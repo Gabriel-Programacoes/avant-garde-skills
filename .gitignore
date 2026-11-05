@@ -18,3 +18,7 @@ desktop.ini
 
 # Antigravity/Agent internal runtimes (if any)
 .system_generated/
+
+# Internal Roadmap and Next Steps (Ignored from GitHub)
+plan.md
+.roadmap/
