@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Veritas Clause — Redline Contratual &amp; Síntese Epistêmica Pós-Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Computational Sunlit Daylight Legal/Financial Studio Palette (palette.mjs --light) */
+      --surface-sunken: oklch(93.0% 0.008 264.4);
+      --surface-canvas: oklch(96.5% 0.006 264.4);
+      --surface-panel: oklch(98.5% 0.004 264.4);
+      --surface-raised: oklch(100.0% 0.000 264.4);
+      --border-subtle: oklch(86.0% 0.012 264.4);
+      --border-strong: oklch(72.0% 0.018 264.4);
+      --text-primary: oklch(16.0% 0.012 264.4);      /* 18.6:1 WCAG AAA / Lc 103 */
+      --text-secondary: oklch(40.0% 0.015 264.4);    /* 8.4:1 WCAG AAA */
+      --text-tertiary: oklch(54.0% 0.012 264.4);
+      --accent-cobalt: oklch(45.0% 0.195 264.4);     /* Deep Editorial Cobalt */
+
+      /* Semantic Epistemic & Redline Diff Tokens */
+      --ai-grounded: oklch(38.0% 0.105 156.0);
+      --ai-risk: oklch(48.0% 0.165 32.0);
+      --diff-add-ink: oklch(30.0% 0.110 154.0);
+      --diff-add-bg: oklch(93.5% 0.038 154.0);
+      --diff-del-ink: oklch(42.0% 0.155 28.0);
+      --diff-del-bg: oklch(94.2% 0.032 28.0);
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    @keyframes veritasReveal {
+      0% { opacity: 0; transform: translateY(14px) scale(0.992); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes reasoningPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--surface-canvas);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+
+    .workbench-shell {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 18px 26px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* 1. Architectural Ledger Header (Zero Pill Badges — Hairline Rules & Naked Typography) */
+    .top-bar {
+      background: oklch(100% 0 0 / 0.86);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.9), 0 8px 24px -14px oklch(16% 0.012 264 / 0.07);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: veritasReveal 500ms var(--ease-out-expo) both;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+    .brand-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .ledger-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding-left: 16px;
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    .telemetry-strip {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .telemetry-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding-left: 18px;
+      border-left: 1px solid var(--border-subtle);
+    }
+    .telemetry-cell:first-child {
+      border-left: none;
+      padding-left: 0;
+    }
+
+    .status-square {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-cobalt);
+      display: inline-block;
+      animation: reasoningPulse 2.2s infinite;
+    }
+
+    /* 2. Split-Stage Post-Chat Workbench */
+    .split-stage {
+      display: grid;
+      grid-template-columns: 7.3fr 4.7fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* LEFT PANE: Contract Document Sheet */
+    .artifact-sheet {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 28px 32px;
+      box-shadow: 0 18px 40px -22px oklch(16% 0.012 264 / 0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: veritasReveal 600ms var(--ease-out-expo) 80ms both;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      gap: 20px;
+    }
+
+    /* Architectural Callout Column (Replaces Ugly Pastel Risk Pill) */
+    .severity-readout {
+      border-left: 2px solid var(--ai-risk);
+      padding-left: 14px;
+      text-align: left;
+      min-width: 190px;
+    }
+    .severity-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+    }
+    .severity-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ai-risk);
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* Clause Navigation Selector Bar ([1] [2] [3] Keyboard Gate) */
+    .clause-tabs {
+      background: var(--surface-sunken);
+      padding: 4px;
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+    .clause-tab {
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 150ms var(--ease-spring), color 150ms var(--ease-spring), transform 140ms var(--ease-spring);
+    }
+    .clause-tab:hover { color: var(--text-primary); }
+    .clause-tab:active { transform: scale(0.98); }
+    .clause-tab[aria-selected="true"] {
+      background: var(--surface-raised);
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px oklch(16% 0.012 264 / 0.08);
+    }
+
+    .kbd-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+
+    /* Contract Context Paragraph */
+    .contract-clause-box {
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: var(--surface-panel);
+      border: 1px solid var(--border-subtle);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Inline Redline Diff Workbench Card */
+    .diff-workbench-card {
+      background: var(--surface-panel);
+      border: 1px solid var(--border-strong);
+      border-top: 2.5px solid var(--accent-cobalt);
+      border-radius: 12px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 220ms var(--ease-spring), box-shadow 220ms var(--ease-spring);
+    }
+
+    .diff-meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Editorial Footnote Links (Replaces Chunky Blue Pill Buttons) */
+    .citation-link {
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed var(--accent-cobalt);
+      padding: 0 0 1px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-cobalt);
+      cursor: pointer;
+      transition: color 140ms var(--ease-spring), border-color 140ms var(--ease-spring), transform 140ms var(--ease-spring);
+    }
+    .citation-link:hover {
+      color: var(--text-primary);
+      border-bottom-style: solid;
+      transform: translateY(-1px);
+    }
+    .citation-link:active {
+      transform: scale(0.97);
+    }
+
+    .diff-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    del.diff-del {
+      display: block;
+      text-decoration: line-through;
+      background: var(--diff-del-bg);
+      color: var(--diff-del-ink);
+      padding: 10px 14px;
+      border-left: 2.5px solid var(--diff-del-ink);
+      border-radius: 0 6px 6px 0;
+    }
+
+    ins.diff-add {
+      display: block;
+      text-decoration: none;
+      background: var(--diff-add-bg);
+      color: var(--diff-add-ink);
+      padding: 10px 14px;
+      border-left: 2.5px solid var(--diff-add-ink);
+      border-radius: 0 6px 6px 0;
+      font-weight: 500;
+    }
+
+    .diff-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-accept {
+      background: var(--text-primary);
+      color: var(--surface-raised);
+      border: none;
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 140ms var(--ease-spring), background 140ms var(--ease-spring);
+    }
+    .btn-accept:hover { transform: translateY(-1px); background: var(--accent-cobalt); }
+    .btn-accept:active { transform: scale(0.97); }
+
+    .btn-reject {
+      background: var(--surface-raised);
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 140ms var(--ease-spring), border-color 140ms var(--ease-spring);
+    }
+    .btn-reject:hover { transform: translateY(-1px); border-color: var(--text-primary); }
+    .btn-reject:active { transform: scale(0.97); }
+
+    /* RIGHT PANE: Transparent Reasoning Trace & Source Ledger */
+    .copilot-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: veritasReveal 600ms var(--ease-out-expo) 160ms both;
+    }
+
+    .copilot-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 14px 32px -18px oklch(16% 0.012 264 / 0.06);
+      transition: transform 240ms var(--ease-spring), border-color 240ms var(--ease-spring);
+    }
+    .copilot-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+
+    .card-index-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+    }
+
+    .trace-list {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+    }
+
+    .trace-step {
+      display: grid;
+      grid-template-columns: 18px 1fr auto;
+      align-items: baseline;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 12px;
+    }
+    .trace-step:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .command-bar {
+      background: var(--surface-panel);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    @media (max-width: 959px) {
+      .workbench-shell { padding: 12px 14px 20px; }
+      .telemetry-strip { display: none; }
+      .split-stage { grid-template-columns: 1fr; }
+      .artifact-sheet { padding: 18px 16px; }
+      .sheet-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .clause-tabs { grid-template-columns: 1fr; }
+      .brand-group { width: 100%; justify-content: space-between; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="workbench-shell tabular-nums">
+    <!-- 1. ARCHITECTURAL LEDGER HEADER (Zero Rounded-Full Pill Blobs) -->
+    <header class="top-bar">
+      <div class="brand-group">
+        <span class="brand-title">Veritas Clause</span>
+        <span class="ledger-meta">MSA-2026-BR · INFRAESTRUTURA CLOUD &amp; IA</span>
+      </div>
+
+      <div class="telemetry-strip" aria-label="Telemetria de Inferência e Grounding">
+        <span class="telemetry-cell">
+          <span class="status-square"></span>
+          <span>PLAYBOOK M&amp;A v4.2</span>
+        </span>
+        <span class="telemetry-cell">LATÊNCIA <strong>380ms</strong></span>
+        <span class="telemetry-cell" style="color:var(--ai-grounded); font-weight:700;">
+          GROUNDING <span id="conf-readout">98.4%</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- 2. SPLIT-STAGE POST-CHAT WORKBENCH -->
+    <main class="split-stage">
+      <!-- LEFT PANE: CONTRACT DOCUMENT + INLINE REDLINE DIFF -->
+      <section class="artifact-sheet" aria-label="Documento Contratual com Redline Inline">
+        <div class="sheet-header">
+          <div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-tertiary); letter-spacing:0.04em;">
+              DOSSIÊ DE AUDITORIA // 03 CLÁUSULAS COM DESVIO DE DIRETRIZ
+            </span>
+            <h1 style="font-family:'Instrument Serif',serif; font-size:36px; font-weight:400; line-height:1.03; margin-top:4px;">
+              Instrumento Particular de Prestação de Serviços SaaS
+            </h1>
+          </div>
+
+          <div class="severity-readout">
+            <span class="severity-label">Diagnóstico da Cláusula</span>
+            <span class="severity-value" id="risk-readout">■ Exposição Ilimitada</span>
+          </div>
+        </div>
+
+        <!-- Keyboard-First Clause Switcher ([1] [2] [3]) -->
+        <div class="clause-tabs" role="tablist" aria-label="Cláusulas Auditadas">
+          <button class="clause-tab" role="tab" aria-selected="true" data-clause="c1">
+            <span>§4.2 Responsabilidade</span>
+            <span class="kbd-key">[1]</span>
+          </button>
+          <button class="clause-tab" role="tab" aria-selected="false" data-clause="c2">
+            <span>§7.1 Propriedade Intelectual</span>
+            <span class="kbd-key">[2]</span>
+          </button>
+          <button class="clause-tab" role="tab" aria-selected="false" data-clause="c3">
+            <span>§9.4 SLA &amp; Multa Rescisória</span>
+            <span class="kbd-key">[3]</span>
+          </button>
+        </div>
+
+        <!-- Prior Unchanged Contract Context -->
+        <div class="contract-clause-box" id="context-before">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-tertiary); margin-bottom:4px;">
+            CLÁUSULA 4.1 // OBRIGAÇÕES DE SEGURANÇA E DISPONIBILIDADE (CONFORME PLAYBOOK)
+          </div>
+          <p>
+            4.1. A CONTRATADA manterá certificação ISO/IEC 27001 e SOC 2 Tipo II vigentes durante todo o prazo contratual, garantindo criptografia AES-256 em repouso e TLS 1.3 em trânsito.
+          </p>
+        </div>
+
+        <!-- ACTIVE INLINE DIFF BLOCK (Reused Component: InlineDiffCard) -->
+        <article class="diff-workbench-card" id="diff-card">
+          <div class="diff-meta-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--text-primary);" id="diff-clause-id">
+                CLÁUSULA 4.2 — LIMITAÇÃO DE RESPONSABILIDADE
+              </span>
+              <span id="diff-status-readout" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--accent-cobalt); padding-left:12px; border-left:1px solid var(--border-subtle);">
+                REVISÃO PENDENTE
+              </span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:14px;">
+              <button type="button" class="citation-link" data-ref="§4.2">
+                Ref. Playbook §4.2 (98.4%)
+              </button>
+              <button type="button" class="citation-link" data-ref="Art. 403 CC">
+                Ref. Art. 403 CC
+              </button>
+            </div>
+          </div>
+
+          <div class="diff-lines">
+            <del class="diff-del" id="diff-del-text">
+              4.2. A CONTRATADA responderá integral e ilimitadamente por quaisquer perdas, danos diretos, indiretos, lucros cessantes ou perda de oportunidade de negócio sofridos pela CONTRATANTE.
+            </del>
+            <ins class="diff-add" id="diff-add-text">
+              4.2. A responsabilidade total e agregada da CONTRATADA fica limitada ao valor efetivamente pago pela CONTRATANTE nos 12 (doze) meses anteriores ao evento danoso, vedada a indenização por lucros cessantes ou danos indiretos (Art. 403 do Código Civil).
+            </ins>
+          </div>
+
+          <p style="font-size:12.5px; color:var(--text-secondary);" id="diff-rationale">
+            <strong>Fundamentação Epistêmica:</strong> A minuta original remove o teto indenizatório (Cap) e inclui lucros cessantes, violando a diretriz §4.2 do Playbook Jurídico Interno (máx. 12 meses de ARR).
+          </p>
+
+          <div class="diff-action-bar">
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn-accept" id="btn-accept">
+                <span>Aceitar Redação</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; opacity:0.75;">[Tab]</span>
+              </button>
+              <button type="button" class="btn-reject" id="btn-reject">
+                <span>Manter Original</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-tertiary);">[Esc]</span>
+              </button>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-secondary);">
+              Exposição mitigada: <strong style="color:var(--ai-grounded);" id="exposure-saved">R$ 4,8M</strong>
+            </span>
+          </div>
+        </article>
+      </section>
+
+      <!-- RIGHT PANE: TRANSPARENT REASONING TRACE & GROUNDED CITATION MATRIX -->
+      <aside class="copilot-column" aria-label="Rastreio de Raciocínio e Fontes Verificadas">
+        <!-- Card 1: Step-by-Step Tool & Retrieval Trace -->
+        <section class="copilot-card">
+          <div class="card-index-row">
+            <span style="font-weight:700; color:var(--text-primary);">01 // RASTREIO DE EXECUÇÃO</span>
+            <span style="color:var(--ai-grounded); font-weight:700;">3 ETAPAS · 380ms</span>
+          </div>
+
+          <ul class="trace-list">
+            <li class="trace-step">
+              <span style="color:var(--ai-grounded); font-family:'JetBrains Mono',monospace; font-weight:700;">01</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;">clause_parser.ast_extract</div>
+                <div style="color:var(--text-secondary); font-size:11.5px;">Extraídas 28 cláusulas e comparadas com matriz SaaS</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-tertiary);">92ms</span>
+            </li>
+            <li class="trace-step">
+              <span style="color:var(--ai-grounded); font-family:'JetBrains Mono',monospace; font-weight:700;">02</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;">rag_playbook.search("liability_cap")</div>
+                <div style="color:var(--text-secondary); font-size:11.5px;">Precedente obrigatório: Teto de 12x mensalidade (cos 0.984)</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-tertiary);">148ms</span>
+            </li>
+            <li class="trace-step">
+              <span style="color:var(--ai-grounded); font-family:'JetBrains Mono',monospace; font-weight:700;">03</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;">statute_guard.verify_br_law</div>
+                <div style="color:var(--text-secondary); font-size:11.5px;">Correlação validada com Art. 403 e Art. 421-A do Código Civil</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-tertiary);">140ms</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Card 2: Grounded Source Excerpt Preview -->
+        <section class="copilot-card" id="source-preview-card">
+          <div class="card-index-row">
+            <span style="font-weight:700; color:var(--text-primary);">02 // FONTE PRIMÁRIA VERIFICADA</span>
+            <span style="color:var(--text-tertiary);">CITAÇÃO LITERAL</span>
+          </div>
+
+          <blockquote id="citation-excerpt" style="padding:12px 14px; background:var(--surface-panel); border-left:2px solid var(--text-primary); font-size:12.5px; color:var(--text-primary);">
+            "Diretriz §4.2 (Playbook Jurídico 2026): Nenhum contrato de fornecimento de software poderá prever responsabilidade ilimitada, devendo o limite global corresponder a 12 meses de faturamento precedente."
+          </blockquote>
+
+          <!-- Contextual Inline Command Bar -->
+          <div class="command-bar">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-secondary);">
+              ⌘K Instruir ajuste (ex: "elevar cap para 24 meses em caso de dolo")...
+            </span>
+            <span class="kbd-key">[↵]</span>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const CLAUSES = {
+      c1: {
+        id: 'CLÁUSULA 4.2 — LIMITAÇÃO DE RESPONSABILIDADE',
+        risk: '■ Exposição Ilimitada',
+        conf: 98.4,
+        saved: 'R$ 4,8M',
+        del: '4.2. A CONTRATADA responderá integral e ilimitadamente por quaisquer perdas, danos diretos, indiretos, lucros cessantes ou perda de oportunidade de negócio sofridos pela CONTRATANTE.',
+        add: '4.2. A responsabilidade total e agregada da CONTRATADA fica limitada ao valor efetivamente pago pela CONTRATANTE nos 12 (doze) meses anteriores ao evento danoso, vedada a indenização por lucros cessantes ou danos indiretos (Art. 403 do Código Civil).',
+        rationale: '<strong>Fundamentação Epistêmica:</strong> A minuta original remove o teto indenizatório (Cap) e inclui lucros cessantes, violando a diretriz §4.2 do Playbook Jurídico Interno (máx. 12 meses de ARR).',
+        excerpt: '"Diretriz §4.2 (Playbook Jurídico 2026): Nenhum contrato de fornecimento de software poderá prever responsabilidade ilimitada, devendo o limite global corresponder a 12 meses de faturamento precedente."',
+      },
+      c2: {
+        id: 'CLÁUSULA 7.1 — PROPRIEDADE INTELECTUAL DE MODELOS',
+        risk: '■ Cessão de IP Core',
+        conf: 99.1,
+        saved: 'R$ 12,0M',
+        del: '7.1. Todo código-fonte, algoritmos, pesos de modelos e melhorias desenvolvidas durante a vigência deste contrato passarão à titularidade exclusiva da CONTRATANTE.',
+        add: '7.1. A CONTRATANTE detém titularidade exclusiva sobre seus Dados de Entrada e Relatórios Gerados, permanecendo a arquitetura pré-existente, motores de inferência e pesos base sob propriedade intelectual exclusiva da CONTRATADA (Lei 9.609/98).',
+        rationale: '<strong>Fundamentação Epistêmica:</strong> Evita transferência acidental da propriedade intelectual do motor SaaS multi-tenant para um único cliente.',
+        excerpt: '"Diretriz §7.1 (Proteção de Ativos SaaS): É vedada a cessão patrimonial de modelos-base, pesos neurais ou bibliotecas pré-existentes em contratos de assinatura."',
+      },
+      c3: {
+        id: 'CLÁUSULA 9.4 — SLA DE DISPONIBILIDADE & MULTA',
+        risk: '■ Multa Desproporcional',
+        conf: 96.8,
+        saved: 'R$ 1,4M',
+        del: '9.4. Em caso de indisponibilidade superior a 15 minutos mensais, incidirá multa automática de 50% sobre o valor anual do contrato, além de rescisão imediata.',
+        add: '9.4. A CONTRATADA garante SLA de 99,9% mensal. Eventual desvio ensejará créditos de serviço escalonados de 5% a 20% na fatura subsequente, observado o Art. 412 do Código Civil.',
+        rationale: '<strong>Fundamentação Epistêmica:</strong> Substitui penalidade punitiva de 50% anual pelo regime padrão de Service Credits auditados via telemetria.',
+        excerpt: '"Diretriz §9.4 (SLA Cloud): Compensações por falha de nível de serviço devem operar via créditos em fatura, respeitando o limite de 20% mensal."',
+      },
+    };
+
+    let currentConf = 98.4;
+    function animateConfidence(target) {
+      const el = document.getElementById('conf-readout');
+      if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (el) el.textContent = `${target.toFixed(1)}%`;
+        currentConf = target;
+        return;
+      }
+      const start = currentConf;
+      const t0 = performance.now();
+      function tick(now) {
+        const p = Math.min(1, (now - t0) / 320);
+        const val = start + (target - start) * (1 - Math.pow(1 - p, 3));
+        el.textContent = `${val.toFixed(1)}%`;
+        if (p < 1) requestAnimationFrame(tick);
+        else currentConf = target;
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function selectClause(key) {
+      const data = CLAUSES[key];
+      if (!data) return;
+      document.querySelectorAll('.clause-tab').forEach((t) => {
+        t.setAttribute('aria-selected', String(t.dataset.clause === key));
+      });
+      const card = document.getElementById('diff-card');
+      if (card && card.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        card.animate(
+          [
+            { opacity: 0.4, transform: 'translateY(6px) scale(0.99)' },
+            { opacity: 1, transform: 'translateY(0) scale(1)' },
+          ],
+          { duration: 260, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+        );
+      }
+      document.getElementById('diff-clause-id').textContent = data.id;
+      document.getElementById('risk-readout').textContent = data.risk;
+      document.getElementById('diff-del-text').textContent = data.del;
+      document.getElementById('diff-add-text').textContent = data.add;
+      document.getElementById('diff-del-text').style.display = 'block';
+      document.getElementById('diff-rationale').innerHTML = data.rationale;
+      document.getElementById('citation-excerpt').textContent = data.excerpt;
+      document.getElementById('exposure-saved').textContent = data.saved;
+      document.getElementById('diff-status-readout').textContent = 'REVISÃO PENDENTE';
+      animateConfidence(data.conf);
+    }
+
+    document.querySelectorAll('.clause-tab').forEach((tab) => {
+      tab.addEventListener('click', () => selectClause(tab.dataset.clause));
+    });
+
+    document.getElementById('btn-accept').addEventListener('click', () => {
+      document.getElementById('diff-del-text').style.display = 'none';
+      const statusEl = document.getElementById('diff-status-readout');
+      statusEl.textContent = '✓ REDAÇÃO APLICADA';
+      statusEl.style.color = 'var(--ai-grounded)';
+    });
+
+    document.getElementById('btn-reject').addEventListener('click', () => {
+      document.getElementById('diff-del-text').style.display = 'block';
+      const statusEl = document.getElementById('diff-status-readout');
+      statusEl.textContent = 'ORIGINAL MANTIDO';
+    });
+
+    document.querySelectorAll('.citation-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        const preview = document.getElementById('source-preview-card');
+        if (preview && preview.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          preview.animate(
+            [
+              { transform: 'scale(0.985)', borderColor: 'var(--accent-cobalt)' },
+              { transform: 'scale(1)', borderColor: 'var(--border-subtle)' },
+            ],
+            { duration: 300, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+          );
+        }
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+      if (e.key === '1') selectClause('c1');
+      if (e.key === '2') selectClause('c2');
+      if (e.key === '3') selectClause('c3');
+      if (e.key === 'Escape') document.getElementById('btn-reject').click();
+    });
+  </script>
+</body>
+</html>

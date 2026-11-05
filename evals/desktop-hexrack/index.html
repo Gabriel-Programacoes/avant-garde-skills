@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HEX-RACK // MODULAR DSP &amp; TELEMETRY WORKSTATION</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Generated via `node scripts/palette.mjs surfaces "#ff5500"` */
+      --surface-sunken: oklch(11.0% 0.006 38.8);  /* #060403 */
+      --surface-canvas: oklch(14.0% 0.008 38.8);  /* #0c0807 */
+      --surface-panel: oklch(17.0% 0.010 38.8);   /* #130e0c */
+      --surface-raised: oklch(21.0% 0.012 38.8);  /* #1d1714 */
+      --surface-overlay: oklch(26.0% 0.015 38.8); /* #2b221f */
+      --border-subtle: oklch(24.0% 0.012 38.8);   /* #251d1b */
+      --border-strong: oklch(34.0% 0.020 38.8);   /* #413530 */
+      --text-primary: oklch(96.0% 0.005 38.8);    /* #f5f1ef — 17.0:1 (Lc 99) */
+      --text-secondary: oklch(76.0% 0.014 38.8);  /* #baaeab — 8.9:1 (Lc 59) */
+      --text-tertiary: oklch(55.0% 0.014 38.8);   /* #796f6c */
+      --text-disabled: oklch(36.0% 0.010 38.8);   /* #423b39 */
+      --accent-primary: oklch(67.6% 0.217 38.8);  /* #ff5500 — Safety Orange */
+      --accent-hover: oklch(73.6% 0.166 38.8);    /* #ff7f55 */
+      --accent-active: oklch(61.6% 0.198 38.8);   /* #e14a00 */
+      --led-online: oklch(74.0% 0.210 145.0);     /* Acid Lime LED */
+      --led-warn: oklch(80.0% 0.180 82.0);        /* Amber Peak LED */
+    }
+
+    /* Desktop Law: Desaturate accents & dim borders when window loses OS focus */
+    body.window-blurred {
+      --accent-primary: oklch(52.0% 0.025 38.8);
+      --led-online: oklch(48.0% 0.030 145.0);
+      --border-strong: var(--border-subtle);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--surface-canvas);
+      color: var(--text-primary);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 12px;
+      line-height: 1.35;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .tabular-nums {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* App Shell Layout: Titlebar (38px) + Main Workspace (1fr) + Statusbar (24px) */
+    .app-shell {
+      display: grid;
+      grid-template-rows: 38px 1fr 24px;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Custom Unified Titlebar */
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: var(--surface-panel);
+      border-bottom: 1px solid var(--border-subtle);
+      -webkit-app-region: drag;
+    }
+
+    .no-drag {
+      -webkit-app-region: no-drag;
+    }
+
+    .traffic-lights {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding-left: 4px;
+      margin-right: 12px;
+    }
+
+    .tl-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--border-strong);
+      border: 1px solid oklch(45% 0.02 38.8);
+    }
+    body:not(.window-blurred) .tl-dot.close { background: oklch(62% 0.21 25); }
+    body:not(.window-blurred) .tl-dot.min   { background: oklch(78% 0.17 85); }
+    body:not(.window-blurred) .tl-dot.max   { background: oklch(72% 0.20 145); }
+
+    .title-cluster {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .led-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--led-online);
+      box-shadow: 0 0 6px var(--led-online);
+    }
+
+    .cmd-pill {
+      height: 26px;
+      min-width: 270px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-sunken);
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .cmd-pill:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    kbd.keycap {
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--surface-raised);
+      border: 1px solid var(--border-strong);
+      border-radius: 2px;
+    }
+
+    .transport-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hw-btn {
+      height: 24px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-raised);
+      border: 1px solid var(--border-strong);
+      border-radius: 2px;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    /* Constraint 2: Zero crossfade transitions; physical 1px depression + instant border flash */
+    .hw-btn:active, .hw-btn[aria-pressed="true"] {
+      transform: translateY(1px);
+      background: var(--accent-primary);
+      color: var(--surface-sunken);
+      border-color: var(--accent-hover);
+    }
+    .hw-btn:focus-visible, .scrubber:focus-visible {
+      outline: 1px solid var(--accent-primary);
+      outline-offset: 1px;
+    }
+
+    /* Main Multi-Pane Workspace */
+    .workspace {
+      display: grid;
+      grid-template-columns: 220px 1fr 270px;
+      height: 100%;
+      overflow: hidden;
+    }
+    .workspace.hide-sidebar {
+      grid-template-columns: 0px 1fr 270px;
+    }
+
+    @media (max-width: 820px) {
+      .workspace {
+        grid-template-columns: 44px 1fr 0px;
+      }
+      .patch-label, .inspector-pane { display: none; }
+    }
+
+    /* Left Sidebar: Patch Bank & Routing Tree */
+    .sidebar-pane {
+      background: var(--surface-panel);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .pane-header {
+      height: 26px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    .patch-list {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .patch-row {
+      height: 26px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid oklch(24% 0.012 38.8 / 0.45);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .patch-row:hover {
+      background: var(--surface-raised);
+      color: var(--text-primary);
+    }
+    .patch-row[aria-selected="true"] {
+      background: var(--surface-sunken);
+      color: var(--accent-primary);
+      border-left: 2px solid var(--accent-primary);
+      padding-left: 8px;
+      font-weight: 600;
+    }
+
+    /* Center Pane: Oscilloscope + Modular Card Rack + Bottom Event Tray */
+    .center-pane {
+      display: grid;
+      grid-template-rows: 138px 1fr 112px;
+      background: var(--surface-canvas);
+      overflow: hidden;
+    }
+    .center-pane.hide-tray {
+      grid-template-rows: 138px 1fr 0px;
+    }
+
+    /* Live Telemetry Scope Well */
+    .scope-well {
+      background: var(--surface-sunken);
+      border-bottom: 1px solid var(--border-subtle);
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 210px;
+      overflow: hidden;
+    }
+
+    #scope-canvas {
+      width: 100%;
+      height: 138px;
+      display: block;
+    }
+
+    .scope-readouts {
+      border-left: 1px solid var(--border-subtle);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+    }
+
+    /* Constraint 1: Modular Card Rack (Rearrangeable, Collapsible Hardware Modules) */
+    .rack-bay {
+      padding: 10px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: min-content;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .rack-module {
+      background: var(--surface-panel);
+      border: 1px solid var(--border-strong);
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+    }
+    .rack-module.flash-active {
+      border-color: var(--accent-primary);
+      box-shadow: inset 0 0 0 1px var(--accent-primary);
+    }
+    .rack-module.collapsed .module-body {
+      display: none;
+    }
+
+    .module-titlebar {
+      height: 26px;
+      padding: 0 8px;
+      background: var(--surface-raised);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .module-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .micro-btn {
+      padding: 1px 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      background: var(--surface-sunken);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+    }
+    .micro-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+    .micro-btn[aria-pressed="true"] {
+      background: var(--accent-primary);
+      color: var(--surface-sunken);
+      font-weight: 700;
+    }
+
+    .module-body {
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    /* Horizontal Numeric Scrubber */
+    .scrubber {
+      height: 28px;
+      padding: 0 8px;
+      background: var(--surface-sunken);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      cursor: ew-resize;
+      position: relative;
+      overflow: hidden;
+    }
+    .scrubber:hover {
+      border-color: var(--border-strong);
+    }
+    .scrubber.dragging {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+    .scrubber-fill {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--accent-primary);
+      pointer-events: none;
+    }
+    .scrubber-label {
+      color: var(--text-tertiary);
+      font-size: 10px;
+    }
+    .scrubber-val {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-primary);
+    }
+
+    /* Bottom Embedded Hex Telemetry Tray */
+    .bottom-tray {
+      background: var(--surface-sunken);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .hex-log {
+      padding: 6px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    /* Right Inspector: Matrix & Euclidean Sequencer */
+    .inspector-pane {
+      background: var(--surface-panel);
+      border-left: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .step-grid {
+      padding: 8px 10px;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+    }
+
+    .step-cell {
+      height: 24px;
+      background: var(--surface-sunken);
+      border: 1px solid var(--border-subtle);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .step-cell.active {
+      background: oklch(67.6% 0.217 38.8 / 0.22);
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .step-cell.playhead {
+      background: var(--accent-primary);
+      color: var(--surface-sunken);
+    }
+
+    /* Bottom Statusbar (24px) */
+    .statusbar {
+      height: 24px;
+      padding: 0 10px;
+      background: var(--surface-panel);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-secondary);
+    }
+
+    /* Command Palette Overlay (Cmd/Ctrl+K) */
+    .cmd-backdrop {
+      position: fixed;
+      inset: 0;
+      background: oklch(11% 0.006 38.8 / 0.72);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 72px;
+      z-index: 100;
+    }
+    .cmd-backdrop.open { display: flex; }
+
+    .cmd-modal {
+      width: 460px;
+      background: var(--surface-overlay);
+      border: 1px solid var(--accent-primary);
+      border-radius: 3px;
+      box-shadow: 0 18px 40px oklch(0% 0 0 / 0.65);
+      overflow: hidden;
+    }
+
+    .cmd-input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px;
+      background: var(--surface-sunken);
+      border: none;
+      border-bottom: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .cmd-item {
+      height: 28px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .cmd-item:hover {
+      background: var(--accent-primary);
+      color: var(--surface-sunken);
+    }
+
+    /* Custom Right-Click Context Menu */
+    .ctx-menu {
+      position: fixed;
+      width: 210px;
+      background: var(--surface-overlay);
+      border: 1px solid var(--border-strong);
+      padding: 4px;
+      display: none;
+      z-index: 120;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .ctx-menu.open { display: block; }
+    .ctx-item {
+      height: 24px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .ctx-item:hover {
+      background: var(--accent-primary);
+      color: var(--surface-sunken);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- 1. CUSTOM UNIFIED TITLEBAR (with -webkit-app-region: drag) -->
+    <header class="titlebar">
+      <div class="title-cluster no-drag">
+        <div class="traffic-lights" aria-hidden="true">
+          <span class="tl-dot close"></span>
+          <span class="tl-dot min"></span>
+          <span class="tl-dot max"></span>
+        </div>
+        <span class="led-dot" id="engine-led"></span>
+        <span class="tabular-nums" style="font-weight:700; letter-spacing:0.03em;">HEX-RACK // DSP v2.4</span>
+        <kbd class="keycap">TAURI v2</kbd>
+      </div>
+
+      <button class="cmd-pill no-drag" id="open-cmd-btn" title="Open Command Palette (⌘K)">
+        <span>Jump to module, patch, or DSP action...</span>
+        <kbd class="keycap">⌘K</kbd>
+      </button>
+
+      <div class="transport-bar no-drag">
+        <button class="hw-btn" id="transport-btn" aria-pressed="true" title="Toggle DSP Transport (Space)">
+          <span>RUN</span>
+          <kbd class="keycap">SPC</kbd>
+        </button>
+        <button class="hw-btn" id="toggle-sidebar-btn" title="Toggle Patch Bank (⌘B)">
+          <span>BANK</span>
+          <kbd class="keycap">⌘B</kbd>
+        </button>
+        <button class="hw-btn" id="toggle-tray-btn" title="Toggle Hex Event Log (⌘J)">
+          <span>LOG</span>
+          <kbd class="keycap">⌘J</kbd>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. MULTI-PANE WORKSPACE -->
+    <main class="workspace" id="main-workspace">
+      <!-- LEFT SIDEBAR: PATCH BANK -->
+      <aside class="sidebar-pane" aria-label="Patch Bank">
+        <div class="pane-header">
+          <span>PATCH BANK // NVMe</span>
+          <span class="tabular-nums">08 SLOTS</span>
+        </div>
+        <ul class="patch-list" id="patch-list" role="listbox" aria-label="Synthesizer Patches">
+          <li class="patch-row" role="option" aria-selected="true" data-patch="01" data-freq="142" data-res="68">
+            <span class="patch-label">01 // KOBOLD SUB-BASS</span>
+            <span class="tabular-nums" style="color:var(--text-tertiary);">128 BPM</span>
+          </li>
+          <li class="patch-row" role="option" aria-selected="false" data-patch="02" data-freq="440" data-res="84">
+            <span class="patch-label">02 // ANHARMONIC BELL</span>
+            <span class="tabular-nums" style="color:var(--text-tertiary);">134 BPM</span>
+          </li>
+          <li class="patch-row" role="option" aria-selected="false" data-patch="03" data-freq="88" data-res="92">
+            <span class="patch-label">03 // BUCHLA WEST-LPG</span>
+            <span class="tabular-nums" style="color:var(--text-tertiary);">110 BPM</span>
+          </li>
+          <li class="patch-row" role="option" aria-selected="false" data-patch="04" data-freq="310" data-res="45">
+            <span class="patch-label">04 // GRANULAR CLOUD</span>
+            <span class="tabular-nums" style="color:var(--text-tertiary);">96 BPM</span>
+          </li>
+          <li class="patch-row" role="option" aria-selected="false" data-patch="05" data-freq="620" data-res="77">
+            <span class="patch-label">05 // ACID LADDER 303</span>
+            <span class="tabular-nums" style="color:var(--text-tertiary);">140 BPM</span>
+          </li>
+          <li class="patch-row" role="option" aria-selected="false" data-patch="06" data-freq="215" data-res="52">
+            <span class="patch-label">06 // TAPE FLUTTER PAD</span>
+            <span class="tabular-nums" style="color:var(--text-tertiary);">88 BPM</span>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- CENTER PANE: OSCILLOSCOPE + MODULAR RACK + HEX TRAY -->
+      <section class="center-pane" id="center-pane">
+        <!-- Oscilloscope Telemetry Well -->
+        <div class="scope-well">
+          <canvas id="scope-canvas" width="760" height="138"></canvas>
+          <div class="scope-readouts tabular-nums">
+            <div>
+              <div style="color:var(--text-tertiary); font-size:9.5px;">MASTER BUS TELEMETRY</div>
+              <div style="font-size:18px; font-weight:700; color:var(--accent-primary);" id="peak-db">-02.4 dBFS</div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+              <div><span style="color:var(--text-tertiary);">SR:</span> 48.0kHz</div>
+              <div><span style="color:var(--text-tertiary);">BUF:</span> 64 smp</div>
+              <div><span style="color:var(--text-tertiary);">LAT:</span> 1.33ms</div>
+              <div><span style="color:var(--text-tertiary);">RMS:</span> -09.1dB</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modular Card Rack (Constraint 1: Rearrangeable & Collapsible) -->
+        <div class="rack-bay" id="rack-bay" aria-label="Modular DSP Rack">
+          <!-- MODULE 1 -->
+          <article class="rack-module" data-mod="OSC-01">
+            <header class="module-titlebar">
+              <span>[1] OSC-01 // PHASE VORTEX</span>
+              <div class="module-controls">
+                <button class="micro-btn move-up-btn" title="Move Rack Module Up">↑</button>
+                <button class="micro-btn move-dn-btn" title="Move Rack Module Down">↓</button>
+                <button class="micro-btn mute-btn" aria-pressed="false" title="Bypass Module (Key 1)">ACTIVE</button>
+                <button class="micro-btn collapse-btn" title="Minimize to Rack Rail">—</button>
+              </div>
+            </header>
+            <div class="module-body">
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Oscillator Frequency" data-param="FREQ" data-min="20" data-max="2000" data-step="2" data-val="142" data-unit=" Hz">
+                <span class="scrubber-label">FREQ</span>
+                <span class="scrubber-val">142 Hz</span>
+                <div class="scrubber-fill" style="width:12%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Phase Detune" data-param="DETUNE" data-min="-50" data-max="50" data-step="0.5" data-val="14.5" data-unit=" ct">
+                <span class="scrubber-label">DETUNE</span>
+                <span class="scrubber-val">14.5 ct</span>
+                <div class="scrubber-fill" style="width:64%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Wavefold Drive" data-param="FOLD" data-min="0" data-max="100" data-step="1" data-val="64" data-unit="%">
+                <span class="scrubber-label">FOLD</span>
+                <span class="scrubber-val">64%</span>
+                <div class="scrubber-fill" style="width:64%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Sub Octave Mix" data-param="SUB" data-min="0" data-max="100" data-step="1" data-val="82" data-unit="%">
+                <span class="scrubber-label">SUB</span>
+                <span class="scrubber-val">82%</span>
+                <div class="scrubber-fill" style="width:82%;"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- MODULE 2 -->
+          <article class="rack-module" data-mod="FLT-02">
+            <header class="module-titlebar">
+              <span>[2] FLT-02 // DIODE LADDER</span>
+              <div class="module-controls">
+                <button class="micro-btn move-up-btn" title="Move Rack Module Up">↑</button>
+                <button class="micro-btn move-dn-btn" title="Move Rack Module Down">↓</button>
+                <button class="micro-btn mute-btn" aria-pressed="false" title="Bypass Module (Key 2)">ACTIVE</button>
+                <button class="micro-btn collapse-btn" title="Minimize to Rack Rail">—</button>
+              </div>
+            </header>
+            <div class="module-body">
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Filter Cutoff" data-param="CUTOFF" data-min="40" data-max="16000" data-step="25" data-val="2480" data-unit=" Hz">
+                <span class="scrubber-label">CUTOFF</span>
+                <span class="scrubber-val">2480 Hz</span>
+                <div class="scrubber-fill" style="width:32%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Filter Resonance" data-param="RESO" data-min="0" data-max="100" data-step="1" data-val="68" data-unit="%">
+                <span class="scrubber-label">RESO</span>
+                <span class="scrubber-val">68%</span>
+                <div class="scrubber-fill" style="width:68%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Filter Drive" data-param="DRIVE" data-min="0" data-max="24" data-step="0.5" data-val="9.5" data-unit=" dB">
+                <span class="scrubber-label">DRIVE</span>
+                <span class="scrubber-val">9.5 dB</span>
+                <div class="scrubber-fill" style="width:40%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Envelope Depth" data-param="ENV-MOD" data-min="-100" data-max="100" data-step="1" data-val="45" data-unit="%">
+                <span class="scrubber-label">ENV-MOD</span>
+                <span class="scrubber-val">45%</span>
+                <div class="scrubber-fill" style="width:72%;"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- MODULE 3 -->
+          <article class="rack-module" data-mod="ENV-03">
+            <header class="module-titlebar">
+              <span>[3] ENV-03 // WEST-COAST LPG</span>
+              <div class="module-controls">
+                <button class="micro-btn move-up-btn" title="Move Rack Module Up">↑</button>
+                <button class="micro-btn move-dn-btn" title="Move Rack Module Down">↓</button>
+                <button class="micro-btn mute-btn" aria-pressed="false" title="Bypass Module (Key 3)">ACTIVE</button>
+                <button class="micro-btn collapse-btn" title="Minimize to Rack Rail">—</button>
+              </div>
+            </header>
+            <div class="module-body">
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Attack Time" data-param="ATTACK" data-min="1" data-max="500" data-step="2" data-val="4" data-unit=" ms">
+                <span class="scrubber-label">ATTACK</span>
+                <span class="scrubber-val">4 ms</span>
+                <div class="scrubber-fill" style="width:4%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Decay Time" data-param="DECAY" data-min="10" data-max="2000" data-step="10" data-val="340" data-unit=" ms">
+                <span class="scrubber-label">DECAY</span>
+                <span class="scrubber-val">340 ms</span>
+                <div class="scrubber-fill" style="width:28%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Vactrol Memory" data-param="VACTROL" data-min="0" data-max="100" data-step="1" data-val="76" data-unit="%">
+                <span class="scrubber-label">VACTROL</span>
+                <span class="scrubber-val">76%</span>
+                <div class="scrubber-fill" style="width:76%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Velocity Sensitivity" data-param="VELO" data-min="0" data-max="100" data-step="1" data-val="90" data-unit="%">
+                <span class="scrubber-label">VELO</span>
+                <span class="scrubber-val">90%</span>
+                <div class="scrubber-fill" style="width:90%;"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- MODULE 4 -->
+          <article class="rack-module" data-mod="BUS-04">
+            <header class="module-titlebar">
+              <span>[4] BUS-04 // SPECTRAL CLIPPER</span>
+              <div class="module-controls">
+                <button class="micro-btn move-up-btn" title="Move Rack Module Up">↑</button>
+                <button class="micro-btn move-dn-btn" title="Move Rack Module Down">↓</button>
+                <button class="micro-btn mute-btn" aria-pressed="false" title="Bypass Module (Key 4)">ACTIVE</button>
+                <button class="micro-btn collapse-btn" title="Minimize to Rack Rail">—</button>
+              </div>
+            </header>
+            <div class="module-body">
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Ceiling Threshold" data-param="CEIL" data-min="-12" data-max="0" data-step="0.1" data-val="-0.3" data-unit=" dB">
+                <span class="scrubber-label">CEIL</span>
+                <span class="scrubber-val">-0.3 dB</span>
+                <div class="scrubber-fill" style="width:95%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Tape Saturation" data-param="SAT" data-min="0" data-max="100" data-step="1" data-val="38" data-unit="%">
+                <span class="scrubber-label">SAT</span>
+                <span class="scrubber-val">38%</span>
+                <div class="scrubber-fill" style="width:38%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Stereo Width" data-param="WIDTH" data-min="0" data-max="200" data-step="2" data-val="124" data-unit="%">
+                <span class="scrubber-label">WIDTH</span>
+                <span class="scrubber-val">124%</span>
+                <div class="scrubber-fill" style="width:62%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Dry Wet Mix" data-param="MIX" data-min="0" data-max="100" data-step="1" data-val="100" data-unit="%">
+                <span class="scrubber-label">MIX</span>
+                <span class="scrubber-val">100%</span>
+                <div class="scrubber-fill" style="width:100%;"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- MODULE 5 -->
+          <article class="rack-module" data-mod="MOD-05">
+            <header class="module-titlebar">
+              <span>[5] MOD-05 // POLYRHYTHMIC LFO</span>
+              <div class="module-controls">
+                <button class="micro-btn move-up-btn" title="Move Rack Module Up">↑</button>
+                <button class="micro-btn move-dn-btn" title="Move Rack Module Down">↓</button>
+                <button class="micro-btn mute-btn" aria-pressed="false" title="Bypass Module">ACTIVE</button>
+                <button class="micro-btn collapse-btn" title="Minimize to Rack Rail">—</button>
+              </div>
+            </header>
+            <div class="module-body">
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="LFO Rate" data-param="RATE" data-min="0.1" data-max="64" data-step="0.2" data-val="4.8" data-unit=" Hz">
+                <span class="scrubber-label">RATE</span>
+                <span class="scrubber-val">4.8 Hz</span>
+                <div class="scrubber-fill" style="width:24%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Wave Skew" data-param="SKEW" data-min="-100" data-max="100" data-step="1" data-val="-18" data-unit="%">
+                <span class="scrubber-label">SKEW</span>
+                <span class="scrubber-val">-18%</span>
+                <div class="scrubber-fill" style="width:41%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Phase Offset" data-param="PHASE" data-min="0" data-max="360" data-step="5" data-val="90" data-unit="°">
+                <span class="scrubber-label">PHASE</span>
+                <span class="scrubber-val">90°</span>
+                <div class="scrubber-fill" style="width:25%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Sample and Hold Slew" data-param="SLEW" data-min="0" data-max="100" data-step="1" data-val="32" data-unit="%">
+                <span class="scrubber-label">SLEW</span>
+                <span class="scrubber-val">32%</span>
+                <div class="scrubber-fill" style="width:32%;"></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- MODULE 6 -->
+          <article class="rack-module" data-mod="DLY-06">
+            <header class="module-titlebar">
+              <span>[6] DLY-06 // BBD CLOCK DELAY</span>
+              <div class="module-controls">
+                <button class="micro-btn move-up-btn" title="Move Rack Module Up">↑</button>
+                <button class="micro-btn move-dn-btn" title="Move Rack Module Down">↓</button>
+                <button class="micro-btn mute-btn" aria-pressed="false" title="Bypass Module">ACTIVE</button>
+                <button class="micro-btn collapse-btn" title="Minimize to Rack Rail">—</button>
+              </div>
+            </header>
+            <div class="module-body">
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Delay Time" data-param="TIME" data-min="5" data-max="1200" data-step="5" data-val="285" data-unit=" ms">
+                <span class="scrubber-label">TIME</span>
+                <span class="scrubber-val">285 ms</span>
+                <div class="scrubber-fill" style="width:34%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Delay Feedback" data-param="FDBK" data-min="0" data-max="110" data-step="1" data-val="72" data-unit="%">
+                <span class="scrubber-label">FDBK</span>
+                <span class="scrubber-val">72%</span>
+                <div class="scrubber-fill" style="width:65%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Clock Noise" data-param="CLOCK" data-min="1" data-max="32" data-step="0.5" data-val="12.5" data-unit=" kHz">
+                <span class="scrubber-label">CLOCK</span>
+                <span class="scrubber-val">12.5 kHz</span>
+                <div class="scrubber-fill" style="width:42%;"></div>
+              </div>
+              <div class="scrubber" role="spinbutton" tabindex="0" aria-label="Delay Send" data-param="SEND" data-min="0" data-max="100" data-step="1" data-val="44" data-unit="%">
+                <span class="scrubber-label">SEND</span>
+                <span class="scrubber-val">44%</span>
+                <div class="scrubber-fill" style="width:44%;"></div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Bottom Hex Event Telemetry Tray -->
+        <div class="bottom-tray">
+          <div class="pane-header">
+            <span>DSP IPC EVENT STREAM // ZERO-MODAL FEEDBACK</span>
+            <span class="tabular-nums" id="event-counter">004 EVENTS</span>
+          </div>
+          <div class="hex-log tabular-nums" id="hex-log">
+            <div>[10:24:01.008] 0x01A4  CORE_AUDIO_INIT     sr=48000Hz  block=64   status=LOCKED</div>
+            <div>[10:24:01.042] 0x02F0  RACK_GRAPH_COMPILE  nodes=04    edges=12   alloc=0.0KB</div>
+            <div>[10:24:01.119] 0x04C8  PARAM_SCRUB_READY   pointerLock=ENABLED    modifiers=SHIFT(10x),ALT(0.1x)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT INSPECTOR: 16-STEP EUCLIDEAN TRIGGER MATRIX -->
+      <aside class="inspector-pane" aria-label="Sequencer and Modulation Matrix">
+        <div>
+          <div class="pane-header">
+            <span>EUCLIDEAN STEP CLOCK</span>
+            <span class="tabular-nums" id="step-readout">STEP 01/16</span>
+          </div>
+          <div class="step-grid tabular-nums" id="step-grid">
+            <div class="step-cell active playhead">01</div>
+            <div class="step-cell">02</div>
+            <div class="step-cell active">03</div>
+            <div class="step-cell">04</div>
+            <div class="step-cell active">05</div>
+            <div class="step-cell">06</div>
+            <div class="step-cell">07</div>
+            <div class="step-cell active">08</div>
+            <div class="step-cell">09</div>
+            <div class="step-cell active">10</div>
+            <div class="step-cell">11</div>
+            <div class="step-cell active">12</div>
+            <div class="step-cell">13</div>
+            <div class="step-cell">14</div>
+            <div class="step-cell active">15</div>
+            <div class="step-cell">16</div>
+          </div>
+
+          <div class="pane-header" style="border-top:1px solid var(--border-subtle); margin-top:6px;">
+            <span>KEYBOARD SHORTCUT MATRIX</span>
+            <span>VIM/PRO</span>
+          </div>
+          <div style="padding:8px 10px; display:flex; flex-direction:column; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10.5px;">
+            <div style="display:flex; justify-content:space-between;"><span>Command Palette</span><kbd class="keycap">⌘K</kbd></div>
+            <div style="display:flex; justify-content:space-between;"><span>Toggle Patch Bank</span><kbd class="keycap">⌘B</kbd></div>
+            <div style="display:flex; justify-content:space-between;"><span>Toggle Event Stream</span><kbd class="keycap">⌘J</kbd></div>
+            <div style="display:flex; justify-content:space-between;"><span>Transport Run/Stop</span><kbd class="keycap">SPC</kbd></div>
+            <div style="display:flex; justify-content:space-between;"><span>Bypass Rack 1–4</span><kbd class="keycap">1–4</kbd></div>
+            <div style="display:flex; justify-content:space-between;"><span>Fine / Coarse Scrub</span><kbd class="keycap">ALT / ⇧</kbd></div>
+          </div>
+        </div>
+
+        <div style="padding:10px; border-top:1px solid var(--border-subtle); background:var(--surface-sunken);" class="tabular-nums">
+          <div style="font-size:10px; color:var(--text-tertiary); margin-bottom:4px;">DSP THREAD LOAD</div>
+          <div style="height:6px; background:var(--surface-panel); border:1px solid var(--border-subtle); overflow:hidden;">
+            <div id="cpu-bar" style="width:14%; height:100%; background:var(--led-online);"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:10px; margin-top:4px;">
+            <span id="cpu-pct">CPU: 14.2%</span>
+            <span id="focus-state">FOCUS: ACTIVE</span>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- 3. STATUSBAR (24px) -->
+    <footer class="statusbar tabular-nums">
+      <div>
+        <span style="color:var(--accent-primary); font-weight:700;">● READY</span>
+        <span style="margin:0 8px;">|</span>
+        <span id="status-msg">Right-click any rack module for hardware context actions. Drag numbers horizontally to scrub.</span>
+      </div>
+      <div>
+        <span>IPC: BROADCAST_SYNC</span>
+        <span style="margin:0 8px;">|</span>
+        <span>MEM: 42.8 MB</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- COMMAND PALETTE (Cmd/Ctrl+K) -->
+  <div class="cmd-backdrop" id="cmd-backdrop" role="dialog" aria-modal="true" aria-label="Command Palette">
+    <div class="cmd-modal">
+      <input type="text" class="cmd-input" id="cmd-input" placeholder="Type a DSP command or module name (ESC to close)..." />
+      <div id="cmd-list">
+        <div class="cmd-item" data-action="collapse-all"><span>Collapse All Rack Modules to Rails</span><kbd class="keycap">RACK</kbd></div>
+        <div class="cmd-item" data-action="expand-all"><span>Expand All Rack Modules</span><kbd class="keycap">RACK</kbd></div>
+        <div class="cmd-item" data-action="randomize"><span>Randomize Oscillator &amp; Filter Seed</span><kbd class="keycap">SEED</kbd></div>
+        <div class="cmd-item" data-action="toggle-transport"><span>Toggle Master Clock Transport</span><kbd class="keycap">SPC</kbd></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM CONTEXT MENU -->
+  <div class="ctx-menu" id="ctx-menu" role="menu">
+    <div class="ctx-item" data-ctx="reset"><span>Reset Module to Nominal</span><kbd class="keycap">0dB</kbd></div>
+    <div class="ctx-item" data-ctx="collapse"><span>Toggle Rail Minimize</span><kbd class="keycap">M</kbd></div>
+    <div class="ctx-item" data-ctx="random"><span>Mutate Module Parameters</span><kbd class="keycap">RND</kbd></div>
+  </div>
+
+  <script>
+    let isRunning = true;
+    let isWindowFocused = true;
+    let waveFreq = 142;
+    let waveRes = 68;
+    let eventCount = 4;
+
+    const logEl = document.getElementById('hex-log');
+    const statusMsg = document.getElementById('status-msg');
+    function pushLog(code, tag, detail) {
+      eventCount++;
+      document.getElementById('event-counter').textContent = `${String(eventCount).padStart(3, '0')} EVENTS`;
+      const now = new Date().toISOString().slice(11, 23);
+      const row = document.createElement('div');
+      row.textContent = `[${now}] ${code}  ${tag.padEnd(18, ' ')}  ${detail}`;
+      logEl.prepend(row);
+      statusMsg.textContent = `${tag}: ${detail}`;
+    }
+
+    // 1. Pointer-Locked + Keyboard Numeric Scrubbers
+    document.querySelectorAll('.scrubber').forEach((scrub) => {
+      const min = parseFloat(scrub.dataset.min);
+      const max = parseFloat(scrub.dataset.max);
+      const step = parseFloat(scrub.dataset.step);
+      const unit = scrub.dataset.unit || '';
+      const param = scrub.dataset.param;
+      const valEl = scrub.querySelector('.scrubber-val');
+      const fillEl = scrub.querySelector('.scrubber-fill');
+
+      function setVal(v) {
+        const clamped = Math.min(max, Math.max(min, Number(v.toFixed(2))));
+        scrub.dataset.val = String(clamped);
+        valEl.textContent = `${clamped}${unit}`;
+        const pct = ((clamped - min) / (max - min)) * 100;
+        fillEl.style.width = `${Math.max(2, Math.min(100, pct))}%`;
+        if (param === 'FREQ' || param === 'CUTOFF') waveFreq = clamped;
+        if (param === 'RESO' || param === 'FOLD') waveRes = clamped;
+      }
+
+      scrub.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        scrub.classList.add('dragging');
+        let acc = parseFloat(scrub.dataset.val);
+        const startX = e.clientX;
+
+        const onMove = (ev) => {
+          const mult = ev.shiftKey ? 10 : ev.altKey ? 0.1 : 1;
+          const dx = ev.movementX !== undefined ? ev.movementX : ev.clientX - startX;
+          acc = Math.min(max, Math.max(min, acc + dx * step * mult));
+          setVal(acc);
+        };
+        const onUp = () => {
+          scrub.classList.remove('dragging');
+          pushLog('0x08A1', 'PARAM_SCRUB_SET', `${param}=${scrub.dataset.val}${unit}`);
+          window.removeEventListener('mousemove', onMove);
+          window.removeEventListener('mouseup', onUp);
+        };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+      });
+
+      scrub.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+        e.preventDefault();
+        const mult = e.shiftKey ? 10 : e.altKey ? 0.1 : 1;
+        const dir = e.key === 'ArrowUp' ? 1 : -1;
+        setVal(parseFloat(scrub.dataset.val) + dir * step * mult);
+      });
+    });
+
+    // 2. Modular Rack Controls (Collapse, Move Up/Down, Bypass)
+    const rackBay = document.getElementById('rack-bay');
+    rackBay.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const mod = btn.closest('.rack-module');
+      const modId = mod.dataset.mod;
+
+      if (btn.classList.contains('collapse-btn')) {
+        mod.classList.toggle('collapsed');
+        pushLog('0x03C2', 'RACK_RAIL_TOGGLE', `module=${modId} collapsed=${mod.classList.contains('collapsed')}`);
+      } else if (btn.classList.contains('mute-btn')) {
+        const bypassed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', String(!bypassed));
+        btn.textContent = !bypassed ? 'BYPASS' : 'ACTIVE';
+        pushLog('0x03D9', 'MODULE_BYPASS', `module=${modId} state=${!bypassed ? 'BYPASSED' : 'ACTIVE'}`);
+      } else if (btn.classList.contains('move-up-btn') && mod.previousElementSibling) {
+        rackBay.insertBefore(mod, mod.previousElementSibling);
+        pushLog('0x03E0', 'RACK_REORDER', `moved ${modId} UP`);
+      } else if (btn.classList.contains('move-dn-btn') && mod.nextElementSibling) {
+        rackBay.insertBefore(mod.nextElementSibling, mod);
+        pushLog('0x03E1', 'RACK_REORDER', `moved ${modId} DOWN`);
+      }
+    });
+
+    // 3. Patch Bank Selection
+    document.getElementById('patch-list').addEventListener('click', (e) => {
+      const row = e.target.closest('.patch-row');
+      if (!row) return;
+      document.querySelectorAll('.patch-row').forEach((r) => r.setAttribute('aria-selected', String(r === row)));
+      waveFreq = Number(row.dataset.freq);
+      waveRes = Number(row.dataset.res);
+      pushLog('0x05B0', 'PATCH_LOAD_INSTANT', `slot=${row.dataset.patch} freq=${waveFreq}Hz`);
+    });
+
+    // 4. Custom Right-Click Context Menu (No Browser Default Menu!)
+    const ctxMenu = document.getElementById('ctx-menu');
+    let ctxTargetMod = null;
+    window.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      ctxTargetMod = e.target.closest('.rack-module') || document.querySelector('.rack-module');
+      ctxMenu.style.left = `${Math.min(window.innerWidth - 220, e.clientX)}px`;
+      ctxMenu.style.top = `${Math.min(window.innerHeight - 100, e.clientY)}px`;
+      ctxMenu.classList.add('open');
+    });
+    window.addEventListener('click', () => ctxMenu.classList.remove('open'));
+    ctxMenu.addEventListener('click', (e) => {
+      const item = e.target.closest('.ctx-item');
+      if (!item || !ctxTargetMod) return;
+      if (item.dataset.ctx === 'collapse') {
+        ctxTargetMod.classList.toggle('collapsed');
+      } else if (item.dataset.ctx === 'random') {
+        ctxTargetMod.querySelectorAll('.scrubber').forEach((s) => {
+          const min = parseFloat(s.dataset.min), max = parseFloat(s.dataset.max);
+          const rnd = Math.round(min + Math.random() * (max - min));
+          s.dataset.val = String(rnd);
+          s.querySelector('.scrubber-val').textContent = `${rnd}${s.dataset.unit || ''}`;
+        });
+        pushLog('0x09F2', 'CTX_MUTATE_SEED', `module=${ctxTargetMod.dataset.mod}`);
+      }
+    });
+
+    // 5. Input-Safe Keyboard Shortcuts & Command Palette
+    const cmdBackdrop = document.getElementById('cmd-backdrop');
+    const cmdInput = document.getElementById('cmd-input');
+    function toggleCmd(force) {
+      const next = force !== undefined ? force : !cmdBackdrop.classList.contains('open');
+      cmdBackdrop.classList.toggle('open', next);
+      if (next) cmdInput.focus();
+    }
+    document.getElementById('open-cmd-btn').addEventListener('click', () => toggleCmd(true));
+    document.getElementById('toggle-sidebar-btn').addEventListener('click', () => {
+      document.getElementById('main-workspace').classList.toggle('hide-sidebar');
+    });
+    document.getElementById('toggle-tray-btn').addEventListener('click', () => {
+      document.getElementById('center-pane').classList.toggle('hide-tray');
+    });
+    document.getElementById('transport-btn').addEventListener('click', (e) => {
+      isRunning = !isRunning;
+      e.currentTarget.setAttribute('aria-pressed', String(isRunning));
+      pushLog('0x0110', 'TRANSPORT_STATE', isRunning ? 'RUNNING' : 'STOPPED');
+    });
+
+    window.addEventListener('keydown', (e) => {
+      const inInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName);
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleCmd();
+      } else if (mod && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        document.getElementById('main-workspace').classList.toggle('hide-sidebar');
+      } else if (mod && e.key.toLowerCase() === 'j') {
+        e.preventDefault();
+        document.getElementById('center-pane').classList.toggle('hide-tray');
+      } else if (e.key === 'Escape') {
+        toggleCmd(false);
+        ctxMenu.classList.remove('open');
+      } else if (!inInput && e.key === ' ') {
+        e.preventDefault();
+        document.getElementById('transport-btn').click();
+      } else if (!inInput && ['1', '2', '3', '4'].includes(e.key)) {
+        const idx = Number(e.key) - 1;
+        const mods = document.querySelectorAll('.rack-module');
+        if (mods[idx]) mods[idx].querySelector('.mute-btn').click();
+      }
+    });
+
+    document.getElementById('cmd-list').addEventListener('click', (e) => {
+      const item = e.target.closest('.cmd-item');
+      if (!item) return;
+      const act = item.dataset.action;
+      if (act === 'collapse-all') document.querySelectorAll('.rack-module').forEach((m) => m.classList.add('collapsed'));
+      if (act === 'expand-all') document.querySelectorAll('.rack-module').forEach((m) => m.classList.remove('collapsed'));
+      if (act === 'toggle-transport') document.getElementById('transport-btn').click();
+      toggleCmd(false);
+    });
+
+    // 6. Zero-Idle Window Blur / Focus Handling + Oscilloscope Loop
+    const canvas = document.getElementById('scope-canvas');
+    const ctx = canvas.getContext('2d');
+    let phase = 0;
+    let stepIdx = 0;
+
+    window.addEventListener('blur', () => {
+      isWindowFocused = false;
+      document.body.classList.add('window-blurred');
+      document.getElementById('focus-state').textContent = 'FOCUS: IDLE (0% GPU)';
+      document.getElementById('cpu-pct').textContent = 'CPU: 0.0%';
+      document.getElementById('cpu-bar').style.width = '0%';
+    });
+    window.addEventListener('focus', () => {
+      isWindowFocused = true;
+      document.body.classList.remove('window-blurred');
+      document.getElementById('focus-state').textContent = 'FOCUS: ACTIVE';
+      document.getElementById('cpu-pct').textContent = 'CPU: 14.2%';
+      document.getElementById('cpu-bar').style.width = '14%';
+    });
+
+    function renderScope() {
+      if (isRunning && isWindowFocused) {
+        const w = canvas.width, h = canvas.height;
+        ctx.fillStyle = '#060403';
+        ctx.fillRect(0, 0, w, h);
+
+        // Subtle graticule lines
+        ctx.strokeStyle = 'rgba(255, 85, 0, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2);
+        ctx.moveTo(w / 2, 0); ctx.lineTo(w / 2, h);
+        ctx.stroke();
+
+        // Synthesized wavefold trace
+        ctx.strokeStyle = '#ff5500';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let x = 0; x < w; x += 2) {
+          const t = (x / w) * Math.PI * (waveFreq / 35) + phase;
+          const raw = Math.sin(t) + 0.35 * Math.sin(t * 3 + (waveRes / 25));
+          const y = h / 2 + raw * (h * 0.32);
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        phase += 0.14;
+      }
+      requestAnimationFrame(renderScope);
+    }
+    renderScope();
+
+    setInterval(() => {
+      if (!isRunning || !isWindowFocused) return;
+      const cells = document.querySelectorAll('.step-cell');
+      cells.forEach((c, i) => c.classList.toggle('playhead', i === stepIdx));
+      document.getElementById('step-readout').textContent = `STEP ${String(stepIdx + 1).padStart(2, '0')}/16`;
+      stepIdx = (stepIdx + 1) % 16;
+    }, 180);
+  </script>
+</body>
+</html>

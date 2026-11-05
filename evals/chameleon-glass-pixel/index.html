@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STYLE ELEVATION PROOF // Sunlit Refractive Glassmorphism vs. Authentic 1989 Pixel OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .split-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* ==========================================================================
+       LEFT PANE: SUNLIT REFRACTIVE GLASSMORPHISM (High-Key Daylight + Optical Rim)
+       Prompt: "Crie um app de clima com glassmorphism"
+       ========================================================================== */
+    .glass-world {
+      --sky-paper: oklch(94.5% 0.022 82.0);
+      --ink-deep: oklch(18.0% 0.030 245.0);
+      --ink-sub: oklch(38.0% 0.035 245.0);
+      --solar-orb: oklch(72.0% 0.215 48.0);
+      --cyan-caustic: oklch(78.0% 0.145 215.0);
+      --cobalt-accent: oklch(45.0% 0.195 255.0);
+
+      position: relative;
+      background: linear-gradient(155deg, oklch(96.5% 0.018 85) 0%, oklch(91.0% 0.038 225) 100%);
+      color: var(--ink-deep);
+      font-family: 'JetBrains Mono', monospace;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      border-right: 2px solid oklch(18% 0.02 245);
+    }
+
+    /* Living Geometric Objects BEHIND the Glass (So Refraction Actually Bends Content!) */
+    .heliostat-disc {
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      top: 105px;
+      right: 42px;
+      background: radial-gradient(circle at 35% 35%, oklch(88% 0.19 82), oklch(66% 0.23 36) 62%, oklch(58% 0.20 18) 100%);
+      box-shadow: 0 24px 70px oklch(68% 0.22 42 / 0.45);
+      z-index: 1;
+    }
+
+    .caustic-ring {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      bottom: 85px;
+      left: 36px;
+      border: 26px solid oklch(74% 0.16 225 / 0.55);
+      z-index: 1;
+    }
+
+    .bg-watermark {
+      position: absolute;
+      top: 195px;
+      left: 28px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 148px;
+      line-height: 0.8;
+      color: oklch(18% 0.03 245 / 0.11);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Optical Refractive Acrylic Lens Card (Not Muddy AI Slop!) */
+    .optical-lens {
+      position: relative;
+      z-index: 5;
+      background: linear-gradient(
+        135deg,
+        oklch(100% 0 0 / 0.62) 0%,
+        oklch(98% 0.01 230 / 0.36) 100%
+      );
+      backdrop-filter: blur(18px) saturate(190%) contrast(104%);
+      -webkit-backdrop-filter: blur(18px) saturate(190%) contrast(104%);
+      border-radius: 22px;
+      /* Specular 1px Directional Rim + Soft Caustic Elevation */
+      box-shadow:
+        inset 0 1.5px 0 0 oklch(100% 0 0 / 0.88),
+        inset 1px 0 0 0 oklch(100% 0 0 / 0.55),
+        inset 0 -1px 0 0 oklch(45% 0.08 240 / 0.22),
+        0 20px 45px -15px oklch(22% 0.05 245 / 0.18);
+      border: 1px solid oklch(100% 0 0 / 0.45);
+      padding: 22px 24px;
+    }
+
+    .glass-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: oklch(100% 0 0 / 0.68);
+      box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.9);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--cobalt-accent);
+    }
+
+    .glass-temp {
+      font-family: 'Instrument Serif', serif;
+      font-size: 86px;
+      line-height: 0.88;
+      letter-spacing: -0.03em;
+      color: var(--ink-deep);
+    }
+
+    .lens-grid {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .micro-lens {
+      background: oklch(100% 0 0 / 0.54);
+      backdrop-filter: blur(14px) saturate(180%);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow:
+        inset 0 1px 0 0 oklch(100% 0 0 / 0.85),
+        0 10px 24px -10px oklch(22% 0.05 245 / 0.14);
+      border: 1px solid oklch(100% 0 0 / 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       RIGHT PANE: AUTHENTIC PIXEL / 1989 RETRO POCKET OS (Playdate / System 1)
+       Prompt: "Crie um tracker de foco estilo retrô pixelado"
+       ========================================================================== */
+    .pixel-world {
+      --lcd-paper: oklch(86.5% 0.038 98.0);   /* #dad8be — Classic Reflective Dot-Matrix LCD */
+      --lcd-mid: oklch(72.0% 0.042 98.0);     /* #acaa8e — Dither shade step */
+      --lcd-ink: oklch(19.0% 0.020 98.0);     /* #171710 — Crisp 1-bit Carbon Pixel Ink */
+      --cartridge-red: oklch(56.0% 0.215 28.0); /* #d82b18 — Famicom / Teenage Engineering Accent */
+
+      background-color: var(--lcd-paper);
+      /* Authentic 2x2 Checkerboard Bayer Dither Background Pattern */
+      background-image:
+        linear-gradient(45deg, var(--lcd-mid) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--lcd-mid) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--lcd-mid) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--lcd-mid) 75%);
+      background-size: 4px 4px;
+      background-position: 0 0, 0 2px, 2px -2px, -2px 0;
+      color: var(--lcd-ink);
+      font-family: 'Silkscreen', monospace;
+      image-rendering: pixelated;
+      -webkit-font-smoothing: none;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Stepped Pixel Window Frame (Zero smooth border-radius, hard 6px shadow!) */
+    .pixel-window {
+      background: var(--lcd-paper);
+      border: 3px solid var(--lcd-ink);
+      box-shadow: 6px 6px 0px var(--lcd-ink);
+    }
+
+    .pixel-titlebar {
+      height: 32px;
+      background: var(--lcd-ink);
+      color: var(--lcd-paper);
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    .pixel-close-box {
+      width: 16px;
+      height: 16px;
+      background: var(--lcd-paper);
+      border: 2px solid var(--lcd-paper);
+      color: var(--lcd-ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .pixel-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .pixel-hero-row {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .sprite-box {
+      width: 96px;
+      height: 96px;
+      background: var(--lcd-mid);
+      border: 3px solid var(--lcd-ink);
+      box-shadow: inset 3px 3px 0px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vt-readout {
+      font-family: 'VT323', monospace;
+      font-size: 52px;
+      line-height: 0.85;
+      color: var(--lcd-ink);
+    }
+
+    /* Segmented 16-Block Pixel Progress Bar */
+    .pixel-bar-wrap {
+      border: 3px solid var(--lcd-ink);
+      padding: 3px;
+      background: var(--lcd-paper);
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      gap: 3px;
+      height: 26px;
+    }
+
+    .pixel-seg {
+      background: var(--lcd-ink);
+    }
+    .pixel-seg.red {
+      background: var(--cartridge-red);
+    }
+    .pixel-seg.empty {
+      background: var(--lcd-mid);
+      opacity: 0.45;
+    }
+
+    .quest-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border: 2px solid var(--lcd-ink);
+      background: var(--lcd-paper);
+      box-shadow: 3px 3px 0px var(--lcd-ink);
+      font-size: 11px;
+    }
+
+    .pixel-tag {
+      background: var(--cartridge-red);
+      color: var(--lcd-paper);
+      padding: 2px 6px;
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+  <main class="split-showcase">
+    <!-- ======================================================================
+         LEFT: SUNLIT REFRACTIVE GLASSMORPHISM (High-Key Daylight + Specular Rim)
+         ====================================================================== -->
+    <section class="glass-world" aria-label="Sunlit Refractive Glassmorphism Showcase">
+      <!-- Real Geometric Objects Behind Glass for Optical Refraction -->
+      <div class="heliostat-disc" aria-hidden="true"></div>
+      <div class="caustic-ring" aria-hidden="true"></div>
+      <div class="bg-watermark" aria-hidden="true">SOLAR</div>
+
+      <header style="position:relative; z-index:5; display:flex; justify-content:space-between; align-items:center;">
+        <span class="glass-pill">● STYLE 01 // SUNLIT REFRACTIVE GLASS (VISION-OS CRAFT)</span>
+        <span style="font-size:11px; font-weight:700; color:var(--ink-sub);">PROMPT: "App de clima com glassmorphism"</span>
+      </header>
+
+      <!-- Main Refractive Optical Lens Card -->
+      <article class="optical-lens">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div style="font-size:10.5px; font-weight:700; letter-spacing:0.08em; color:var(--cobalt-accent);">
+              ZURICH HELIOSTAT STATION // 47.3769° N
+            </div>
+            <h1 style="font-family:'Instrument Serif',serif; font-size:40px; font-weight:400; line-height:0.95; margin-top:4px;">
+              Refractive Clear Sky &amp; <em>High</em> Albedo
+            </h1>
+          </div>
+          <div class="glass-temp">24.8°</div>
+        </div>
+
+        <p style="margin-top:12px; font-size:12px; color:var(--ink-sub); max-width:52ch; line-height:1.45;">
+          Optical acrylic surface with <strong>18px blur + 190% saturation</strong> and directional <strong>1.5px specular top rim</strong> refracting the live solar orb and caustic ring underneath.
+        </p>
+
+        <!-- Barometric & Solar Irradiance Curve Inside the Lens -->
+        <svg viewBox="0 0 560 95" width="100%" height="95" style="margin-top:14px; overflow:visible;" role="img" aria-label="Solar irradiance curve">
+          <line x1="0" x2="560" y1="75" y2="75" stroke="oklch(18% 0.03 245 / 0.2)" stroke-dasharray="3 3" />
+          <path d="M0,75 Q140,70 220,32 T420,24 T560,68" fill="none" stroke="oklch(45% 0.195 255)" stroke-width="2.5" />
+          <circle cx="310" cy="18" r="6" fill="oklch(66% 0.23 36)" stroke="#fff" stroke-width="2" />
+          <text x="322" y="22" font-size="10.5" font-weight="700" fill="oklch(18% 0.03 245)">SOLAR ZENITH 13:14 (940 W/m²)</text>
+          <text x="0" y="90" font-size="10" fill="oklch(38% 0.035 245)">06:00 DAWN</text>
+          <text x="560" y="90" font-size="10" text-anchor="end" fill="oklch(38% 0.035 245)">20:42 DUSK</text>
+        </svg>
+      </article>
+
+      <!-- Bottom Row of 3 Refractive Micro-Lenses -->
+      <div class="lens-grid">
+        <div class="micro-lens">
+          <span style="font-size:10px; font-weight:700; color:var(--ink-sub);">BAROMETRIC PRESSURE</span>
+          <span style="font-family:'Instrument Serif',serif; font-size:34px; line-height:1;">1018.4 <small style="font-size:14px; font-family:'JetBrains Mono',monospace;">hPa</small></span>
+          <span style="font-size:10px; color:var(--cobalt-accent); font-weight:700;">▲ STEADY ANTICYCLONE</span>
+        </div>
+        <div class="micro-lens">
+          <span style="font-size:10px; font-weight:700; color:var(--ink-sub);">OPTICAL AIR QUALITY</span>
+          <span style="font-family:'Instrument Serif',serif; font-size:34px; line-height:1;">12 <small style="font-size:14px; font-family:'JetBrains Mono',monospace;">AQI</small></span>
+          <span style="font-size:10px; color:oklch(42% 0.16 150); font-weight:700;">● PM2.5: 2.8 µg/m³</span>
+        </div>
+        <div class="micro-lens">
+          <span style="font-size:10px; font-weight:700; color:var(--ink-sub);">DEW POINT &amp; HUMIDITY</span>
+          <span style="font-family:'Instrument Serif',serif; font-size:34px; line-height:1;">41% <small style="font-size:14px; font-family:'JetBrains Mono',monospace;">RH</small></span>
+          <span style="font-size:10px; color:var(--ink-sub); font-weight:700;">DEW POINT: 10.2°C</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         RIGHT: AUTHENTIC 1989 PIXEL / 1-BIT DOT-MATRIX OS (Playdate / System 1)
+         ====================================================================== -->
+    <section class="pixel-world" aria-label="Authentic Pixel Art and Retro OS Showcase">
+      <header style="display:flex; justify-content:space-between; align-items:center; background:var(--lcd-paper); border:3px solid var(--lcd-ink); padding:6px 12px; box-shadow:4px 4px 0px var(--lcd-ink);">
+        <span style="font-size:10.5px; font-weight:700;">■ STYLE 02 // DOT-MATRIX PIXEL OS (1989)</span>
+        <span style="font-size:10px;">PROMPT: "Tracker retrô pixelado"</span>
+      </header>
+
+      <!-- Main Stepped Pixel Window -->
+      <article class="pixel-window">
+        <div class="pixel-titlebar">
+          <span>CHRONO-BIT.EXE // ROM BANK 04</span>
+          <span class="pixel-close-box">×</span>
+        </div>
+
+        <div class="pixel-body">
+          <div class="pixel-hero-row">
+            <!-- Crisp 16x16 Integer-Scaled SVG Pixel Sprite (Hourglass / Pocket Computer) -->
+            <div class="sprite-box">
+              <svg width="64" height="64" viewBox="0 0 16 16" shape-rendering="crispEdges" role="img" aria-label="16x16 Pixel Art Hourglass Sprite">
+                <!-- Top & Bottom Brass Caps -->
+                <rect x="2" y="1" width="12" height="2" fill="#171710" />
+                <rect x="2" y="13" width="12" height="2" fill="#171710" />
+                <!-- Glass Outline Stepped Pixels -->
+                <rect x="3" y="3" width="10" height="2" fill="#dad8be" />
+                <rect x="3" y="3" width="1" height="2" fill="#171710" />
+                <rect x="12" y="3" width="1" height="2" fill="#171710" />
+                <rect x="4" y="5" width="1" height="2" fill="#171710" />
+                <rect x="11" y="5" width="1" height="2" fill="#171710" />
+                <rect x="6" y="7" width="1" height="2" fill="#171710" />
+                <rect x="9" y="7" width="1" height="2" fill="#171710" />
+                <rect x="4" y="9" width="1" height="2" fill="#171710" />
+                <rect x="11" y="9" width="1" height="2" fill="#171710" />
+                <rect x="3" y="11" width="1" height="2" fill="#171710" />
+                <rect x="12" y="11" width="1" height="2" fill="#171710" />
+                <!-- Falling Red Pixel Sand -->
+                <rect x="5" y="4" width="6" height="2" fill="#d82b18" />
+                <rect x="7" y="7" width="2" height="2" fill="#d82b18" />
+                <rect x="6" y="10" width="4" height="1" fill="#d82b18" />
+                <rect x="4" y="11" width="8" height="2" fill="#d82b18" />
+              </svg>
+            </div>
+
+            <div>
+              <div style="font-size:10px; color:var(--cartridge-red); font-weight:700;">DEEP WORK CARTRIDGE // LV.14</div>
+              <div class="vt-readout">01:48:22 REMAINING</div>
+              <div style="font-size:10.5px; margin-top:4px;">STREAK: 18 DAYS · MULTIPLIER: 2.4X</div>
+            </div>
+          </div>
+
+          <!-- 16-Bit Segmented Progress Bar -->
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;">
+              <span>DAILY STAMINA METER</span>
+              <span>13 / 16 BLOCKS (81%)</span>
+            </div>
+            <div class="pixel-bar-wrap">
+              <span class="pixel-seg"></span><span class="pixel-seg"></span><span class="pixel-seg"></span><span class="pixel-seg"></span>
+              <span class="pixel-seg"></span><span class="pixel-seg"></span><span class="pixel-seg"></span><span class="pixel-seg"></span>
+              <span class="pixel-seg"></span><span class="pixel-seg"></span><span class="pixel-seg"></span><span class="pixel-seg red"></span>
+              <span class="pixel-seg red"></span><span class="pixel-seg empty"></span><span class="pixel-seg empty"></span><span class="pixel-seg empty"></span>
+            </div>
+          </div>
+
+          <!-- Quest / Habit Log Rows with Hard Offset Shadows -->
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="quest-row">
+              <span>[X] 01. WRITE GLSL RAYMARCH KERNEL</span>
+              <span class="pixel-tag">+320 EXP</span>
+            </div>
+            <div class="quest-row">
+              <span>[X] 02. AUDIT APCA CONTRAST MATRIX</span>
+              <span class="pixel-tag">+240 EXP</span>
+            </div>
+            <div class="quest-row">
+              <span>[ ] 03. SHIP ZERO-SLOP PIXEL ENGINE</span>
+              <span style="background:var(--lcd-ink); color:var(--lcd-paper); padding:2px 6px; font-size:10px;">ACTIVE</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Bottom Retro Function Key Bar -->
+      <footer style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+        <div style="background:var(--lcd-paper); border:3px solid var(--lcd-ink); padding:8px; text-align:center; font-size:10.5px; font-weight:700; box-shadow:3px 3px 0px var(--lcd-ink);">
+          [F1] START
+        </div>
+        <div style="background:var(--lcd-paper); border:3px solid var(--lcd-ink); padding:8px; text-align:center; font-size:10.5px; font-weight:700; box-shadow:3px 3px 0px var(--lcd-ink);">
+          [F2] PAUSE
+        </div>
+        <div style="background:var(--lcd-paper); border:3px solid var(--lcd-ink); padding:8px; text-align:center; font-size:10.5px; font-weight:700; box-shadow:3px 3px 0px var(--lcd-ink);">
+          [F3] LOGS
+        </div>
+        <div style="background:var(--cartridge-red); color:var(--lcd-paper); border:3px solid var(--lcd-ink); padding:8px; text-align:center; font-size:10.5px; font-weight:700; box-shadow:3px 3px 0px var(--lcd-ink);">
+          [F4] BEEP
+        </div>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

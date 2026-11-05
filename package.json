@@ -1,0 +1,60 @@
+{
+  "name": "avant-garde-skills",
+  "version": "1.0.0",
+  "description": "Studio-grade UI/UX intelligence suite for AI coding agents (Gemini, Claude, Codex, AGY). Replaces generic AI slop with award-level frontend craft, APCA contrast, WebGL shaders, procedural acoustics, and multi-screen design lock.",
+  "type": "module",
+  "bin": {
+    "avant-garde-skills": "./bin/cli.mjs"
+  },
+  "main": "./bin/cli.mjs",
+  "scripts": {
+    "start": "node ./bin/cli.mjs",
+    "sync": "node ./sync-agents.mjs",
+    "test": "node avant-garde-frontend/scripts/palette.mjs test && node avant-garde-frontend/scripts/constraints.mjs test && node avant-garde-frontend/scripts/design-lock.mjs test && node avant-garde-frontend/scripts/audit-ui.mjs test && node avant-garde-motion-shaders/scripts/audit-shaders.mjs test && node avant-garde-data-viz/scripts/audit-dataviz.mjs test && node avant-garde-mobile-tactile/scripts/audit-mobile.mjs test && node avant-garde-ai-ux/scripts/audit-ai-ux.mjs test && node avant-garde-sonic-haptics/scripts/audit-sonic.mjs test"
+  },
+  "keywords": [
+    "ai-skills",
+    "gemini",
+    "claude-code",
+    "codex",
+    "antigravity",
+    "ui-ux",
+    "design-system",
+    "anti-slop",
+    "frontend",
+    "design-tokens",
+    "oklch",
+    "apca",
+    "webgl",
+    "shaders",
+    "web-audio",
+    "data-viz",
+    "mobile-tactile"
+  ],
+  "author": "Gabriel-Programacoes <bielg6055@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gabriel-Programacoes/avant-garde-skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Gabriel-Programacoes/avant-garde-skills/issues"
+  },
+  "homepage": "https://github.com/Gabriel-Programacoes/avant-garde-skills#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin",
+    "avant-garde-frontend",
+    "avant-garde-desktop",
+    "avant-garde-motion-shaders",
+    "avant-garde-data-viz",
+    "avant-garde-mobile-tactile",
+    "avant-garde-ai-ux",
+    "avant-garde-sonic-haptics",
+    "sync-agents.mjs",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "project": "tonwerk-t1000",
+  "archetype": "sunlit-braun-industrial-acoustics",
+  "updatedAt": "2026-11-05",
+  "fonts": [
+    "Plus Jakarta Sans",
+    "Instrument Serif",
+    "JetBrains Mono"
+  ],
+  "tokens": {
+    "--surface-sunken": "oklch(92.2% 0.009 75.0)",
+    "--surface-canvas": "oklch(96.2% 0.007 75.0)",
+    "--surface-panel": "oklch(98.5% 0.004 75.0)",
+    "--surface-raised": "oklch(100.0% 0.000 75.0)",
+    "--border-subtle": "oklch(85.0% 0.011 75.0)",
+    "--border-strong": "oklch(72.0% 0.016 75.0)",
+    "--text-primary": "oklch(16.0% 0.012 37.5)",
+    "--text-secondary": "oklch(40.0% 0.015 37.5)",
+    "--text-tertiary": "oklch(54.0% 0.012 37.5)",
+    "--braun-orange": "oklch(60.0% 0.192 37.5)",
+    "--braun-olive": "oklch(42.0% 0.088 152.0)",
+    "--scope-ink": "oklch(20.0% 0.018 152.0)",
+    "--ease-spring": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "--ease-out-expo": "cubic-bezier(0.19, 1, 0.22, 1)"
+  },
+  "components": [
+    {
+      "name": "EnvelopeScopeCanvas",
+      "path": "components/ui/EnvelopeScopeCanvas.tsx",
+      "tags": [
+        "navigation"
+      ],
+      "props": "baseHz: number; decayMs: number; cutoffHz: number;",
+      "description": "Reusable EnvelopeScopeCanvas primitive"
+    },
+    {
+      "name": "TactileAcousticPad",
+      "path": "components/ui/TactileAcousticPad.tsx",
+      "tags": [],
+      "props": "spec: AcousticVoiceSpec; active: boolean; hotkey: string; onTrigger: (spec: AcousticVoiceSpec) => void;",
+      "description": "Reusable TactileAcousticPad primitive"
+    }
+  ]
+}

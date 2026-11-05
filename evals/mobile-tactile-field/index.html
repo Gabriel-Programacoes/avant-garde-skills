@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>LUX-M // Pocket Optical Rangefinder &amp; Spot Exposure Instrument</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Anodized Titanium & Recessed OLED Palette via scripts/palette.mjs */
+      --oled-well: oklch(10.0% 0.005 76.4);     /* #040302 — Deep recessed OLED glass */
+      --chassis-dark: oklch(16.5% 0.010 76.4);  /* #110e0b — Dark anodized body */
+      --chassis-alu: oklch(23.5% 0.012 76.4);   /* #211d17 — Bead-blasted titanium deck */
+      --chassis-raised: oklch(28.5% 0.014 76.4);/* #2d2820 — Physical keycap surface */
+      --bevel-light: oklch(42.0% 0.020 76.4);   /* #4f473a — Top 1px machined chamfer */
+      --bevel-dark: oklch(11.0% 0.006 76.4);    /* #050403 — Bottom key shadow */
+      --text-primary: oklch(96.0% 0.005 76.4);  /* #f4f1ee — Lc 99 */
+      --text-secondary: oklch(76.0% 0.014 76.4);/* #b6b0a7 — Lc 60 */
+      --text-muted: oklch(54.0% 0.014 76.4);    /* #736e66 */
+      --amber-led: oklch(78.0% 0.168 78.0);     /* #f6ac00 — Rangefinder Optical Amber */
+      --safety-orange: oklch(65.0% 0.220 35.0); /* #ff4d00 — Hold-to-Arm / Leica Red-Orange */
+      --emerald-lock: oklch(74.0% 0.200 148.0); /* #1fd665 — Focus Peaking Lock */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: #070605;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Pocket Instrument Chassis (Full-bleed on 390x844 mobile, centered frame on desktop) */
+    .pocket-chassis {
+      width: 100%;
+      max-width: 412px;
+      height: 100dvh;
+      max-height: 880px;
+      background: var(--chassis-dark);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding-top: max(10px, env(safe-area-inset-top));
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
+      position: relative;
+      overflow: hidden;
+      border-left: 1px solid var(--bevel-light);
+      border-right: 1px solid var(--bevel-light);
+    }
+
+    /* ZONE 1 (Top 25% — STRICTLY READ-ONLY OLED TELEMETRY WELL, ZERO BUTTONS) */
+    .oled-telemetry-well {
+      margin: 0 12px;
+      padding: 10px 12px;
+      background: var(--oled-well);
+      border: 1.5px solid var(--bevel-light);
+      border-radius: 12px;
+      box-shadow: inset 0 3px 10px rgba(0,0,0,0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .oled-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid oklch(28% 0.014 76.4 / 0.6);
+      padding-bottom: 5px;
+    }
+
+    .ev-pill {
+      background: var(--safety-orange);
+      color: var(--oled-well);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 800;
+      font-size: 10px;
+    }
+
+    .oled-main-readouts {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .exposure-triad {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .shutter-big {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--amber-led);
+      letter-spacing: -0.03em;
+    }
+
+    .sub-triad {
+      font-size: 11.5px;
+      color: var(--text-primary);
+      font-weight: 600;
+      display: flex;
+      gap: 10px;
+    }
+
+    /* ZONE 2 (Center 36% — OPTICAL RANGEFINDER VIEWFINDER & ARTIFICIAL HORIZON) */
+    .viewfinder-stage {
+      margin: 10px 12px;
+      background: #060605;
+      border: 1.5px solid var(--bevel-light);
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+    }
+
+    .vf-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .vf-hud-corner {
+      position: absolute;
+      font-size: 9.5px;
+      color: var(--amber-led);
+      pointer-events: none;
+      background: oklch(10% 0.005 76.4 / 0.78);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* ZONE 3 (Bottom 39% — ANODIZED THUMB DECK: KNURLED WHEEL + HOLD-TO-ARM RING + KEYS) */
+    .thumb-deck {
+      margin: 0 12px;
+      padding: 12px;
+      background: var(--chassis-alu);
+      border-top: 1.5px solid var(--bevel-light);
+      border-left: 1px solid var(--bevel-light);
+      border-right: 1px solid var(--bevel-light);
+      border-bottom: 2px solid var(--bevel-dark);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      touch-action: none;
+    }
+
+    /* Knurled Horizontal Thumb-Wheel Scrubber */
+    .knurled-wheel {
+      min-height: 62px;
+      background: var(--oled-well);
+      border: 1.5px solid var(--bevel-light);
+      border-radius: 11px;
+      padding: 7px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: ew-resize;
+      touch-action: none;
+      position: relative;
+    }
+    .knurled-wheel.scrubbing {
+      border-color: var(--amber-led);
+      box-shadow: 0 0 0 1px var(--amber-led);
+    }
+
+    .wheel-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    .tick-track {
+      height: 22px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .tick-mark {
+      width: 2px;
+      height: 9px;
+      background: var(--text-muted);
+      border-radius: 1px;
+    }
+    .tick-mark.major {
+      height: 16px;
+      background: var(--text-primary);
+    }
+    .tick-mark.center-needle {
+      height: 20px;
+      width: 3px;
+      background: var(--safety-orange);
+    }
+
+    /* Segmented Mechanical Hardware Keys (>= 48px height) + Central Hold-to-Arm Shutter */
+    .trigger-row {
+      display: grid;
+      grid-template-columns: 1fr 76px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .mech-key {
+      min-height: 52px;
+      background: var(--chassis-raised);
+      border-top: 1.5px solid var(--bevel-light);
+      border-left: 1px solid var(--bevel-light);
+      border-right: 1px solid var(--bevel-dark);
+      border-bottom: 3px solid var(--bevel-dark);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 10.5px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 7px 10px;
+      cursor: pointer;
+      touch-action: none;
+    }
+    .mech-key:active, .mech-key[aria-pressed="true"] {
+      transform: translateY(2px);
+      border-bottom-width: 1px;
+      background: oklch(24% 0.015 76.4);
+    }
+
+    .key-led {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+    .mech-key[aria-pressed="true"] .key-led {
+      background: var(--amber-led);
+      box-shadow: 0 0 6px var(--amber-led);
+    }
+
+    /* Constraint 3: Hold-to-Arm Progressive Ring Shutter Button (68x68px) */
+    .shutter-well {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: none;
+    }
+    .shutter-plunger {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--safety-orange);
+      border: 2px solid var(--text-primary);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--oled-well);
+      transition: transform 60ms ease;
+    }
+    .shutter-well:active .shutter-plunger {
+      transform: scale(0.92);
+    }
+
+    /* Constraint 2: 3-Detent Spring-Snapping Bottom Sheet */
+    .spring-sheet {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 0;
+      background: oklch(14.5% 0.012 76.4 / 0.97);
+      border-top: 2px solid var(--amber-led);
+      border-left: 1px solid var(--bevel-light);
+      border-right: 1px solid var(--bevel-light);
+      border-radius: 18px 18px 0 0;
+      padding: 8px 14px 18px;
+      z-index: 40;
+      transition: transform 240ms cubic-bezier(0.18, 1.15, 0.32, 1);
+      touch-action: none;
+    }
+    .spring-sheet[data-detent="peek"] {
+      transform: translateY(calc(100% - 42px));
+    }
+    .spring-sheet[data-detent="half"] {
+      transform: translateY(calc(100% - 195px));
+    }
+    .spring-sheet[data-detent="full"] {
+      transform: translateY(0%);
+    }
+
+    .sheet-pill-bar {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--amber-led);
+    }
+
+    .sheet-grabber {
+      width: 38px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--bevel-light);
+      margin: 0 auto 4px;
+    }
+
+    .lut-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .lut-card {
+      min-height: 46px;
+      padding: 6px 8px;
+      background: var(--oled-well);
+      border: 1px solid var(--bevel-light);
+      border-radius: 7px;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .lut-card[aria-selected="true"] {
+      border-color: var(--amber-led);
+      color: var(--amber-led);
+    }
+  </style>
+</head>
+<body>
+  <main class="pocket-chassis tabular-nums">
+    <!-- 1. TOP ZONE (0–25%): READ-ONLY OLED TELEMETRY WELL -->
+    <section class="oled-telemetry-well" aria-label="Optical Exposure Telemetry">
+      <div class="oled-status-row">
+        <span>LUX-M // LEICA M-MOUNT SPOT METER</span>
+        <span class="ev-pill" id="ev-badge">EV +13.4</span>
+      </div>
+
+      <div class="oled-main-readouts">
+        <div class="exposure-triad">
+          <div class="shutter-big" id="shutter-readout">1/1000s</div>
+          <div class="sub-triad">
+            <span id="aperture-readout">f/2.0</span>
+            <span>•</span>
+            <span id="iso-readout">ISO 160</span>
+            <span>•</span>
+            <span style="color:var(--emerald-lock);">RAW 14b</span>
+          </div>
+        </div>
+
+        <!-- Live Luminance Waveform & Clipping Histogram SVG -->
+        <svg viewBox="0 0 140 48" width="100%" height="48" role="img" aria-label="Live luminance exposure histogram">
+          <rect x="0" y="0" width="140" height="48" fill="oklch(14% 0.008 76.4)" rx="4" />
+          <line x1="35" x2="35" y1="0" y2="48" stroke="oklch(35% 0.01 76.4 / 0.5)" stroke-dasharray="2 2" />
+          <line x1="70" x2="70" y1="0" y2="48" stroke="oklch(35% 0.01 76.4 / 0.5)" stroke-dasharray="2 2" />
+          <line x1="105" x2="105" y1="0" y2="48" stroke="oklch(65% 0.22 35 / 0.6)" stroke-dasharray="2 2" />
+          <path id="hist-path" d="M2,46 L14,42 L28,30 L44,16 L62,22 L78,10 L96,18 L112,32 L126,41 L138,46 Z"
+                fill="oklch(78.0% 0.168 78.0 / 0.32)" stroke="oklch(78.0% 0.168 78.0)" stroke-width="1.5" />
+          <text x="5" y="11" font-size="8" fill="oklch(76% 0.014 76.4)">ZONE V</text>
+          <text x="108" y="11" font-size="8" fill="oklch(65% 0.22 35)" font-weight="700">+2.8EV</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 2. CENTER ZONE (25–58%): RANGEFINDER SPLIT-PRISM & CLINOMETER VIEWFINDER -->
+    <section class="viewfinder-stage" id="vf-stage" aria-label="Optical Rangefinder Viewfinder">
+      <div class="vf-hud-corner" style="top:8px; left:8px;" id="frame-label">FRAME: 35mm SUMMICRON</div>
+      <div class="vf-hud-corner" style="top:8px; right:8px; color:var(--emerald-lock);" id="dist-label">FOCUS: 2.4m (∞ LOCK)</div>
+      <div class="vf-hud-corner" style="bottom:48px; left:8px;">PITCH: +0.4° · ROLL: 0.0°</div>
+      <div class="vf-hud-corner" style="bottom:48px; right:8px;" id="lut-active-badge">STOCK: TRI-X 400</div>
+
+      <svg class="vf-svg" viewBox="0 0 360 280" role="img" aria-label="Rangefinder framelines and split-prism focus patch">
+        <!-- Subtle architectural target scene in viewfinder -->
+        <defs>
+          <radialGradient id="vf-vignette" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="oklch(22% 0.02 78)" />
+            <stop offset="100%" stop-color="oklch(9% 0.005 76)" />
+          </radialGradient>
+        </defs>
+        <rect width="360" height="280" fill="url(#vf-vignette)" />
+
+        <!-- Bright-line 35mm Optical Framelines -->
+        <g stroke="oklch(96% 0.005 76.4 / 0.78)" stroke-width="1.4" fill="none">
+          <path d="M 28,56 L 28,28 L 62,28" />
+          <path d="M 298,28 L 332,28 L 332,56" />
+          <path d="M 28,200 L 28,228 L 62,228" />
+          <path d="M 298,228 L 332,228 L 332,200" />
+        </g>
+
+        <!-- Artificial Horizon Level Bar -->
+        <line x1="65" y1="128" x2="295" y2="128" stroke="oklch(74% 0.20 148 / 0.55)" stroke-width="1" stroke-dasharray="4 4" />
+
+        <!-- Geometric Subject + Coincident Rangefinder Ghost Patch -->
+        <g id="subject-primary" stroke="oklch(78% 0.168 78)" stroke-width="1.5" fill="none">
+          <circle cx="180" cy="128" r="54" />
+          <polygon points="180,78 224,154 136,154" />
+        </g>
+        <g id="subject-ghost" stroke="oklch(65% 0.22 35 / 0.75)" stroke-width="1.3" fill="none" transform="translate(4, 0)">
+          <polygon points="180,78 224,154 136,154" />
+        </g>
+
+        <!-- Central Split-Prism Rangefinder Patch -->
+        <rect x="138" y="96" width="84" height="64" fill="oklch(78% 0.168 78 / 0.08)" stroke="oklch(78% 0.168 78)" stroke-width="1.2" />
+        <line x1="180" y1="88" x2="180" y2="168" stroke="oklch(78% 0.168 78 / 0.65)" stroke-width="1" />
+      </svg>
+    </section>
+
+    <!-- 3. BOTTOM THUMB ZONE (58–100%): KNURLED THUMB DIAL + MECHANICAL KEYS + HOLD SHUTTER -->
+    <section class="thumb-deck" style="margin-bottom: 36px;" aria-label="One-Handed Thumb Controls">
+      <!-- Pointer-Captured Knurled Rotary Thumb Wheel -->
+      <div class="knurled-wheel" id="thumb-wheel" role="slider" tabindex="0" aria-label="Shutter Speed & Focus Thumb Wheel" aria-valuemin="0" aria-valuemax="8" aria-valuenow="5">
+        <div class="wheel-header">
+          <span>THUMB DIAL // SCRUB</span>
+          <span style="color:var(--amber-led); font-weight:700;" id="wheel-mode-label">SHUTTER + PRISM</span>
+        </div>
+        <div class="tick-track" id="tick-track">
+          <span class="tick-mark major"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span>
+          <span class="tick-mark major"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span>
+          <span class="tick-mark major"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span>
+          <span class="tick-mark center-needle"></span>
+          <span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark major"></span>
+          <span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark major"></span>
+          <span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark"></span><span class="tick-mark major"></span>
+        </div>
+      </div>
+
+      <!-- Bottom Mechanical Row: Left Aperture Key + Center Hold-to-Arm Shutter + Right Lens Key -->
+      <div class="trigger-row">
+        <button class="mech-key" id="aperture-btn" aria-pressed="true">
+          <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:9px; color:var(--text-secondary);">APERTURE</span>
+            <span class="key-led"></span>
+          </div>
+          <span id="key-ap-val" style="font-size:14px;">f/2.0</span>
+        </button>
+
+        <!-- Constraint 3: Hold-to-Arm Progressive Ring Shutter -->
+        <div class="shutter-well" id="shutter-btn" role="button" tabindex="0" aria-label="Hold to Arm and Capture RAW">
+          <svg width="68" height="68" viewBox="0 0 68 68" style="position:absolute; inset:0; transform:rotate(-90deg);">
+            <circle cx="34" cy="34" r="30" fill="none" stroke="oklch(28% 0.014 76.4)" stroke-width="3.5" />
+            <circle id="arm-ring" cx="34" cy="34" r="30" fill="none" stroke="oklch(78.0% 0.168 78.0)" stroke-width="3.5"
+                    stroke-dasharray="188.5" stroke-dashoffset="188.5" stroke-linecap="round" />
+          </svg>
+          <div class="shutter-plunger" id="shutter-label">HOLD</div>
+        </div>
+
+        <button class="mech-key" id="lens-btn" aria-pressed="false">
+          <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:9px; color:var(--text-secondary);">FRAMELINE</span>
+            <span class="key-led"></span>
+          </div>
+          <span id="key-lens-val" style="font-size:14px;">35mm</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Constraint 2: 3-DETENT SPRING-SNAPPING BOTTOM SHEET -->
+    <aside class="spring-sheet" id="spring-sheet" data-detent="peek" aria-label="Film Stock and Zone System Drawer">
+      <div class="sheet-grabber"></div>
+      <div class="sheet-pill-bar" id="sheet-toggle">
+        <span>▲ FILM STOCK &amp; ZONE MATRIX</span>
+        <span id="sheet-detent-label">DETENT: PEEK</span>
+      </div>
+
+      <div class="lut-grid" role="listbox" aria-label="Film Chemistry Emulsions">
+        <div class="lut-card" role="option" aria-selected="true" data-stock="TRI-X 400" data-iso="ISO 400">
+          <span style="font-weight:700;">TRI-X 400</span>
+          <span style="color:var(--text-secondary); font-size:9px;">B&amp;W SILVER GRAIN</span>
+        </div>
+        <div class="lut-card" role="option" aria-selected="false" data-stock="CINESTILL 800T" data-iso="ISO 800">
+          <span style="font-weight:700;">800T HALATION</span>
+          <span style="color:var(--text-secondary); font-size:9px;">TUNGSTEN 3200K</span>
+        </div>
+        <div class="lut-card" role="option" aria-selected="false" data-stock="VELVIA 50" data-iso="ISO 50">
+          <span style="font-weight:700;">VELVIA 50</span>
+          <span style="color:var(--text-secondary); font-size:9px;">HIGH CHROMA SLIDE</span>
+        </div>
+      </div>
+
+      <div style="margin-top:12px; padding-top:8px; border-top:1px solid var(--bevel-light); font-size:10px; color:var(--text-secondary); display:flex; justify-content:space-between;">
+        <span>ANSEL ADAMS ZONE SYSTEM:</span>
+        <span style="color:var(--emerald-lock); font-weight:700;">ZONE III–VII LOCKED (0% CLIP)</span>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const SHUTTERS = ['1/60s', '1/125s', '1/250s', '1/500s', '1/1000s', '1/2000s', '1/4000s', '1/8000s'];
+    const EVS      = ['+9.4',  '+10.4',  '+11.4',  '+12.4',  '+13.4',   '+14.4',   '+15.4',   '+16.4'];
+    const APERTURES = ['f/1.4', 'f/2.0', 'f/2.8', 'f/4.0', 'f/5.6', 'f/8.0'];
+    const LENSES    = ['28mm ELMARIT', '35mm SUMMICRON', '50mm SUMMILUX', '90mm APO'];
+
+    let sIdx = 4;
+    let apIdx = 1;
+    let lensIdx = 1;
+
+    // 1. Pointer-Captured Knurled Thumb Wheel
+    const wheel = document.getElementById('thumb-wheel');
+    const ghost = document.getElementById('subject-ghost');
+    let startX = 0;
+    let startSIdx = sIdx;
+
+    wheel.addEventListener('pointerdown', (e) => {
+      wheel.setPointerCapture(e.pointerId);
+      wheel.classList.add('scrubbing');
+      startX = e.clientX;
+      startSIdx = sIdx;
+    });
+
+    wheel.addEventListener('pointermove', (e) => {
+      if (!wheel.hasPointerCapture(e.pointerId)) return;
+      const dx = e.clientX - startX;
+      const stepDelta = Math.round(dx / 18);
+      const next = Math.max(0, Math.min(SHUTTERS.length - 1, startSIdx + stepDelta));
+      if (next !== sIdx) {
+        sIdx = next;
+        if (navigator.vibrate) navigator.vibrate(6);
+        document.getElementById('shutter-readout').textContent = SHUTTERS[sIdx];
+        document.getElementById('ev-badge').textContent = `EV ${EVS[sIdx]}`;
+        const offset = (sIdx - 4) * 3;
+        ghost.setAttribute('transform', `translate(${offset}, 0)`);
+        document.getElementById('dist-label').textContent =
+          offset === 0 ? 'FOCUS: 2.4m (∞ COINCIDENT LOCK)' : `FOCUS: ${(2.4 + offset * 0.2).toFixed(1)}m (ALIGN PRISM)`;
+      }
+    });
+
+    const endScrub = (e) => {
+      if (wheel.hasPointerCapture(e.pointerId)) wheel.releasePointerCapture(e.pointerId);
+      wheel.classList.remove('scrubbing');
+    };
+    wheel.addEventListener('pointerup', endScrub);
+    wheel.addEventListener('pointercancel', endScrub);
+
+    // 2. Mechanical Keys (Aperture & Frameline)
+    document.getElementById('aperture-btn').addEventListener('click', (e) => {
+      apIdx = (apIdx + 1) % APERTURES.length;
+      if (navigator.vibrate) navigator.vibrate(8);
+      document.getElementById('key-ap-val').textContent = APERTURES[apIdx];
+      document.getElementById('aperture-readout').textContent = APERTURES[apIdx];
+      e.currentTarget.setAttribute('aria-pressed', 'true');
+    });
+
+    document.getElementById('lens-btn').addEventListener('click', (e) => {
+      lensIdx = (lensIdx + 1) % LENSES.length;
+      if (navigator.vibrate) navigator.vibrate(8);
+      const short = LENSES[lensIdx].split(' ')[0];
+      document.getElementById('key-lens-val').textContent = short;
+      document.getElementById('frame-label').textContent = `FRAME: ${LENSES[lensIdx]}`;
+      e.currentTarget.setAttribute('aria-pressed', 'true');
+    });
+
+    // 3. Hold-to-Arm Progressive Ring Shutter
+    const shutterBtn = document.getElementById('shutter-btn');
+    const armRing = document.getElementById('arm-ring');
+    const shutterLabel = document.getElementById('shutter-label');
+    let holdTimer = null;
+
+    shutterBtn.addEventListener('pointerdown', (e) => {
+      shutterBtn.setPointerCapture(e.pointerId);
+      armRing.style.transition = 'stroke-dashoffset 420ms linear';
+      armRing.style.strokeDashoffset = '0';
+      holdTimer = setTimeout(() => {
+        if (navigator.vibrate) navigator.vibrate([12, 30, 18]);
+        shutterLabel.textContent = 'LOCKED';
+      }, 420);
+    });
+
+    const releaseShutter = () => {
+      clearTimeout(holdTimer);
+      armRing.style.transition = 'stroke-dashoffset 140ms ease-out';
+      armRing.style.strokeDashoffset = '188.5';
+      setTimeout(() => { shutterLabel.textContent = 'HOLD'; }, 350);
+    };
+    shutterBtn.addEventListener('pointerup', releaseShutter);
+    shutterBtn.addEventListener('pointercancel', releaseShutter);
+
+    // 4. 3-Detent Spring Bottom Sheet
+    const sheet = document.getElementById('spring-sheet');
+    const detentLabel = document.getElementById('sheet-detent-label');
+    const DETENTS = ['peek', 'half', 'full'];
+    document.getElementById('sheet-toggle').addEventListener('click', () => {
+      const cur = sheet.dataset.detent;
+      const next = DETENTS[(DETENTS.indexOf(cur) + 1) % DETENTS.length];
+      sheet.dataset.detent = next;
+      detentLabel.textContent = `DETENT: ${next.toUpperCase()} (TAP TO SNAP)`;
+      if (navigator.vibrate) navigator.vibrate(6);
+    });
+
+    document.querySelectorAll('.lut-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.lut-card').forEach((c) => c.setAttribute('aria-selected', String(c === card)));
+        document.getElementById('lut-active-badge').textContent = `STOCK: ${card.dataset.stock}`;
+        document.getElementById('iso-readout').textContent = card.dataset.iso;
+      });
+    });
+  </script>
+</body>
+</html>

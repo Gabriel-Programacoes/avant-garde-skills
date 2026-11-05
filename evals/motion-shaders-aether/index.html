@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AETHER // SDF-04 — Raymarched Ferrofluid &amp; Ordered Bayer Dither Bench</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --surface-sunken: oklch(11.0% 0.006 121.2);  /* #040503 */
+      --surface-canvas: oklch(14.0% 0.008 121.2);  /* #090a06 */
+      --surface-panel: oklch(17.0% 0.010 121.2 / 0.86);
+      --border-subtle: oklch(26.0% 0.015 121.2);
+      --border-strong: oklch(42.0% 0.035 121.2);
+      --text-primary: oklch(96.0% 0.005 121.2);    /* #f1f2ef — Lc 99 */
+      --text-secondary: oklch(76.0% 0.014 121.2);  /* #afb3a9 — Lc 60 */
+      --accent-sulphur: oklch(86.0% 0.215 121.2);  /* #d4ff00 — Acid Sulphur Signal */
+      --accent-cyan: oklch(78.0% 0.145 205.0);     /* #2ad4e8 — Chromatic Split Partner */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--surface-sunken);
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #webgl-stage {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      z-index: 1;
+    }
+
+    /* Architectural HUD Overlay Layer */
+    .hud-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: 360px 1fr 310px;
+      grid-template-rows: 52px 1fr auto;
+      padding: 20px 24px;
+      gap: 16px;
+    }
+
+    .hud-Interactive {
+      pointer-events: auto;
+    }
+
+    /* Top Telemetry Strip */
+    .hud-topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: var(--surface-panel);
+      border: 1px solid var(--border-strong);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge-sulphur {
+      background: var(--accent-sulphur);
+      color: var(--surface-sunken);
+      padding: 2px 8px;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Left Column: Kinetic Hero Typography & Mathematical Field Equation */
+    .hud-hero {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+      align-self: start;
+      background: var(--surface-panel);
+      border: 1px solid var(--border-strong);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .Hero-title, .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 27px;
+      line-height: 0.96;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+
+    .hero-title span {
+      color: var(--accent-sulphur);
+      display: block;
+    }
+
+    .formula-box {
+      background: var(--surface-sunken);
+      border-left: 3px solid var(--accent-sulphur);
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Right Column: Live GLSL Uniform Readout Card (Spring-loaded magnetic card) */
+    .hud-uniforms {
+      grid-column: 3 / 4;
+      grid-row: 2 / 3;
+      align-self: start;
+      background: var(--surface-panel);
+      border: 1px solid var(--border-strong);
+      padding: 16px;
+      font-variant-numeric: tabular-nums;
+      will-change: transform;
+    }
+
+    .uni-header {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--accent-sulphur);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .uni-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed oklch(26% 0.015 121.2 / 0.6);
+      font-size: 11px;
+    }
+
+    .uni-key { color: var(--text-secondary); }
+    .uni-val { color: var(--text-primary); font-weight: 600; }
+
+    /* Bottom Dock: Harmonic Oscillator Presets (Constraint 1) */
+    .hud-bottom {
+      grid-column: 1 / -1;
+      grid-row: 3 / 4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--surface-panel);
+      border: 1px solid var(--border-strong);
+      padding: 12px 16px;
+    }
+
+    .preset-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .osc-btn {
+      background: var(--surface-sunken);
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+      padding: 8px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .osc-btn:hover {
+      border-color: var(--accent-sulphur);
+    }
+
+    .osc-btn[aria-pressed="true"] {
+      background: var(--accent-sulphur);
+      color: var(--surface-sunken);
+      border-color: var(--accent-sulphur);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <!-- FULL-VIEWPORT WEBGL2 SHADER STAGE -->
+  <canvas id="webgl-stage"></canvas>
+
+  <!-- SYNCHRONIZED ARCHITECTURAL DOM HUD -->
+  <div class="hud-layer">
+    <header class="hud-topbar hud-Interactive">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="badge-sulphur">WEBGL2 // #VERSION 300 ES</span>
+        <span>AETHER SDF-04 // RAYMARCHED FERROFLUID &amp; BAYER MATRIX</span>
+      </div>
+      <div>
+        <span id="gl-status" style="color:var(--accent-sulphur); font-weight:700;">● GL_COMPILE_STATUS: OK (0 ERRORS)</span>
+        <span style="margin:0 10px;">|</span>
+        <span id="dpr-readout">DPR: 1.0 (CLAMPED ≤2.0)</span>
+      </div>
+    </header>
+
+    <section class="hud-hero hud-Interactive">
+      <div style="font-size:10px; color:var(--accent-sulphur); font-weight:700; letter-spacing:0.08em;">
+        PROCEDURAL FIELD LABORATORY // ZERO TEXTURE ASSETS
+      </div>
+      <h1 class="hero-title">
+        Raymarched
+        <span>Ferrofluid</span>
+        Isolines
+      </h1>
+      <p style="color:var(--text-secondary); line-height:1.45;">
+        Analytic 3D Signed Distance Field combining an octahedral core, orbiting harmonic torus, and gyroid surface displacement quantized through an ordered 4×4 Bayer dithering matrix.
+      </p>
+      <div class="formula-box">
+        <div><strong>SDF FIELD EQUATION:</strong></div>
+        <div>d(p) = smin(sdTorus(p, R), sdOcta(p), k=0.34)</div>
+        <div>+ 0.045 · sin(ω·p.x)·cos(ω·p.y)·sin(ω·p.z)</div>
+        <div>color = oklch2rgb(L, C, 121.2°) × bayer4x4(fragCoord)</div>
+      </div>
+    </section>
+
+    <aside class="hud-uniforms hud-Interactive" id="magnetic-hud">
+      <div class="uni-header">
+        <span>LIVE SHADER UNIFORMS</span>
+        <span>60.0 FPS</span>
+      </div>
+      <div class="uni-row"><span class="uni-key">u_resolution</span><span class="uni-val" id="u-res">1440 × 900</span></div>
+      <div class="uni-row"><span class="uni-key">u_pointer (damped)</span><span class="uni-val" id="u-ptr">0.500, 0.500</span></div>
+      <div class="uni-row"><span class="uni-key">u_velocity</span><span class="uni-val" id="u-vel">0.018 rad/s</span></div>
+      <div class="uni-row"><span class="uni-key">u_harmonic (ω)</span><span class="uni-val" id="u-harm">6.0 Hz (MODE 01)</span></div>
+      <div class="uni-row"><span class="uni-key">u_dither_mix</span><span class="uni-val" id="u-dith">0.85 (BAYER 4×4)</span></div>
+      <div class="uni-row"><span class="uni-key">u_smin_k</span><span class="uni-val" id="u-smin">0.340</span></div>
+      <div class="uni-row"><span class="uni-key">u_reduced_motion</span><span class="uni-val" id="u-red">0.0 (DYNAMIC)</span></div>
+    </aside>
+
+    <footer class="hud-bottom hud-Interactive">
+      <div class="preset-group" role="group" aria-label="Harmonic Oscillator Presets">
+        <button class="osc-btn" data-harm="6.0" data-dith="0.85" data-smin="0.34" aria-pressed="true">
+          <span>01 // 432Hz FERRO-TORUS</span>
+        </button>
+        <button class="osc-btn" data-harm="11.0" data-dith="0.35" data-smin="0.48" aria-pressed="false">
+          <span>02 // 528Hz GYROID RESONANCE</span>
+        </button>
+        <button class="osc-btn" data-harm="4.0" data-dith="1.00" data-smin="0.22" aria-pressed="false">
+          <span>03 // 639Hz PURE 1-BIT BAYER</span>
+        </button>
+        <button class="osc-btn" data-harm="16.0" data-dith="0.60" data-smin="0.40" aria-pressed="false">
+          <span>04 // 741Hz HIGH-FREQ ISOLINES</span>
+        </button>
+      </div>
+      <div>
+        <button class="osc-btn" id="impulse-btn">TRIGGER SHOCKWAVE IMPULSE</button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const VS_SRC = `#version 300 es
+    in vec2 a_pos;
+    out vec2 v_uv;
+    void main() {
+      v_uv = a_pos * 0.5 + 0.5;
+      gl_Position = vec4(a_pos, 0.0, 1.0);
+    }`;
+
+    const FS_SRC = `#version 300 es
+    precision highp float;
+    in vec2 v_uv;
+    out vec4 fragColor;
+
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    uniform vec2 u_pointer;
+    uniform float u_velocity;
+    uniform float u_harmonic;
+    uniform float u_dither;
+    uniform float u_smin;
+    uniform float u_impulse;
+
+    vec3 oklch2rgb(float L, float C, float H_deg) {
+      float h = radians(H_deg);
+      float a = C * cos(h);
+      float b = C * sin(h);
+      float l_ = L + 0.3963377774 * a + 0.2158037573 * b;
+      float m_ = L - 0.1055613458 * a - 0.0638541728 * b;
+      float s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+      float l = l_ * l_ * l_;
+      float m = m_ * m_ * m_;
+      float s = s_ * s_ * s_;
+      vec3 lin = vec3(
+        +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+      );
+      return pow(clamp(lin, 0.0, 1.0), vec3(1.0 / 2.2));
+    }
+
+    mat2 rot(float a) {
+      float s = sin(a), c = cos(a);
+      return mat2(c, -s, s, c);
+    }
+
+    float smin(float a, float b, float k) {
+      float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+      return mix(b, a, h) - k * h * (1.0 - h);
+    }
+
+    float sdTorus(vec3 p, vec2 t) {
+      vec2 q = vec2(length(p.xz) - t.x, p.y);
+      return length(q) - t.y;
+    }
+
+    float sdOctahedron(vec3 p, float s) {
+      p = abs(p);
+      return (p.x + p.y + p.z - s) * 0.57735027;
+    }
+
+    float bayer4x4(vec2 fragCoord) {
+      ivec2 p = ivec2(mod(fragCoord, 4.0));
+      int idx = p.y * 4 + p.x;
+      int m[16] = int[16](
+         0,  8,  2, 10,
+        12,  4, 14,  6,
+         3, 11,  1,  9,
+        15,  7, 13,  5
+      );
+      return (float(m[idx]) + 0.5) / 16.0;
+    }
+
+    float mapScene(vec3 p) {
+      vec3 q = p;
+      q.xz *= rot(u_time * 0.45 + (u_pointer.x - 0.5) * 2.2);
+      q.yz *= rot(u_time * 0.32 + (u_pointer.y - 0.5) * 2.2);
+
+      float torus = sdTorus(q, vec2(0.82, 0.24));
+
+      vec3 octP = p;
+      octP.xy *= rot(-u_time * 0.6);
+      octP.xz *= rot(u_time * 0.4);
+      float octa = sdOctahedron(octP, 0.72 + 0.12 * u_impulse);
+
+      float d = smin(torus, octa, u_smin);
+
+      // Harmonic Gyroid Surface Ripple
+      float gyroid = dot(sin(q * u_harmonic + u_time * 1.6), cos(q.zxy * u_harmonic));
+      d += 0.042 * gyroid;
+      return d;
+    }
+
+    vec3 calcNormal(vec3 p) {
+      vec2 e = vec2(0.002, 0.0);
+      return normalize(vec3(
+        mapScene(p + e.xyy) - mapScene(p - e.xyy),
+        mapScene(p + e.yxy) - mapScene(p - e.yxy),
+        mapScene(p + e.yyx) - mapScene(p - e.yyx)
+      ));
+    }
+
+    void main() {
+      // Aspect-ratio normalized coordinates (-0.5..0.5 on shortest side)
+      float minDim = min(u_resolution.x, u_resolution.y);
+      vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / minDim;
+
+      vec3 ro = vec3(0.0, 0.0, 2.85);
+      vec3 rd = normalize(vec3(uv, -1.25));
+
+      float t = 0.0;
+      bool hit = false;
+      for (int i = 0; i < 64; i++) {
+        vec3 p = ro + rd * t;
+        float d = mapScene(p);
+        if (d < 0.0015) { hit = true; break; }
+        if (t > 6.0) break;
+        t += d * 0.85;
+      }
+
+      vec3 bgDark = oklch2rgb(0.12, 0.008, 121.2);
+      vec3 sulphur = oklch2rgb(0.86, 0.215, 121.2);
+      vec3 cyanEdge = oklch2rgb(0.76, 0.14, 205.0);
+
+      float bayer = bayer4x4(gl_FragCoord.xy / 2.0);
+
+      // Background topographic field rings
+      float bgField = sin(length(uv) * (u_harmonic * 3.0) - u_time * 1.5);
+      float bgRings = smoothstep(0.92, 0.98, bgField);
+      vec3 col = mix(bgDark, oklch2rgb(0.22, 0.03, 121.2), bgRings);
+
+      if (hit) {
+        vec3 p = ro + rd * t;
+        vec3 n = calcNormal(p);
+        vec3 lightDir = normalize(vec3(0.7, 0.9, 1.2));
+        float diff = max(dot(n, lightDir), 0.0);
+        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 3.0);
+
+        // Topographic isolines carved across the 3D SDF surface
+        float iso = smoothstep(0.04, 0.0, abs(fract((p.x + p.y + p.z) * u_harmonic * 0.6) - 0.5) - 0.42);
+
+        float lum = diff * 0.75 + fresnel * 0.55 + iso * 0.35;
+        float ditheredLum = step(bayer, lum);
+        float finalMask = mix(lum, ditheredLum, u_dither);
+
+        col = mix(bgDark, sulphur, finalMask);
+        col = mix(col, cyanEdge, fresnel * 0.55);
+      }
+
+      fragColor = vec4(col, 1.0);
+    }`;
+
+    const canvas = document.getElementById('webgl-stage');
+    const gl = canvas.getContext('webgl2', { antialias: false });
+
+    function createShader(type, src) {
+      const sh = gl.createShader(type);
+      gl.shaderSource(sh, src);
+      gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(sh));
+        document.getElementById('gl-status').textContent = '● GL_ERROR';
+      }
+      return sh;
+    }
+
+    const prog = gl.createProgram();
+    gl.attachShader(prog, createShader(gl.VERTEX_SHADER, VS_SRC));
+    gl.attachShader(prog, createShader(gl.FRAGMENT_SHADER, FS_SRC));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const locPos = gl.getAttribLocation(prog, 'a_pos');
+    gl.enableVertexAttribArray(locPos);
+    gl.vertexAttribPointer(locPos, 2, gl.FLOAT, false, 0, 0);
+
+    const uLoc = {
+      res: gl.getUniformLocation(prog, 'u_resolution'),
+      time: gl.getUniformLocation(prog, 'u_time'),
+      ptr: gl.getUniformLocation(prog, 'u_pointer'),
+      vel: gl.getUniformLocation(prog, 'u_velocity'),
+      harm: gl.getUniformLocation(prog, 'u_harmonic'),
+      dith: gl.getUniformLocation(prog, 'u_dither'),
+      smin: gl.getUniformLocation(prog, 'u_smin'),
+      imp: gl.getUniformLocation(prog, 'u_impulse'),
+    };
+
+    let state = {
+      harm: 6.0,
+      dith: 0.85,
+      smin: 0.34,
+      impulse: 0.0,
+      targetX: 0.52,
+      targetY: 0.48,
+      curX: 0.52,
+      curY: 0.48,
+      vel: 0.018,
+    };
+
+    // Spring2D for Magnetic HUD card
+    const hudSpring = { x: 0, y: 0, vx: 0, vy: 0 };
+    const magHud = document.getElementById('magnetic-hud');
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.floor(window.innerWidth * dpr));
+      canvas.height = Math.max(1, Math.floor(window.innerHeight * dpr));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      document.getElementById('u-res').textContent = `${canvas.width} × ${canvas.height}`;
+      document.getElementById('dpr-readout').textContent = `DPR: ${dpr.toFixed(1)} (CLAMPED ≤2.0)`;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('pointermove', (e) => {
+      state.targetX = e.clientX / Math.max(1, window.innerWidth);
+      state.targetY = 1.0 - e.clientY / Math.max(1, window.innerHeight);
+    }, { passive: true });
+
+    document.querySelectorAll('.osc-btn[data-harm]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.osc-btn[data-harm]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        state.harm = parseFloat(btn.dataset.harm);
+        state.dith = parseFloat(btn.dataset.dith);
+        state.smin = parseFloat(btn.dataset.smin);
+        state.impulse = 1.0;
+        document.getElementById('u-harm').textContent = `${state.harm.toFixed(1)} Hz`;
+        document.getElementById('u-dith').textContent = `${state.dith.toFixed(2)} (BAYER 4×4)`;
+        document.getElementById('u-smin').textContent = state.smin.toFixed(3);
+      });
+    });
+
+    document.getElementById('impulse-btn').addEventListener('click', () => {
+      state.impulse = 1.5;
+    });
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) document.getElementById('u-red').textContent = '1.0 (STATIC)';
+
+    let isVisible = true;
+    const io = new IntersectionObserver(([entry]) => { isVisible = entry.isIntersecting; });
+    io.observe(canvas);
+
+    let last = performance.now();
+    function render(now) {
+      const dt = Math.min(0.05, (now - last) * 0.001);
+      last = now;
+
+      if (isVisible && !document.hidden) {
+        const k = 1.0 - Math.exp(-10.0 * dt);
+        const dx = state.targetX - state.curX;
+        const dy = state.targetY - state.curY;
+        state.curX += dx * k;
+        state.curY += dy * k;
+        state.vel = state.vel * 0.92 + Math.hypot(dx, dy) * 12.0 * 0.08;
+        state.impulse *= Math.exp(-4.0 * dt);
+
+        // Step magnetic HUD spring
+        const targetHudX = (state.curX - 0.5) * 18.0;
+        const targetHudY = (0.5 - state.curY) * 18.0;
+        const ax = -220 * (hudSpring.x - targetHudX) - 20 * hudSpring.vx;
+        const ay = -220 * (hudSpring.y - targetHudY) - 20 * hudSpring.vy;
+        hudSpring.vx += ax * dt;
+        hudSpring.vy += ay * dt;
+        hudSpring.x += hudSpring.vx * dt;
+        hudSpring.y += hudSpring.vy * dt;
+        magHud.style.transform = `translate3d(${hudSpring.x.toFixed(2)}px, ${hudSpring.y.toFixed(2)}px, 0)`;
+
+        document.getElementById('u-ptr').textContent = `${state.curX.toFixed(3)}, ${state.curY.toFixed(3)}`;
+        document.getElementById('u-vel').textContent = `${state.vel.toFixed(3)} rad/s`;
+
+        gl.uniform2f(uLoc.res, canvas.width, canvas.height);
+        gl.uniform1f(uLoc.time, reducedMotion ? 3.2 : now * 0.001);
+        gl.uniform2f(uLoc.ptr, state.curX, state.curY);
+        gl.uniform1f(uLoc.vel, state.vel);
+        gl.uniform1f(uLoc.harm, state.harm);
+        gl.uniform1f(uLoc.dith, state.dith);
+        gl.uniform1f(uLoc.smin, state.smin);
+        gl.uniform1f(uLoc.imp, state.impulse);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+      if (!reducedMotion) requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>

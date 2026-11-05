@@ -1,0 +1,62 @@
+{
+  "version": "1.0.0",
+  "project": "lumina-atelier",
+  "archetype": "sunlit-architectural-daylight",
+  "updatedAt": "2026-11-05",
+  "fonts": [
+    "Plus Jakarta Sans",
+    "Instrument Serif",
+    "JetBrains Mono"
+  ],
+  "tokens": {
+    "--paper-stone": "oklch(97.0% 0.009 78.0)",
+    "--paper-sunken": "oklch(93.5% 0.013 78.0)",
+    "--surface-card": "oklch(99.4% 0.003 78.0)",
+    "--ink-espresso": "oklch(18.0% 0.022 155.0)",
+    "--ink-secondary": "oklch(40.0% 0.020 155.0)",
+    "--ink-muted": "oklch(55.0% 0.016 155.0)",
+    "--sage-primary": "oklch(39.0% 0.092 158.0)",
+    "--sage-soft": "oklch(91.0% 0.032 158.0)",
+    "--terracotta": "oklch(60.0% 0.148 42.0)",
+    "--border-hairline": "oklch(18.0% 0.022 155.0 / 0.11)",
+    "--border-strong": "oklch(18.0% 0.022 155.0 / 0.22)",
+    "--ease-spring": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "--ease-out-expo": "cubic-bezier(0.19, 1, 0.22, 1)"
+  },
+  "components": [
+    {
+      "name": "LuminaCalendar",
+      "path": "components/ui/LuminaCalendar.tsx",
+      "tags": [
+        "calendar",
+        "navigation",
+        "card",
+        "table"
+      ],
+      "props": "/** 'compact' for hero quick-booking (Screen 1) or 'month' for full patient scheduling (Screen 2..N) */ variant?: 'compact' | 'month'; days: CalendarDaySlot[]; selectedDate: string; selectedSlot: string; doctorName?: string; onSelectDate: (dateIso: string) => void; onSelectSlot: (slot: string) => void;",
+      "description": "Reusable LuminaCalendar primitive"
+    },
+    {
+      "name": "LuminaNavPill",
+      "path": "components/ui/LuminaNavPill.tsx",
+      "tags": [
+        "calendar",
+        "navigation",
+        "card"
+      ],
+      "props": "activeRoute: 'home' | 'portal' | 'protocols'; patientName?: string; ctaLabel?: string;",
+      "description": "Reusable LuminaNavPill primitive"
+    },
+    {
+      "name": "LuminaSegmentedPill",
+      "path": "components/ui/LuminaSegmentedPill.tsx",
+      "tags": [
+        "segmented-control",
+        "card",
+        "table"
+      ],
+      "props": "options: SegmentedOption[]; activeId: string; onChange: (id: string) => void;",
+      "description": "Reusable LuminaSegmentedPill primitive"
+    }
+  ]
+}

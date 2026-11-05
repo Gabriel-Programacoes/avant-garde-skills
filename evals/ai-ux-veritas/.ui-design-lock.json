@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "project": "veritas-clause",
+  "archetype": "inline-redline-artifact-workbench",
+  "updatedAt": "2026-11-05",
+  "fonts": [
+    "Plus Jakarta Sans",
+    "Instrument Serif",
+    "JetBrains Mono"
+  ],
+  "tokens": {
+    "--surface-sunken": "oklch(93.0% 0.008 264.4)",
+    "--surface-canvas": "oklch(96.5% 0.006 264.4)",
+    "--surface-panel": "oklch(98.5% 0.004 264.4)",
+    "--surface-raised": "oklch(100.0% 0.000 264.4)",
+    "--border-subtle": "oklch(86.0% 0.012 264.4)",
+    "--border-strong": "oklch(72.0% 0.018 264.4)",
+    "--text-primary": "oklch(16.0% 0.012 264.4)",
+    "--text-secondary": "oklch(40.0% 0.015 264.4)",
+    "--text-tertiary": "oklch(54.0% 0.012 264.4)",
+    "--accent-cobalt": "oklch(45.0% 0.195 264.4)",
+    "--ai-grounded": "oklch(38.0% 0.105 156.0)",
+    "--ai-risk": "oklch(48.0% 0.165 32.0)",
+    "--diff-add-ink": "oklch(30.0% 0.110 154.0)",
+    "--diff-add-bg": "oklch(93.5% 0.038 154.0)",
+    "--diff-del-ink": "oklch(42.0% 0.155 28.0)",
+    "--diff-del-bg": "oklch(94.2% 0.032 28.0)",
+    "--ease-spring": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "--ease-out-expo": "cubic-bezier(0.19, 1, 0.22, 1)"
+  },
+  "components": [
+    {
+      "name": "CitationBadge",
+      "path": "components/ui/CitationBadge.tsx",
+      "tags": [],
+      "props": "sectionRef: string; confidence: string; active?: boolean; onSelect: (ref: string) => void;",
+      "description": "Reusable CitationBadge primitive"
+    },
+    {
+      "name": "InlineDiffCard",
+      "path": "components/ui/InlineDiffCard.tsx",
+      "tags": [
+        "navigation",
+        "card"
+      ],
+      "props": "clauseId: string; title: string; originalText: string; proposedText: string; rationale: string; confidence: string; citation: string; status: 'pending' | 'accepted' | 'rejected'; onAccept: () => void; onReject: () => void;",
+      "description": "Reusable InlineDiffCard primitive"
+    },
+    {
+      "name": "ReasoningStepTrace",
+      "path": "components/ui/ReasoningStepTrace.tsx",
+      "tags": [
+        "navigation"
+      ],
+      "props": "steps: ReasoningStep[]; totalMs: number; groundingScore: string;",
+      "description": "Reusable ReasoningStepTrace primitive"
+    }
+  ]
+}

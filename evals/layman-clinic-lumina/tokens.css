@@ -1,0 +1,65 @@
+:root {
+  --paper-stone: oklch(97.0% 0.009 78.0);
+  --paper-sunken: oklch(93.5% 0.013 78.0);
+  --surface-card: oklch(99.4% 0.003 78.0);
+  --ink-espresso: oklch(18.0% 0.022 155.0);
+  --ink-secondary: oklch(40.0% 0.020 155.0);
+  --ink-muted: oklch(55.0% 0.016 155.0);
+  --sage-primary: oklch(39.0% 0.092 158.0);
+  --sage-soft: oklch(91.0% 0.032 158.0);
+  --terracotta: oklch(60.0% 0.148 42.0);
+  --border-hairline: oklch(18.0% 0.022 155.0 / 0.11);
+  --border-strong: oklch(18.0% 0.022 155.0 / 0.22);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Shared Multi-Screen Living Motion Choreography (Tier 1 + Tier 2) */
+@keyframes luminaRevealUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes luminaWordRise {
+  0% {
+    opacity: 0;
+    transform: translateY(105%) rotate(1.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes sunlightOrbitalDrift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-34px, 24px, 0) scale(1.07);
+  }
+}
+
+@keyframes beaconPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(39.0% 0.092 158.0 / 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 7px oklch(39.0% 0.092 158.0 / 0);
+  }
+}
+
+@keyframes drawCollagenCurve {
+  0% {
+    stroke-dashoffset: 320;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}

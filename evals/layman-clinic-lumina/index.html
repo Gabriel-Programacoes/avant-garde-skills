@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumina Atelier Dermatológico — Ciência Celular &amp; Estética Regenerativa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Sunlit Architectural Daylight Palette (Generated via palette.mjs --light) */
+      --paper-stone: oklch(97.0% 0.009 78.0);     /* #f7f4ee — Warm Travertine Alabaster */
+      --paper-sunken: oklch(93.5% 0.013 78.0);    /* #ebe5da — Soft Sandstone Recessed Well */
+      --surface-card: oklch(99.4% 0.003 78.0);    /* #fdfcfa — Sunlit Ceramic White */
+      --ink-espresso: oklch(18.0% 0.022 155.0);   /* #0c1611 — 17.06:1 WCAG AAA / Lc 98.8 */
+      --ink-secondary: oklch(40.0% 0.020 155.0);  /* #3f4d45 — 8.2:1 WCAG AAA */
+      --ink-muted: oklch(55.0% 0.016 155.0);      /* #6b7770 */
+      --sage-primary: oklch(39.0% 0.092 158.0);   /* #18583f — Botanical Clinical Sage (8.3:1 with paper text) */
+      --sage-soft: oklch(91.0% 0.032 158.0);      /* #d4eade — Soft Botanical Pill */
+      --terracotta: oklch(60.0% 0.148 42.0);      /* #c76238 — Warm Skin-Tone Terracotta Accent */
+      --border-hairline: oklch(18.0% 0.022 155.0 / 0.11);
+      --border-strong: oklch(18.0% 0.022 155.0 / 0.22);
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    @keyframes luminaRevealUp {
+      0% { opacity: 0; transform: translateY(16px) scale(0.99); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes sunlightOrbitalDrift {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(-32px, 22px, 0) scale(1.06); }
+    }
+    @keyframes beaconPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    @keyframes drawCollagenCurve {
+      0% { stroke-dashoffset: 320; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--paper-stone);
+      color: var(--ink-espresso);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Ambient Warm Botanical Glow in Top-Right Background */
+    .ambient-sunlight {
+      position: fixed;
+      top: -120px;
+      right: -80px;
+      width: 580px;
+      height: 580px;
+      border-radius: 50%;
+      background: radial-gradient(circle, oklch(89% 0.065 65 / 0.55) 0%, oklch(92% 0.04 158 / 0.25) 50%, transparent 72%);
+      pointer-events: none;
+      z-index: 0;
+      animation: sunlightOrbitalDrift 14s ease-in-out infinite;
+    }
+
+    .live-beacon {
+      width: 6px;
+      height: 6px;
+      background: var(--sage-primary);
+      display: inline-block;
+      animation: beaconPulse 2.2s infinite;
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 2;
+      max-width: 1340px;
+      margin: 0 auto;
+      padding: 18px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Refractive Optical-Glass Top Navigation Bar */
+    .nav-pill {
+      background: oklch(99.5% 0.003 78.0 / 0.78);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      box-shadow:
+        inset 0 1px 0 0 oklch(100% 0 0 / 0.9),
+        0 10px 30px -12px oklch(18% 0.02 155 / 0.08);
+      border: 1px solid var(--border-hairline);
+      border-radius: 14px;
+      padding: 10px 14px 10px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .brand-serif {
+      font-family: 'Instrument Serif', serif;
+      font-size: 26px;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .brand-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--ink-secondary);
+      padding-left: 14px;
+      border-left: 1px solid var(--border-hairline);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    .btn-primary {
+      background: var(--sage-primary);
+      color: var(--surface-card);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 140ms var(--ease-spring), background 140ms var(--ease-spring);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    /* Editorial Split-Stage + Asymmetric Bento Grid (58% Left / 42% Right) */
+    .hero-bento {
+      display: grid;
+      grid-template-columns: 7.1fr 4.9fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    /* Main Editorial Story Card */
+    .story-card {
+      background:
+        radial-gradient(480px circle at var(--mx, 50%) var(--my, 20%), oklch(92% 0.035 158 / 0.22), transparent 65%),
+        var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 24px;
+      padding: 34px 36px;
+      box-shadow: 0 16px 40px -20px oklch(18% 0.02 155 / 0.06);
+      position: relative;
+      overflow: hidden;
+      animation: luminaRevealUp 650ms var(--ease-out-expo) both;
+      transition: transform 280ms var(--ease-spring), box-shadow 280ms var(--ease-spring), border-color 280ms var(--ease-spring);
+    }
+    .story-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 24px 48px -18px oklch(18% 0.02 155 / 0.11);
+      border-color: var(--border-strong);
+    }
+
+    .eyebrow-ledger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border-hairline);
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--sage-primary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    h1.hero-headline {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: clamp(2.7rem, 4.3vw, 4.15rem);
+      line-height: 0.96;
+      letter-spacing: -0.02em;
+      color: var(--ink-espresso);
+      max-width: 16ch;
+    }
+
+    h1.hero-headline em {
+      font-style: italic;
+      color: var(--sage-primary);
+    }
+
+    .hero-lead {
+      margin-top: 16px;
+      font-size: 15px;
+      color: var(--ink-secondary);
+      max-width: 54ch;
+      line-height: 1.55;
+    }
+
+    /* Constraint 1: Numbers as Hero Evidence (Oversized Tabular-Nums Proof Strip) */
+    .evidence-grid {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border-hairline);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .metric-big {
+      font-family: 'Instrument Serif', serif;
+      font-size: 44px;
+      line-height: 0.95;
+      color: var(--ink-espresso);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-big sup {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--terracotta);
+      font-weight: 600;
+      margin-left: 2px;
+    }
+
+    .metric-caption {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--ink-secondary);
+      font-weight: 500;
+    }
+
+    /* Secondary Asymmetric Bento Row (2 tactile cards under the story card) */
+    .sub-bento-row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .tactile-subcard {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 20px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      animation: luminaRevealUp 650ms var(--ease-out-expo) 120ms both;
+      transition: transform 240ms var(--ease-spring), box-shadow 240ms var(--ease-spring), border-color 240ms var(--ease-spring);
+    }
+    .tactile-subcard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 34px -16px oklch(18% 0.02 155 / 0.10);
+      border-color: var(--border-strong);
+    }
+
+    .doctor-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage-primary), oklch(55% 0.11 158));
+      color: var(--surface-card);
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* RIGHT COLUMN (42%): LIVE INTERACTIVE PROTOCOL & INSTANT BOOKING SIMULATOR */
+    .simulator-card {
+      background: var(--surface-card);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 24px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 22px 48px -18px oklch(18% 0.02 155 / 0.10);
+      animation: luminaRevealUp 650ms var(--ease-out-expo) 180ms both;
+      transition: transform 260ms var(--ease-spring), box-shadow 260ms var(--ease-spring);
+    }
+    .simulator-card:hover {
+      box-shadow: 0 28px 56px -16px oklch(18% 0.02 155 / 0.14);
+    }
+
+    .sim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-hairline);
+      padding-bottom: 12px;
+    }
+
+    /* Segmented Pill Switcher */
+    .pill-switcher {
+      background: var(--paper-sunken);
+      padding: 4px;
+      border-radius: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+    .seg-btn {
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 8px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: background 140ms var(--ease-spring), color 140ms var(--ease-spring);
+    }
+    .seg-btn[aria-selected="true"] {
+      background: var(--surface-card);
+      color: var(--ink-espresso);
+      box-shadow: 0 2px 8px oklch(18% 0.02 155 / 0.08);
+    }
+
+    /* Protocol Result Well */
+    .protocol-well {
+      background: var(--paper-stone);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .spec-pills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .spec-box {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+
+    .spec-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      display: block;
+    }
+
+    .spec-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-espresso);
+    }
+
+    /* Time Slot Selector */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .slot-btn {
+      background: var(--paper-stone);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-espresso);
+      cursor: pointer;
+      text-align: center;
+      transition: transform 140ms var(--ease-spring), background 160ms var(--ease-spring), color 160ms var(--ease-spring), border-color 160ms var(--ease-spring);
+    }
+    .slot-btn:hover {
+      transform: translateY(-1.5px);
+      border-color: var(--sage-primary);
+    }
+    .slot-btn:active {
+      transform: scale(0.96);
+    }
+    .slot-btn[aria-pressed="true"] {
+      background: var(--sage-primary);
+      color: var(--surface-card);
+      border-color: var(--sage-primary);
+    }
+
+    .price-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    @media (max-width: 959px) {
+      .page-shell { padding: 12px 14px 24px; gap: 16px; }
+      .nav-links, .brand-meta { display: none; }
+      .hero-bento { grid-template-columns: 1fr; }
+      .story-card { padding: 22px 20px; }
+      .sub-bento-row { grid-template-columns: 1fr; }
+      .evidence-grid { gap: 10px; }
+      .metric-big { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-sunlight" aria-hidden="true"></div>
+
+  <div class="page-shell tabular-nums">
+    <!-- 1. REFRACTIVE DAYLIGHT NAVIGATION BAR -->
+    <header class="nav-pill">
+      <div class="brand-lockup">
+        <span class="brand-serif">Lumina Atelier</span>
+        <span class="brand-meta">DERMATOLOGIA CLÍNICA &amp; LASER · CRM-SP 142.890</span>
+      </div>
+
+      <nav class="nav-links" aria-label="Navegação Principal">
+        <span>Protocolos</span>
+        <span>Diagnóstico 3D</span>
+        <span>Corpo Clínico</span>
+        <span>Jardins · SP</span>
+      </nav>
+
+      <button class="btn-primary">
+        <span>Agendar Consulta</span>
+        <span>→</span>
+      </button>
+    </header>
+
+    <!-- 2. HERO ASYMMETRIC BENTO & INTERACTIVE PROTOCOL CONFIGURATOR -->
+    <main class="hero-bento">
+      <!-- LEFT COLUMN: Editorial Narrative + Numbers as Hero Evidence + Clinical Proof -->
+      <div class="left-column">
+        <article class="story-card">
+          <div class="eyebrow-ledger">
+            <span class="live-beacon"></span>
+            <span>DIAGNÓSTICO ÓPTICO MULTIESPECTRAL</span>
+            <span style="color:var(--ink-muted);">//</span>
+            <span style="color:var(--ink-secondary);">PROTOCOLOS SEM EXCESSOS</span>
+          </div>
+
+          <h1 class="hero-headline">
+            Ciência celular para uma pele <em>naturalmente</em> luminosa.
+          </h1>
+
+          <p class="hero-lead">
+            Unimos dermatologia baseada em evidências, bioestimuladores de última geração e lasers fracionados não-ablativos para restaurar a arquitetura da sua pele sem alterar seus traços.
+          </p>
+
+          <!-- Constraint 1: Numbers as Hero Evidence -->
+          <div class="evidence-grid">
+            <div>
+              <div class="metric-big">98.4<sup>%</sup></div>
+              <div class="metric-caption">Índice de satisfação clínica em 12 meses</div>
+            </div>
+            <div>
+              <div class="metric-big">+68<sup>%</sup></div>
+              <div class="metric-caption">Densidade dérmica média por ultrassom</div>
+            </div>
+            <div>
+              <div class="metric-big">4.96<sup>★</sup></div>
+              <div class="metric-caption">640 avaliações verificadas de pacientes</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Bottom Two Tactile Bento Cards -->
+        <div class="sub-bento-row">
+          <article class="tactile-subcard">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; color:var(--sage-primary);">01 // MAPEAMENTO FACIAL 3D</span>
+              <span style="font-size:11px; color:var(--terracotta); font-weight:700;">INCLUSO NA 1ª CONSULTA</span>
+            </div>
+            <p style="font-size:13px; color:var(--ink-secondary);">
+              Escaneamento óptico polarizado que mede poros, manchas UV subdérmicas, vascularização e firmeza antes de qualquer indicação.
+            </p>
+            <div class="doctor-badge">
+              <div class="avatar-circle">Dra</div>
+              <div>
+                <div style="font-weight:700; font-size:13px;">Dra. Helena Vasconcelos</div>
+                <div style="font-size:11.5px; color:var(--ink-muted);">Dermatologista Titular SBD · Fellowship Zurique</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="tactile-subcard" style="background:var(--paper-sunken);">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; color:var(--ink-secondary);">
+              02 // CURVA DE REGENERAÇÃO DE COLÁGENO
+            </div>
+            <svg viewBox="0 0 240 76" width="100%" height="76" role="img" aria-label="Curva de estímulo de colágeno em 90 dias">
+              <line x1="0" y1="64" x2="240" y2="64" stroke="oklch(18% 0.02 155 / 0.2)" stroke-dasharray="2 2" />
+              <path d="M4,60 C70,56 105,44 132,36 C168,25 200,21 232,19 L232,64 L4,64 Z" fill="oklch(39% 0.092 158 / 0.14)" />
+              <path d="M4,60 C70,56 105,44 132,36 C168,25 200,21 232,19" fill="none" stroke="oklch(39% 0.092 158)" stroke-width="2.2" stroke-dasharray="320" style="animation: drawCollagenCurve 1.3s var(--ease-out-expo) both;" />
+              <circle cx="132" cy="36" r="3.5" fill="oklch(39% 0.092 158)" />
+              <circle cx="232" cy="19" r="4" fill="oklch(60% 0.148 42)" />
+              <text x="86" y="27" font-size="9.5" font-family="JetBrains Mono,monospace" font-weight="600" fill="oklch(18% 0.02 155)">30d (+38%)</text>
+              <text x="166" y="12" font-size="9.5" font-family="JetBrains Mono,monospace" font-weight="600" fill="oklch(60% 0.148 42)">90d (+82%)</text>
+            </svg>
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--ink-secondary);">
+              <span>Início imediato</span>
+              <span style="font-weight:700; color:var(--sage-primary);">Pico no 3º mês</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: LIVE INTERACTIVE PROTOCOL & BOOKING SIMULATOR -->
+      <aside class="simulator-card" aria-label="Simulador de Protocolo e Agendamento">
+        <div>
+          <div class="sim-header">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sage-primary); font-weight:600;">
+                SIMULADOR INTERATIVO // ESCOLHA SEU OBJETIVO
+              </div>
+              <h2 style="font-family:'Instrument Serif',serif; font-size:28px; font-weight:400; line-height:1.05; margin-top:2px;">
+                Descubra seu protocolo ideal
+              </h2>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace; color:var(--sage-primary); font-size:10.5px; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+              <span class="live-beacon"></span>
+              <span>TEMPO REAL</span>
+            </span>
+          </div>
+
+          <!-- 1. Segmented Goal Switcher -->
+          <div style="margin-top:14px;">
+            <label style="font-size:11.5px; font-weight:600; color:var(--ink-secondary); display:block; margin-bottom:6px;">
+              1. Qual é a prioridade da sua pele hoje?
+            </label>
+            <div class="pill-switcher" role="tablist">
+              <button class="seg-btn" role="tab" aria-selected="true" data-proto="glow">
+                Glow &amp; Manchas
+              </button>
+              <button class="seg-btn" role="tab" aria-selected="false" data-proto="lift">
+                Firmeza 4D
+              </button>
+              <button class="seg-btn" role="tab" aria-selected="false" data-proto="hydra">
+                Barreira &amp; Poros
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Dynamic Protocol Output Well -->
+          <div class="protocol-well" style="margin-top:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div>
+                <span style="font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--terracotta); font-weight:700;" id="p-tag">
+                  PROTOCOLO RECOMENDADO // 01
+                </span>
+                <h3 style="font-size:17px; font-weight:700; margin-top:2px;" id="p-title">
+                  Laser Lavieen + Exossomos Botânicos
+                </h3>
+              </div>
+            </div>
+            <p style="font-size:12.5px; color:var(--ink-secondary);" id="p-desc">
+              Uniformiza o tom da pele, suaviza melasma e fecha poros dilatados com efeito "BB Laser" natural e retorno imediato à rotina.
+            </p>
+
+            <div class="spec-pills">
+              <div class="spec-box">
+                <span class="spec-label">DURAÇÃO</span>
+                <span class="spec-val" id="p-dur">45 min</span>
+              </div>
+              <div class="spec-box">
+                <span class="spec-label">RECUPERAÇÃO</span>
+                <span class="spec-val" id="p-rec">Zero downtime</span>
+              </div>
+              <div class="spec-box">
+                <span class="spec-label">HIDRATAÇÃO</span>
+                <span class="spec-val" style="color:var(--sage-primary);" id="p-hyd">+64% em 7d</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Instant Time Slot Picker -->
+          <div style="margin-top:14px;">
+            <label style="font-size:11.5px; font-weight:600; color:var(--ink-secondary); display:block; margin-bottom:6px;">
+              2. Horários disponíveis com a Dra. Helena:
+            </label>
+            <div class="slot-grid">
+              <button class="slot-btn" aria-pressed="true" data-slot="Hoje, 16:30">Hoje · 16:30</button>
+              <button class="slot-btn" aria-pressed="false" data-slot="Amanhã, 10:00">Amanhã · 10:00</button>
+              <button class="slot-btn" aria-pressed="false" data-slot="Qui, 14:30">Qui · 14:30</button>
+            </div>
+          </div>
+
+          <!-- 3.5 Clinical Guarantee & Preparation Note -->
+          <div style="margin-top:14px; padding:12px 14px; border-radius:12px; background:var(--paper-sunken); display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--ink-secondary);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:700; color:var(--ink-espresso);">✓ Escaneamento Óptico 3D incluso</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sage-primary);">CORTESIA</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span>✓ Kit pós-laser calmante com água termal botânica</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sage-primary);">INCLUSO</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Transparent Price & Action Footer -->
+        <div class="price-footer">
+          <div>
+            <span style="font-size:11px; color:var(--ink-muted); display:block;">Sessão completa + Escaneamento 3D</span>
+            <div style="display:flex; align-items:baseline; gap:6px;">
+              <span style="font-family:'Instrument Serif',serif; font-size:38px; line-height:1;" id="p-price">R$ 680</span>
+              <span style="font-size:11.5px; color:var(--ink-secondary);">ou 3x sem juros</span>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="confirm-btn" style="padding: 13px 22px; font-size: 13.5px;">
+            <span id="confirm-label">Reservar Hoje · 16:30</span>
+          </button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const PROTO_DATA = {
+      glow: {
+        tag: 'PROTOCOLO RECOMENDADO // 01',
+        title: 'Laser Lavieen + Exossomos Botânicos',
+        desc: 'Uniformiza o tom da pele, suaviza melasma e fecha poros dilatados com efeito "BB Laser" natural e retorno imediato à rotina.',
+        dur: '45 min',
+        rec: 'Zero downtime',
+        hyd: '+64% em 7d',
+        price: 'R$ 680',
+      },
+      lift: {
+        tag: 'PROTOCOLO RECOMENDADO // 02',
+        title: 'Ultrassom Microfocado Ultraformer MPT',
+        desc: 'Ancoragem muscular profunda e neocolagênese progressiva para contorno mandibular e efeito lifting sem cortes.',
+        dur: '60 min',
+        rec: 'Imediato',
+        hyd: '+82% firmeza',
+        price: 'R$ 1.290',
+      },
+      hydra: {
+        tag: 'PROTOCOLO RECOMENDADO // 03',
+        title: 'Bioremodelação Profhilo + LED Âmbar',
+        desc: 'Ácido hialurônico ultrapuro de duplo peso molecular que restaura a arquitetura dérmica e devolve o viço acetinado.',
+        dur: '40 min',
+        rec: 'Zero downtime',
+        hyd: '+91% turgor',
+        price: 'R$ 920',
+        rawPrice: 920,
+      },
+    };
+    PROTO_DATA.glow.rawPrice = 680;
+    PROTO_DATA.lift.rawPrice = 1290;
+
+    let currentPriceVal = 680;
+    function animatePriceTo(targetVal) {
+      const el = document.getElementById('p-price');
+      if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (el) el.textContent = `R$ ${targetVal.toLocaleString('pt-BR')}`;
+        currentPriceVal = targetVal;
+        return;
+      }
+      const startVal = currentPriceVal;
+      const startTime = performance.now();
+      const duration = 360;
+      function step(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = Math.round(startVal + (targetVal - startVal) * eased);
+        el.textContent = `R$ ${val.toLocaleString('pt-BR')}`;
+        if (t < 1) requestAnimationFrame(step);
+        else currentPriceVal = targetVal;
+      }
+      requestAnimationFrame(step);
+    }
+
+    document.querySelectorAll('.seg-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.seg-btn').forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
+        const d = PROTO_DATA[btn.dataset.proto];
+        const well = document.querySelector('.protocol-well');
+        if (well && well.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          well.animate(
+            [
+              { opacity: 0.45, transform: 'translateY(6px) scale(0.985)' },
+              { opacity: 1, transform: 'translateY(0) scale(1)' },
+            ],
+            { duration: 280, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+          );
+        }
+        document.getElementById('p-tag').textContent = d.tag;
+        document.getElementById('p-title').textContent = d.title;
+        document.getElementById('p-desc').textContent = d.desc;
+        document.getElementById('p-dur').textContent = d.dur;
+        document.getElementById('p-rec').textContent = d.rec;
+        document.getElementById('p-hyd').textContent = d.hyd;
+        animatePriceTo(d.rawPrice);
+      });
+    });
+
+    // Pointer-reactive radial spotlight on Story Card
+    const storyCard = document.querySelector('.story-card');
+    if (storyCard) {
+      storyCard.addEventListener('pointermove', (e) => {
+        const rect = storyCard.getBoundingClientRect();
+        storyCard.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+        storyCard.style.setProperty('--my', `${e.clientY - rect.top}px`);
+      });
+    }
+
+    document.querySelectorAll('.slot-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.slot-btn').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        document.getElementById('confirm-label').textContent = `Reservar ${btn.textContent}`;
+      });
+    });
+  </script>
+</body>
+</html>

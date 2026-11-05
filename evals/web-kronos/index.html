@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KRONOS // CALIBRE K-09 — Horological Micro-Bench & Raw Inspection Dossier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: oklch(96.5% 0.008 85);       /* #f7f4ec — Archival drafting vellum */
+      --paper-sunken: oklch(92.5% 0.012 85);/* #ece7da — Spec table well */
+      --ink: oklch(16.0% 0.020 260);        /* #0a0f1d — 17.54:1 WCAG / Lc 98.7 on paper */
+      --ink-muted: oklch(42.0% 0.025 260);  /* #464e62 — 6.8:1 WCAG on paper */
+      --dominant: oklch(37.9% 0.195 263.2); /* #002fa7 — International Klein Horological Blue */
+      --signal: oklch(62.0% 0.210 28.0);    /* #e83c28 — Synthetic ruby jewel bearing */
+      --brass: oklch(72.0% 0.135 82.0);     /* #c89d28 — Untreated glucydur balance wheel */
+      --hairline: oklch(16.0% 0.020 260 / 0.18);
+      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Constraint 1: Fixed single-canvas architecture on desktop; zero page scroll */
+    @media (min-width: 960px) {
+      html, body {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+    }
+
+    .grain-overlay {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      opacity: 0.04;
+    }
+
+    /* 13-Column Asymmetric Swiss Drafting Grid */
+    .bench-grid {
+      display: grid;
+      grid-template-columns: repeat(13, minmax(0, 1fr));
+      grid-template-rows: 42px 1fr 54px;
+      height: 100vh;
+      width: 100vw;
+      border: 1px solid var(--hairline);
+    }
+
+    /* Top Telemetry & Coordinate Bar */
+    .top-rail {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--ink);
+      background: var(--paper-sunken);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      background: var(--dominant);
+      color: var(--paper);
+      font-weight: 600;
+    }
+
+    .ruby-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--signal);
+      display: inline-block;
+    }
+
+    /* Left Column (Cols 1-5): Editorial Dossier & Process Notes */
+    .dossier-pane {
+      grid-column: 1 / 6;
+      border-right: 1px solid var(--ink);
+      padding: 24px 24px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--dominant);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    h1.hero-display {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: clamp(2.6rem, 4.3vw, 4.4rem);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin: 10px 0 12px;
+      color: var(--ink);
+    }
+
+    h1.hero-display em {
+      font-style: italic;
+      color: var(--dominant);
+    }
+
+    .lead-copy {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      max-width: 46ch;
+      margin-bottom: 16px;
+    }
+
+    /* Process & Raw Sketch Notes (Constraint 2: Show the process) */
+    .process-box {
+      background: var(--paper-sunken);
+      border-left: 3px solid var(--dominant);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+
+    .process-box-header {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--dominant);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .process-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11.5px;
+    }
+
+    .process-list li::before {
+      content: "› ";
+      color: var(--signal);
+      font-weight: 700;
+    }
+
+    /* Raw CNC Tolerance Table */
+    .raw-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .raw-table th {
+      text-align: left;
+      padding: 5px 6px;
+      border-bottom: 1px solid var(--ink);
+      color: var(--ink-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .raw-table td {
+      padding: 6px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .pass-tag {
+      background: var(--dominant);
+      color: var(--paper);
+      padding: 1px 5px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    /* Center-Right Column (Cols 6-13): Interactive Blueprint Canvas */
+    .blueprint-pane {
+      grid-column: 6 / 14;
+      background: var(--dominant);
+      color: var(--paper);
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 20px 24px;
+      overflow: hidden;
+    }
+
+    /* Subtle technical coordinate grid inside the Klein Blue blueprint */
+    .blueprint-pane::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, oklch(96.5% 0.008 85 / 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, oklch(96.5% 0.008 85 / 0.08) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .blueprint-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid oklch(96.5% 0.008 85 / 0.25);
+      padding-bottom: 12px;
+    }
+
+    .kpi-strip {
+      display: flex;
+      gap: 24px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-item .kpi-label {
+      font-size: 10px;
+      opacity: 0.72;
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .kpi-item .kpi-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    /* Interactive Escapement SVG Stage */
+    .stage-wrap {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .escapement-svg {
+      width: min(100%, 460px);
+      height: auto;
+      max-height: 410px;
+      overflow: visible;
+    }
+
+    .blueprint-controls {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid oklch(96.5% 0.008 85 / 0.25);
+      padding-top: 12px;
+      font-size: 11px;
+    }
+
+    .freq-btn {
+      background: transparent;
+      color: var(--paper);
+      border: 1px solid oklch(96.5% 0.008 85 / 0.45);
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 180ms var(--ease-expo), color 180ms var(--ease-expo);
+    }
+
+    .freq-btn[aria-pressed="true"], .freq-btn:hover {
+      background: var(--paper);
+      color: var(--dominant);
+      font-weight: 700;
+    }
+
+    .freq-btn:focus-visible, .chapter-tab:focus-visible {
+      outline: 2px solid var(--signal);
+      outline-offset: 2px;
+    }
+
+    /* Bottom Chapter Switcher Rail (Replaces scrolling!) */
+    .bottom-rail {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--ink);
+      background: var(--paper);
+    }
+
+    @media (max-width: 959px) {
+      .bottom-rail {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .chapter-tab {
+      appearance: none;
+      border: none;
+      border-right: 1px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      padding: 10px 16px;
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 200ms var(--ease-expo), color 200ms var(--ease-expo);
+    }
+
+    .chapter-tab:last-child { border-right: none; }
+
+    .chapter-tab[aria-selected="true"] {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .chapter-tab-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .chapter-tab-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 959px) {
+      html, body {
+        width: 100%;
+        overflow-x: hidden;
+      }
+      .bench-grid {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        min-height: 100vh;
+      }
+      .top-rail {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px 12px;
+        font-size: 10px;
+      }
+      .dossier-pane {
+        border-right: none;
+        border-bottom: 1px solid var(--ink);
+        padding: 14px 12px;
+      }
+      h1.hero-display {
+        font-size: 2.15rem;
+        line-height: 0.94;
+      }
+      .lead-copy {
+        font-size: 11.5px;
+      }
+      .process-box {
+        padding: 10px;
+      }
+      .process-list {
+        font-size: 10.5px;
+      }
+      .raw-table {
+        font-size: 9.5px;
+      }
+      .raw-table th, .raw-table td {
+        padding: 4px 2px;
+      }
+      .blueprint-pane {
+        padding: 14px 12px;
+      }
+      .blueprint-header {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .kpi-strip {
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .kpi-item .kpi-val {
+        font-size: 16px;
+      }
+      .bottom-rail {
+        grid-template-columns: 1fr 1fr;
+      }
+      .chapter-tab {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--ink);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Zero-Asset Fallback: Inline SVG Film Grain -->
+  <svg aria-hidden="true" class="grain-overlay">
+    <filter id="kronos-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#kronos-grain)" />
+  </svg>
+
+  <div class="bench-grid">
+    <!-- TOP TELEMETRY RAIL -->
+    <header class="top-rail">
+      <div>
+        <span class="status-pill"><span class="ruby-dot"></span> KRONOS BENCH // LA CHAUX-DE-FONDS</span>
+        <span style="margin-left: 12px;">CALIBRE K-09 MONOMETALLIC TOURBILLON</span>
+      </div>
+      <div style="font-variant-numeric: tabular-nums;">
+        <span>SCALE 14:1</span>
+        <span style="margin: 0 12px;">|</span>
+        <span id="cursor-coords">X: +00.00mm  Y: +00.00mm</span>
+      </div>
+    </header>
+
+    <!-- LEFT PANE: EDITORIAL & RAW PROCESS DOSSIER -->
+    <section class="dossier-pane" aria-live="polite">
+      <div>
+        <div class="chapter-badge">
+          <span id="ch-code">REV-09.A // ESCAPEMENT</span>
+          <span>—</span>
+          <span id="ch-tol">TOLERANCE ±0.0008 mm</span>
+        </div>
+        <h1 class="hero-display" id="ch-title">Co-Axial Silicon <em>Impulse</em> Escapement</h1>
+        <p class="lead-copy" id="ch-sub">
+          Tangential impulse geometry eliminating sliding friction across synthetic ruby pallet jewels. Direct bench dossier with unedited CNC deviation logs.
+        </p>
+
+        <div class="process-box">
+          <div class="process-box-header">
+            <span>WATCHMAKER BENCH LOG // UNEDITED NOTES</span>
+            <span id="ch-stamp">SIGNED: M. VAUCHER</span>
+          </div>
+          <ul class="process-list" id="ch-notes">
+            <li>DRAWN NOTE [14:02]: Escape wheel tooth flank undercut by 1.4° to prevent oil-film meniscus drag.</li>
+            <li>MATERIAL SPEC: DRIE-etched monocrystalline silicon wafer (orientation &lt;100&gt;, 142 µm thickness).</li>
+            <li>REJECTED REV-08: Beryllium-bronze anchor showed 0.4 ms drift after 420h thermal cycling.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+          <span style="font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;">RAW CNC &amp; INTERFEROMETRY DEVIATION MATRIX</span>
+          <span style="font-size:10px; color:var(--dominant); font-weight:700;">ISO-3159 CERTIFIED</span>
+        </div>
+        <table class="raw-table" aria-label="Raw CNC inspection measurements">
+          <thead>
+            <tr>
+              <th>AXIS / PARAMETER</th>
+              <th>NOMINAL</th>
+              <th>MEASURED</th>
+              <th>DELTA</th>
+              <th>STATE</th>
+            </tr>
+          </thead>
+          <tbody id="ch-table">
+            <tr><td>PALLET-LIFT-ANGLE</td><td>52.000°</td><td>52.004°</td><td>+0.004°</td><td><span class="pass-tag">PASS</span></td></tr>
+            <tr><td>IMPULSE-PIN-RAD</td><td>0.3400 mm</td><td>0.3396 mm</td><td>-0.0004 mm</td><td><span class="pass-tag">PASS</span></td></tr>
+            <tr><td>FORK-HORN-CLEAR</td><td>0.0450 mm</td><td>0.0452 mm</td><td>+0.0002 mm</td><td><span class="pass-tag">PASS</span></td></tr>
+            <tr><td>GUARD-PIN-DEPTH</td><td>0.0220 mm</td><td>0.0219 mm</td><td>-0.0001 mm</td><td><span class="pass-tag">PASS</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- RIGHT PANE: LIVE CAD BLUEPRINT & KINEMATIC ESCAPEMENT -->
+    <section class="blueprint-pane" id="blueprint-stage">
+      <div class="blueprint-header">
+        <div>
+          <div style="font-size:10px; letter-spacing:0.08em; opacity:0.75;">LIVE KINEMATIC CAD PROJECTION // LAYER 04</div>
+          <div style="font-size:13px; font-weight:700; margin-top:2px;" id="cad-layer-name">SILICON ESCAPE WHEEL + RUBY PALLET FORK</div>
+        </div>
+        <div class="kpi-strip">
+          <div class="kpi-item">
+            <span class="kpi-label">FREQUENCY</span>
+            <span class="kpi-val" id="kpi-vph">28,800 VPH</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-label">AMPLITUDE</span>
+            <span class="kpi-val" id="kpi-amp">312°</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-label">BEAT ERROR</span>
+            <span class="kpi-val" id="kpi-beat">0.1 ms</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-wrap">
+        <svg class="escapement-svg" viewBox="-220 -220 440 440" role="img" aria-label="Interactive mechanical escapement blueprint">
+          <!-- Outer Coordinate Protractor Ring -->
+          <circle cx="0" cy="0" r="192" fill="none" stroke="oklch(96.5% 0.008 85 / 0.28)" stroke-width="1" stroke-dasharray="3 3" />
+          <circle cx="0" cy="0" r="165" fill="none" stroke="oklch(96.5% 0.008 85 / 0.45)" stroke-width="1" />
+          <line x1="-205" y1="0" x2="205" y2="0" stroke="oklch(96.5% 0.008 85 / 0.2)" stroke-width="1" />
+          <line x1="0" y1="-205" x2="0" y2="205" stroke="oklch(96.5% 0.008 85 / 0.2)" stroke-width="1" />
+
+          <!-- Technical Dimension Callouts -->
+          <g fill="oklch(96.5% 0.008 85 / 0.85)" font-size="9" font-family="JetBrains Mono, monospace">
+            <text x="-185" y="-175">Ø 10.400 mm ±0.0008</text>
+            <text x="88" y="-175" id="svg-rev-label">CAD REV 09.A</text>
+            <text x="-185" y="185" id="svg-angle-readout">PHASE ANGLE: 000.0°</text>
+            <text x="82" y="185">TORQUE: 982.4 µNm</text>
+          </g>
+
+          <!-- Escape Wheel Group (Rotates in discrete mechanical steps!) -->
+          <g id="escape-wheel">
+            <circle cx="0" cy="0" r="118" fill="none" stroke="oklch(96.5% 0.008 85)" stroke-width="1.6" />
+            <circle cx="0" cy="0" r="88" fill="none" stroke="oklch(96.5% 0.008 85 / 0.55)" stroke-width="1" stroke-dasharray="6 4" />
+            <circle cx="0" cy="0" r="26" fill="none" stroke="oklch(72.0% 0.135 82.0)" stroke-width="2" />
+            <!-- 3 Co-Axial Spokes -->
+            <line x1="0" y1="-26" x2="0" y2="-118" stroke="oklch(96.5% 0.008 85)" stroke-width="2.5" />
+            <line x1="22.5" y1="13" x2="102" y2="59" stroke="oklch(96.5% 0.008 85)" stroke-width="2.5" />
+            <line x1="-22.5" y1="13" x2="-102" y2="59" stroke="oklch(96.5% 0.008 85)" stroke-width="2.5" />
+            <!-- 12 Impulse Teeth -->
+            <g id="wheel-teeth" stroke="oklch(96.5% 0.008 85)" stroke-width="1.8" fill="oklch(37.9% 0.195 263.2)">
+              <polygon points="0,-118 8,-144 -6,-138" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(30)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(60)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(90)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(120)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(150)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(180)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(210)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(240)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(270)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(300)" />
+              <polygon points="0,-118 8,-144 -6,-138" transform="rotate(330)" />
+            </g>
+          </g>
+
+          <!-- Balance Spring / Overcoil Hairline -->
+          <g id="pallet-fork" transform="translate(0, -152)">
+            <path d="M -42,18 L 0,-12 L 42,18" fill="none" stroke="oklch(72.0% 0.135 82.0)" stroke-width="3.5" />
+            <!-- Synthetic Ruby Pallet Jewels -->
+            <rect x="-46" y="14" width="10" height="16" fill="oklch(62.0% 0.210 28.0)" transform="rotate(-18 -41 22)" />
+            <rect x="36" y="14" width="10" height="16" fill="oklch(62.0% 0.210 28.0)" transform="rotate(18 41 22)" />
+            <circle cx="0" cy="-12" r="5" fill="oklch(62.0% 0.210 28.0)" />
+          </g>
+
+          <!-- Center Ruby Cap Jewel -->
+          <circle cx="0" cy="0" r="9" fill="oklch(62.0% 0.210 28.0)" />
+          <circle cx="0" cy="0" r="3.5" fill="oklch(96.5% 0.008 85)" />
+        </svg>
+      </div>
+
+      <!-- Interactive Toy: Live Oscillator Frequency Selector -->
+      <div class="blueprint-controls">
+        <div>
+          <span style="opacity:0.75; margin-right:8px;">OSCILLATOR TEST BENCH:</span>
+          <button class="freq-btn" data-hz="3" aria-pressed="false">3.0 Hz (21,600 vph)</button>
+          <button class="freq-btn" data-hz="4" aria-pressed="true">4.0 Hz (28,800 vph)</button>
+          <button class="freq-btn" data-hz="5" aria-pressed="false">5.0 Hz (36,000 vph)</button>
+        </div>
+        <div>
+          <button class="freq-btn" id="step-impulse-btn" title="Trigger single mechanical impulse step">STEP IMPULSE (+7.5°)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM CHAPTER NAVIGATION (Replaces vertical scroll with instant canvas state swap) -->
+    <nav class="bottom-rail" role="tablist" aria-label="Calibre K-09 Inspection Chapters">
+      <button class="chapter-tab" role="tab" aria-selected="true" data-ch="01">
+        <div>
+          <div class="chapter-tab-label">CHAPTER 01 // GEOMETRY</div>
+          <div style="font-size:12px; font-weight:600;">Co-Axial Silicon Escapement</div>
+        </div>
+        <span class="chapter-tab-num">01</span>
+      </button>
+      <button class="chapter-tab" role="tab" aria-selected="false" data-ch="02">
+        <div>
+          <div class="chapter-tab-label">CHAPTER 02 // ISOCHRONISM</div>
+          <div style="font-size:12px; font-weight:600;">Cylindrical Overcoil &amp; Laser Trim</div>
+        </div>
+        <span class="chapter-tab-num">02</span>
+      </button>
+      <button class="chapter-tab" role="tab" aria-selected="false" data-ch="03">
+        <div>
+          <div class="chapter-tab-label">CHAPTER 03 // ACOUSTIC</div>
+          <div style="font-size:12px; font-weight:600;">Anharmonic Strike &amp; Gear Train</div>
+        </div>
+        <span class="chapter-tab-num">03</span>
+      </button>
+      <button class="chapter-tab" role="tab" aria-selected="false" data-ch="04">
+        <div>
+          <div class="chapter-tab-label">CHAPTER 04 // ALLOCATION</div>
+          <div style="font-size:12px; font-weight:600;">Tantalum Casing &amp; Serial Ledger</div>
+        </div>
+        <span class="chapter-tab-num">04</span>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    const DATA = {
+      '01': {
+        code: 'REV-09.A // ESCAPEMENT',
+        tol: 'TOLERANCE ±0.0008 mm',
+        title: 'Co-Axial Silicon <em>Impulse</em> Escapement',
+        sub: 'Tangential impulse geometry eliminating sliding friction across synthetic ruby pallet jewels. Direct bench dossier with unedited CNC deviation logs.',
+        stamp: 'SIGNED: M. VAUCHER',
+        layer: 'SILICON ESCAPE WHEEL + RUBY PALLET FORK',
+        vph: '28,800 VPH',
+        amp: '312°',
+        beat: '0.1 ms',
+        hz: 4,
+        notes: [
+          'DRAWN NOTE [14:02]: Escape wheel tooth flank undercut by 1.4° to prevent oil-film meniscus drag.',
+          'MATERIAL SPEC: DRIE-etched monocrystalline silicon wafer (orientation <100>, 142 µm thickness).',
+          'REJECTED REV-08: Beryllium-bronze anchor showed 0.4 ms drift after 420h thermal cycling.'
+        ],
+        rows: [
+          ['PALLET-LIFT-ANGLE', '52.000°', '52.004°', '+0.004°', 'PASS'],
+          ['IMPULSE-PIN-RAD', '0.3400 mm', '0.3396 mm', '-0.0004 mm', 'PASS'],
+          ['FORK-HORN-CLEAR', '0.0450 mm', '0.0452 mm', '+0.0002 mm', 'PASS'],
+          ['GUARD-PIN-DEPTH', '0.0220 mm', '0.0219 mm', '-0.0001 mm', 'PASS']
+        ]
+      },
+      '02': {
+        code: 'REV-09.B // ISOCHRONISM',
+        tol: 'TOLERANCE ±0.0005 mm',
+        title: 'Free-Sprung Cylindrical <em>Overcoil</em>',
+        sub: 'Six-position acoustic laser interferometry across the full 68-hour barrel unwind curve.',
+        stamp: 'SIGNED: E. ROCHAT',
+        layer: 'PHILLIPS TERMINAL CURVE #14 + INERTIA WEIGHTS',
+        vph: '36,000 VPH',
+        amp: '298°',
+        beat: '0.0 ms',
+        hz: 5,
+        notes: [
+          'TERMINAL CURVE: Phillips outer curve #14 modified with laser-ablated inner collet.',
+          'INERTIA TRIM: 4 recessed platinum-iridium timing weights (0.18 mg per quarter-turn).',
+          'THERMAL COEFFICIENT: +0.09 sec/day/°C verified between 8°C and 38°C.'
+        ],
+        rows: [
+          ['POS-DIAL-UP (CH)', '+0.00 s/d', '+0.18 s/d', '+0.18 s/d', 'PASS'],
+          ['POS-CROWN-DOWN (9H)', '+0.00 s/d', '-0.22 s/d', '-0.22 s/d', 'PASS'],
+          ['POS-CROWN-LEFT (6H)', '+0.00 s/d', '+0.31 s/d', '+0.31 s/d', 'PASS'],
+          ['ISO-24H-DECAY', '<0.80 s/d', '0.29 s/d', '-0.51 s/d', 'PASS']
+        ]
+      },
+      '03': {
+        code: 'REV-09.C // ACOUSTIC',
+        tol: 'TOLERANCE ±0.0011 mm',
+        title: 'Anharmonic Strike &amp; <em>Involute</em> Train',
+        sub: 'Modified involute gear teeth milled on 5-axis Kern Micro HD at 48,000 RPM with dry MoS2 plasma pivots.',
+        stamp: 'SIGNED: L. BERTHOUD',
+        layer: 'GRADE-5 TITANIUM BRIDGE + INVOLUTE THIRD WHEEL',
+        vph: '21,600 VPH',
+        amp: '318°',
+        beat: '0.2 ms',
+        hz: 3,
+        notes: [
+          'ACOUSTIC TRACE: 18.4 kHz impulse transient damped via grade-5 titanium bridge ribs.',
+          'TORQUE RIPPLE: Reduced from 4.8% (standard epicycloidal) to 1.1% across barrel unwind.',
+          'LUBRICATION: Dry MoS2 plasma-sputtered pivots; zero wet synthetic oil on escape teeth.'
+        ],
+        rows: [
+          ['BARREL-TORQUE-MAX', '980.0 µNm', '982.4 µNm', '+2.4 µNm', 'PASS'],
+          ['THIRD-WHEEL-RUNOUT', '0.0015 mm', '0.0009 mm', '-0.0006 mm', 'PASS'],
+          ['ESCAPE-PINION-END', '0.0150 mm', '0.0148 mm', '-0.0002 mm', 'PASS'],
+          ['ACOUSTIC-Q-FACTOR', '64.2 dB', '64.8 dB', '+0.6 dB', 'PASS']
+        ]
+      },
+      '04': {
+        code: 'REV-09.D // ALLOCATION',
+        tol: 'TOLERANCE ±0.0004 mm',
+        title: 'Tantalum-992 Casing &amp; <em>Serial</em> Ledger',
+        sub: 'Eighteen calibres assembled per year in La Chaux-de-Fonds. Delivered with raw brass test-plate and interferometry tape.',
+        stamp: 'BENCH LEDGER 2026',
+        layer: 'MONOLITHIC TANTALUM-992 FLANK + SAPPHIRE GASKET',
+        vph: '28,800 VPH',
+        amp: '310°',
+        beat: '0.1 ms',
+        hz: 4,
+        notes: [
+          'DELIVERY INCLUDES: Raw CNC brass test-plate, signed interferometry tape, and 10x loupe.',
+          'CASE METAL: Tantalum-992 monolithic ring with sapphire exhibition flank.',
+          'WARRANTY: Lifetime bench service directly with the watchmaker who signed the bridge.'
+        ],
+        rows: [
+          ['SERIAL #09-01', 'GENEVA', 'DELIVERED', '0.14 s/d', 'LOCKED'],
+          ['SERIAL #09-02', 'ZURICH', 'TESTING', '0.19 s/d', 'BENCH'],
+          ['SERIAL #09-03', 'KYOTO', 'AVAILABLE', '0.11 s/d', 'OPEN'],
+          ['SERIAL #09-04', 'SÃO PAULO', 'AVAILABLE', '0.16 s/d', 'OPEN']
+        ]
+      }
+    };
+
+    let currentHz = 4;
+    let wheelAngle = 0;
+    let forkDir = 1;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wheelEl = document.getElementById('escape-wheel');
+    const forkEl = document.getElementById('pallet-fork');
+    const angleText = document.getElementById('svg-angle-readout');
+
+    function stepEscapement() {
+      wheelAngle = (wheelAngle + 7.5) % 360;
+      forkDir = -forkDir;
+      wheelEl.setAttribute('transform', `rotate(${wheelAngle})`);
+      forkEl.setAttribute('transform', `translate(0, -152) rotate(${forkDir * 4.5} 0 -12)`);
+      angleText.textContent = `PHASE ANGLE: ${wheelAngle.toFixed(1).padStart(5, '0')}°`;
+    }
+
+    let timer = null;
+    function updateTicker() {
+      if (timer) clearInterval(timer);
+      if (!reducedMotion) {
+        timer = setInterval(stepEscapement, Math.round(1000 / (currentHz * 2)));
+      }
+    }
+    updateTicker();
+
+    document.getElementById('step-impulse-btn').addEventListener('click', stepEscapement);
+
+    document.querySelectorAll('.freq-btn[data-hz]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentHz = Number(btn.dataset.hz);
+        document.querySelectorAll('.freq-btn[data-hz]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        document.getElementById('kpi-vph').textContent = `${(currentHz * 7200).toLocaleString()} VPH`;
+        updateTicker();
+      });
+    });
+
+    document.querySelectorAll('.chapter-tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const ch = DATA[tab.dataset.ch];
+        document.querySelectorAll('.chapter-tab').forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+        document.getElementById('ch-code').textContent = ch.code;
+        document.getElementById('ch-tol').textContent = ch.tol;
+        document.getElementById('ch-title').innerHTML = ch.title;
+        document.getElementById('ch-sub').textContent = ch.sub;
+        document.getElementById('ch-stamp').textContent = ch.stamp;
+        document.getElementById('cad-layer-name').textContent = ch.layer;
+        document.getElementById('kpi-vph').textContent = ch.vph;
+        document.getElementById('kpi-amp').textContent = ch.amp;
+        document.getElementById('kpi-beat').textContent = ch.beat;
+        document.getElementById('svg-rev-label').textContent = ch.code.split(' //')[0];
+        document.getElementById('ch-notes').innerHTML = ch.notes.map((n) => `<li>${n}</li>`).join('');
+        document.getElementById('ch-table').innerHTML = ch.rows
+          .map(([a, nom, m, d, s]) => `<tr><td>${a}</td><td>${nom}</td><td>${m}</td><td>${d}</td><td><span class="pass-tag">${s}</span></td></tr>`)
+          .join('');
+        currentHz = ch.hz;
+        document.querySelectorAll('.freq-btn[data-hz]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.hz) === currentHz)));
+        updateTicker();
+      });
+    });
+
+    document.getElementById('blueprint-stage').addEventListener('mousemove', (e) => {
+      const r = e.currentTarget.getBoundingClientRect();
+      const x = (((e.clientX - r.left) / r.width - 0.5) * 20).toFixed(2);
+      const y = (((e.clientY - r.top) / r.height - 0.5) * 20).toFixed(2);
+      document.getElementById('cursor-coords').textContent = `X: ${x >= 0 ? '+' : ''}${x}mm  Y: ${y >= 0 ? '+' : ''}${y}mm`;
+    });
+  </script>
+</body>
+</html>
