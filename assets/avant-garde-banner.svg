@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-banner-glow" cx="65%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#141824" />
+      <stop offset="50%" stop-color="#090B10" />
+      <stop offset="100%" stop-color="#040507" />
+    </radialGradient>
+
+    <!-- Titanium Gradient for Monumental Glyph -->
+    <linearGradient id="glyph-titanium" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#E2E6EC" />
+      <stop offset="100%" stop-color="#8E99AA" />
+    </linearGradient>
+
+    <!-- Graphite Gradient for Monumental Glyph -->
+    <linearGradient id="glyph-graphite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#647285" />
+      <stop offset="60%" stop-color="#2D3542" />
+      <stop offset="100%" stop-color="#151921" />
+    </linearGradient>
+
+    <!-- Emerald Telemetry Gradient -->
+    <linearGradient id="telemetry-emerald" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00F090" />
+      <stop offset="100%" stop-color="#05D684" />
+    </linearGradient>
+
+    <!-- Subtle Technical Grid Pattern -->
+    <pattern id="banner-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.025)" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1280" height="640" fill="url(#bg-banner-glow)" />
+  <rect width="1280" height="640" fill="url(#banner-grid)" />
+
+  <!-- Outer Architectural Framing -->
+  <rect x="32" y="32" width="1216" height="576" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+  <rect x="44" y="44" width="1192" height="552" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1" />
+
+  <!-- Corner Brackets -->
+  <path d="M 24 52 L 24 24 L 52 24" fill="none" stroke="#00F090" stroke-width="2" />
+  <path d="M 1256 52 L 1256 24 L 1228 24" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5" />
+  <path d="M 24 588 L 24 616 L 52 616" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5" />
+  <path d="M 1256 588 L 1256 616 L 1228 616" fill="none" stroke="#00F090" stroke-width="2" />
+
+  <!-- TOP STATUS BAR -->
+  <g id="top-bar">
+    <line x1="32" y1="76" x2="1248" y2="76" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1" />
+    <circle cx="56" cy="60" r="4" fill="#00F090" />
+    <text x="68" y="64" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="normal" fill="#00F090" letter-spacing="0.16em">SYSTEM ONLINE</text>
+    <text x="210" y="64" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="normal" fill="#6B7588" letter-spacing="0.12em">// AGY • CLAUDE • OPENAI • CODEX</text>
+    <text x="1224" y="64" text-anchor="end" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="normal" fill="#8E99AA" letter-spacing="0.14em">SPEC : 7-SKILL AUTONOMOUS SUITE</text>
+  </g>
+
+  <!-- LEFT HERO SECTION (TYPOGRAPHY & MISSION) -->
+  <g id="hero-content">
+    <!-- Super-title Indicator -->
+    <rect x="64" y="112" width="6" height="6" fill="#00F090" />
+    <text x="78" y="118" font-family="'Consolas', 'Courier New', monospace" font-size="12" font-weight="normal" fill="#00F090" letter-spacing="0.22em">STUDIO-GRADE UI/UX INTELLIGENCE</text>
+
+    <!-- Monumental Header -->
+    <text x="64" y="200" font-family="'Segoe UI', Arial, sans-serif" font-size="78" font-weight="bold" fill="#FFFFFF" letter-spacing="-0.02em">AVANT-GARDE</text>
+
+    <!-- Mission Statement -->
+    <text x="66" y="244" font-family="'Segoe UI', Arial, sans-serif" font-size="19" font-weight="normal" fill="#CBD5E1">The Anti-Slop Design &amp; Engineering Intelligence Suite for AI Coding Agents.</text>
+    <text x="66" y="274" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="normal" fill="#8A96A8">Bans generic AI purple gradients &amp; floating pills. Enforces APCA contrast, 60fps WebGL2 &amp; procedural Web Audio.</text>
+
+    <!-- 4 Architectural Metric Cards -->
+    <g id="metric-cards" transform="translate(66, 316)">
+      <!-- Card 1: APCA -->
+      <g transform="translate(0, 0)">
+        <rect width="132" height="74" fill="rgba(14, 18, 26, 0.7)" stroke="rgba(255, 255, 255, 0.09)" stroke-width="1" />
+        <text x="14" y="34" font-family="'Consolas', 'Courier New', monospace" font-size="20" font-weight="bold" fill="#00F090">Lc 98.8</text>
+        <text x="14" y="56" font-family="'Consolas', 'Courier New', monospace" font-size="10" font-weight="normal" fill="#717D90" letter-spacing="0.1em">APCA CONTRAST</text>
+      </g>
+
+      <!-- Card 2: 60 FPS -->
+      <g transform="translate(144, 0)">
+        <rect width="132" height="74" fill="rgba(14, 18, 26, 0.7)" stroke="rgba(255, 255, 255, 0.09)" stroke-width="1" />
+        <text x="14" y="34" font-family="'Consolas', 'Courier New', monospace" font-size="20" font-weight="bold" fill="#FFFFFF">60 FPS</text>
+        <text x="14" y="56" font-family="'Consolas', 'Courier New', monospace" font-size="10" font-weight="normal" fill="#717D90" letter-spacing="0.1em">WEBGL2 GLSL</text>
+      </g>
+
+      <!-- Card 3: <2 KB -->
+      <g transform="translate(288, 0)">
+        <rect width="132" height="74" fill="rgba(14, 18, 26, 0.7)" stroke="rgba(255, 255, 255, 0.09)" stroke-width="1" />
+        <text x="14" y="34" font-family="'Consolas', 'Courier New', monospace" font-size="20" font-weight="bold" fill="#FF5722">&lt;2 KB</text>
+        <text x="14" y="56" font-family="'Consolas', 'Courier New', monospace" font-size="10" font-weight="normal" fill="#717D90" letter-spacing="0.1em">ZERO-ASSET AUDIO</text>
+      </g>
+
+      <!-- Card 4: 0.00% DRIFT -->
+      <g transform="translate(432, 0)">
+        <rect width="132" height="74" fill="rgba(14, 18, 26, 0.7)" stroke="rgba(255, 255, 255, 0.09)" stroke-width="1" />
+        <text x="14" y="34" font-family="'Consolas', 'Courier New', monospace" font-size="20" font-weight="bold" fill="#38BDF8">0.00%</text>
+        <text x="14" y="56" font-family="'Consolas', 'Courier New', monospace" font-size="10" font-weight="normal" fill="#717D90" letter-spacing="0.1em">DESIGN DRIFT</text>
+      </g>
+    </g>
+
+    <!-- Quick Run Terminal Callout -->
+    <g transform="translate(66, 412)">
+      <rect width="564" height="34" fill="#0A0C12" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+      <text x="16" y="22" font-family="'Consolas', 'Courier New', monospace" font-size="12" font-weight="normal" fill="#00F090">$</text>
+      <text x="32" y="22" font-family="'Consolas', 'Courier New', monospace" font-size="12" font-weight="normal" fill="#E2E8F0">npx avant-garde-skills</text>
+      <text x="548" y="22" text-anchor="end" font-family="'Consolas', 'Courier New', monospace" font-size="10" font-weight="normal" fill="#64748B">[INSTANT RUN]</text>
+    </g>
+  </g>
+
+  <!-- RIGHT HERO SECTION (MONUMENTAL CONSTRUCTIVIST GLYPH & TELEMETRY LAB) -->
+  <g id="hero-visual" transform="translate(940, 270)">
+    <!-- Precision Orbital Rings -->
+    <circle cx="0" cy="0" r="180" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1" />
+    <circle cx="0" cy="0" r="150" fill="none" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1" stroke-dasharray="3 6" />
+    <circle cx="0" cy="0" r="110" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1" />
+
+    <!-- Technical Axes & Crosshairs -->
+    <line x1="-190" y1="0" x2="190" y2="0" stroke="rgba(255, 255, 255, 0.07)" stroke-width="1" />
+    <line x1="0" y1="-190" x2="0" y2="190" stroke="rgba(255, 255, 255, 0.07)" stroke-width="1" />
+
+    <!-- Corner Reticles -->
+    <path d="M -130 -110 L -140 -110 L -140 -100" fill="none" stroke="#00F090" stroke-width="1.5" />
+    <path d="M 130 -110 L 140 -110 L 140 -100" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
+    <path d="M -130 110 L -140 110 L -140 100" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
+    <path d="M 130 110 L 140 110 L 140 100" fill="none" stroke="#00F090" stroke-width="1.5" />
+
+    <!-- Constructivist 'A' Prism Monogram -->
+    <!-- Left Facet (Titanium) -->
+    <polygon points="0,-120 0,-40 -70,110 -115,110" fill="url(#glyph-titanium)" />
+    <!-- Right Facet (Graphite) -->
+    <polygon points="0,-120 0,-40 70,110 115,110" fill="url(#glyph-graphite)" />
+    <!-- Center Inverted Triangle Window -->
+    <polygon points="0,-40 40,45 -40,45" fill="#07090D" stroke="rgba(255, 255, 255, 0.16)" stroke-width="1" />
+    <!-- Horizontal Precision Bar -->
+    <line x1="-90" y1="50" x2="90" y2="50" stroke="url(#telemetry-emerald)" stroke-width="3" />
+    <!-- Center Pip -->
+    <circle cx="0" cy="50" r="4" fill="#FF5722" />
+
+    <!-- Procedural Oscilloscope Wave Trace (Sound & Shader telemetry) -->
+    <path d="M -160 140 Q -120 120 -80 140 T 0 140 T 80 140 T 160 140" fill="none" stroke="rgba(0, 240, 144, 0.4)" stroke-width="1.5" />
+    <path d="M -160 140 Q -130 100 -90 140 T -20 140 T 50 110 T 110 140 T 160 140" fill="none" stroke="#00F090" stroke-width="1.5" />
+    <text x="0" y="162" text-anchor="middle" font-family="'Consolas', 'Courier New', monospace" font-size="9" fill="#78869A" letter-spacing="0.14em">ADSR TRANSIENT // 60FPS GLSL SYNC</text>
+  </g>
+
+  <!-- BOTTOM 7 SKILLS MATRIX STRIP -->
+  <g id="skills-strip" transform="translate(64, 480)">
+    <!-- Dividing Line -->
+    <line x1="0" y1="0" x2="1152" y2="0" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+
+    <!-- Strip Header -->
+    <text x="0" y="24" font-family="'Consolas', 'Courier New', monospace" font-size="10" font-weight="normal" fill="#8C98AA" letter-spacing="0.16em">SUITE DOMAINS [ 7 ACTIVE SPECIALISTS ] :</text>
+
+    <!-- 7 Skill Hairline Indicator Cells -->
+    <g transform="translate(0, 36)">
+      <!-- 1: Frontend -->
+      <g transform="translate(0, 0)">
+        <rect width="156" height="52" fill="rgba(15, 19, 28, 0.8)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="12" y="14" width="6" height="6" fill="#00F090" />
+        <text x="24" y="21" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="bold" fill="#FFFFFF">FRONTEND</text>
+        <text x="12" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#717D90">Layman-to-Studio &amp; Bento</text>
+      </g>
+
+      <!-- 2: Desktop -->
+      <g transform="translate(166, 0)">
+        <rect width="156" height="52" fill="rgba(15, 19, 28, 0.8)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="12" y="14" width="6" height="6" fill="#38BDF8" />
+        <text x="24" y="21" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="bold" fill="#FFFFFF">DESKTOP</text>
+        <text x="12" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#717D90">Tauri &amp; 120ms Keymaps</text>
+      </g>
+
+      <!-- 3: Shaders -->
+      <g transform="translate(332, 0)">
+        <rect width="156" height="52" fill="rgba(15, 19, 28, 0.8)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="12" y="14" width="6" height="6" fill="#A855F7" />
+        <text x="24" y="21" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="bold" fill="#FFFFFF">SHADERS</text>
+        <text x="12" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#717D90">WebGL2 &amp; Bayer Dither</text>
+      </g>
+
+      <!-- 4: Data-Viz -->
+      <g transform="translate(498, 0)">
+        <rect width="156" height="52" fill="rgba(15, 19, 28, 0.8)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="12" y="14" width="6" height="6" fill="#F59E0B" />
+        <text x="24" y="21" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="bold" fill="#FFFFFF">DATA-VIZ</text>
+        <text x="12" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#717D90">Tufte, Lupi &amp; OKLCH</text>
+      </g>
+
+      <!-- 5: Mobile -->
+      <g transform="translate(664, 0)">
+        <rect width="156" height="52" fill="rgba(15, 19, 28, 0.8)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="12" y="14" width="6" height="6" fill="#10B981" />
+        <text x="24" y="21" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="bold" fill="#FFFFFF">MOBILE</text>
+        <text x="12" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#717D90">100dvh &amp; Rotary Dials</text>
+      </g>
+
+      <!-- 6: AI-UX -->
+      <g transform="translate(830, 0)">
+        <rect width="156" height="52" fill="rgba(15, 19, 28, 0.8)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="12" y="14" width="6" height="6" fill="#60A5FA" />
+        <text x="24" y="21" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="bold" fill="#FFFFFF">AI-UX</text>
+        <text x="12" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#717D90">Post-Chat Redline Diffs</text>
+      </g>
+
+      <!-- 7: Sonic -->
+      <g transform="translate(996, 0)">
+        <rect width="156" height="52" fill="rgba(15, 19, 28, 0.8)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+        <rect x="12" y="14" width="6" height="6" fill="#FF5722" />
+        <text x="24" y="21" font-family="'Consolas', 'Courier New', monospace" font-size="11" font-weight="bold" fill="#FFFFFF">ACOUSTICS</text>
+        <text x="12" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#717D90">Zero-Asset Web Audio</text>
+      </g>
+    </g>
+  </g>
+</svg>

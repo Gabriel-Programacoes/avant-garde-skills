@@ -1,5 +1,9 @@
 # Avant-Garde Skills Suite
 
+<p align="center">
+  <img src="assets/avant-garde-banner.png" alt="Avant-Garde Skills Suite" width="100%" />
+</p>
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Skills: 7](https://img.shields.io/badge/Skills-7%20Active-emerald)](package.json)
 [![Auditors: Zero--Dep](https://img.shields.io/badge/Auditors-Zero--Dependency-orange)](package.json)
