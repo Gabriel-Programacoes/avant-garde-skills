@@ -4,7 +4,7 @@
   "description": "Studio-grade UI/UX intelligence suite for AI coding agents (Gemini, Claude, Codex, AGY). Replaces generic AI slop with award-level frontend craft, APCA contrast, WebGL shaders, procedural acoustics, and multi-screen design lock.",
   "type": "module",
   "bin": {
-    "avant-garde-skills": "./bin/cli.mjs"
+    "avant-garde-skills": "bin/cli.mjs"
   },
   "main": "./bin/cli.mjs",
   "scripts": {
@@ -35,7 +35,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Gabriel-Programacoes/avant-garde-skills.git"
+    "url": "git+https://github.com/Gabriel-Programacoes/avant-garde-skills.git"
   },
   "bugs": {
     "url": "https://github.com/Gabriel-Programacoes/avant-garde-skills/issues"
