@@ -1,597 +1,497 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lumina Atelier — Tela 2: Prontuário da Paciente &amp; Calendário de Sessões</title>
+  <title>Lumina Patient Portal — Recovery Chronometer &amp; LuminaCalendar (Screen 2)</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./tokens.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="tokens.css">
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
+    body {
       background: var(--paper-stone);
       color: var(--ink-espresso);
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 13.5px;
+      line-height: 1.55;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
     .tabular-nums { font-variant-numeric: tabular-nums; }
 
-    .ambient-sunlight {
-      position: fixed;
-      top: -120px;
-      right: -80px;
-      width: 580px;
-      height: 580px;
-      border-radius: 50%;
-      background: radial-gradient(circle, oklch(89% 0.065 65 / 0.55) 0%, oklch(92% 0.04 158 / 0.25) 50%, transparent 72%);
-      pointer-events: none;
-      z-index: 0;
-      animation: sunlightOrbitalDrift 14s ease-in-out infinite;
-    }
-
-    .page-shell {
-      position: relative;
-      z-index: 2;
-      max-width: 1340px;
-      margin: 0 auto;
-      padding: 18px 28px 28px;
+    /* Top Patient Portal Header */
+    .portal-nav {
+      background: var(--surface-card);
+      border-bottom: 1px solid var(--border-hairline);
+      padding: 12px 32px;
       display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    /* REUSED COMPONENT 1: LuminaNavPill (identical contract to Screen 1) */
-    .nav-pill {
-      background: oklch(99.5% 0.003 78.0 / 0.78);
-      backdrop-filter: blur(16px) saturate(180%);
-      -webkit-backdrop-filter: blur(16px) saturate(180%);
-      box-shadow:
-        inset 0 1px 0 0 oklch(100% 0 0 / 0.9),
-        0 10px 30px -12px oklch(18% 0.02 155 / 0.08);
-      border: 1px solid var(--border-hairline);
-      border-radius: 14px;
-      padding: 10px 14px 10px 22px;
-      display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
-
-    .brand-lockup { display: flex; align-items: baseline; gap: 14px; }
-    .brand-serif { font-family: 'Instrument Serif', serif; font-size: 26px; letter-spacing: -0.02em; line-height: 1; }
-    .brand-meta {
+    .portal-brand {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 24px;
+      font-style: italic;
+      color: var(--ink-espresso);
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .dossier-id {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10.5px;
-      color: var(--ink-secondary);
-      padding-left: 14px;
-      border-left: 1px solid var(--border-hairline);
+      color: var(--ink-muted);
+      letter-spacing: 0.1em;
+      font-style: normal;
     }
-
-    .nav-links {
+    .nav-right-block {
       display: flex;
       align-items: center;
-      gap: 24px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-secondary);
+      gap: 18px;
     }
-    .nav-active {
+    .patient-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
       color: var(--sage-primary);
-      font-weight: 700;
-      border-bottom: 1.5px solid var(--sage-primary);
-      padding-bottom: 2px;
-    }
-
-    .btn-primary {
-      background: var(--sage-primary);
-      color: var(--surface-card);
-      border: none;
-      border-radius: 10px;
-      padding: 10px 20px;
-      font-family: inherit;
-      font-size: 13px;
       font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
     }
-
-    /* Main 2-Column Workspace (Same 7.1fr / 4.9fr Asymmetric Rhythm as Screen 1) */
-    .portal-bento {
-      display: grid;
-      grid-template-columns: 7.1fr 4.9fr;
-      gap: 22px;
-      align-items: stretch;
-    }
-
-    .left-column {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .dossier-card {
-      background:
-        radial-gradient(480px circle at var(--mx, 50%) var(--my, 20%), oklch(92% 0.035 158 / 0.22), transparent 65%),
-        var(--surface-card);
+    .btn-back-screen1 {
+      background: var(--paper-sunken);
       border: 1px solid var(--border-hairline);
-      border-radius: 24px;
-      padding: 28px 32px;
-      box-shadow: 0 16px 40px -20px oklch(18% 0.02 155 / 0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      animation: luminaRevealUp 650ms var(--ease-out-expo) both;
-      transition: transform 260ms var(--ease-spring), box-shadow 260ms var(--ease-spring), border-color 260ms var(--ease-spring);
+      color: var(--ink-espresso);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 6px 14px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.15s ease;
     }
-    .dossier-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 24px 48px -18px oklch(18% 0.02 155 / 0.11);
+    .btn-back-screen1:hover {
+      background: white;
       border-color: var(--border-strong);
     }
 
-    /* REUSED COMPONENT 2: LuminaSegmentedPill */
-    .pill-switcher {
-      background: var(--paper-sunken);
-      padding: 4px;
-      border-radius: 14px;
+    /* Main Split Portal Layout */
+    .portal-grid {
+      flex: 1;
+      max-width: 1360px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 24px 32px 36px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 4px;
+      grid-template-columns: 1fr 480px;
+      gap: 32px;
     }
-    .seg-btn {
-      background: transparent;
-      border: none;
-      border-radius: 10px;
-      padding: 9px 10px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-secondary);
-      cursor: pointer;
-    }
-    .seg-btn[aria-selected="true"] {
+
+    /* LEFT COLUMN: Full-Month LuminaCalendar Scheduling Grid */
+    .schedule-bay {
       background: var(--surface-card);
-      color: var(--ink-espresso);
-      box-shadow: 0 2px 8px oklch(18% 0.02 155 / 0.08);
-    }
-
-    /* Dermal Biomarker Telemetry Strip (Matches Screen 1 Metric Typography) */
-    .biomarker-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      padding: 16px;
-      background: var(--paper-stone);
+      border-radius: 12px;
       border: 1px solid var(--border-hairline);
-      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 15px 35px -10px oklch(18% 0.02 155 / 0.05);
+      display: flex;
+      flex-direction: column;
     }
-
-    .metric-big {
-      font-family: 'Instrument Serif', serif;
-      font-size: 38px;
-      line-height: 0.95;
+    .schedule-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .schedule-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 26px;
       color: var(--ink-espresso);
     }
-    .metric-big sup {
+    .schedule-meta {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--sage-primary);
       font-weight: 600;
-      margin-left: 3px;
     }
 
-    /* Session Timeline Stepper */
-    .session-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    /* Month Calendar Table */
+    .calendar-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
     }
-    .session-row {
-      display: grid;
-      grid-template-columns: 96px 1fr auto;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border-hairline);
-      background: var(--surface-card);
+    .calendar-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--ink-muted);
+      text-align: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-hairline);
     }
-    .session-row.active-session {
-      background: oklch(91.0% 0.032 158.0 / 0.35);
-      border-color: var(--sage-primary);
+    .calendar-table td {
+      height: 64px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid oklch(18% 0.02 155 / 0.05);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s ease;
     }
+    .calendar-table td:hover {
+      background: var(--paper-sunken);
+    }
+    .calendar-table td.active-session {
+      background: var(--sage-soft);
+      font-weight: 700;
+      color: var(--sage-primary);
+    }
+    .calendar-table td.selected {
+      background: var(--sage-primary);
+      color: white;
+    }
+    .cell-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--sage-primary);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 8px;
+      left: calc(50% - 2px);
+    }
+    .cell-dot.orange { background: var(--terracotta); }
 
-    .sub-bento-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-    .tactile-subcard {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: 20px;
-      padding: 18px 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    /* RIGHT COLUMN: REUSED COMPONENT 3 — LuminaCalendar (variant="month") */
-    .scheduler-panel {
-      background: var(--surface-card);
-      border: 1.5px solid var(--border-strong);
-      border-radius: 24px;
-      padding: 26px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 14px;
-      box-shadow: 0 22px 48px -18px oklch(18% 0.02 155 / 0.10);
-    }
-
-    .lumina-calendar {
+    /* Upcoming Appointments List */
+    .upcoming-box {
+      margin-top: auto;
       background: var(--paper-stone);
+      border-radius: 8px;
       border: 1px solid var(--border-hairline);
-      border-radius: 18px;
-      padding: 16px;
+      padding: 16px 20px;
+    }
+    .upcoming-head {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .appointment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .appointment-item:last-child { border-bottom: none; }
+
+    /* RIGHT COLUMN: Recovery Chronometer & Regimen */
+    .recovery-bay {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .recovery-card {
+      background: var(--surface-card);
+      border-radius: 12px;
+      border: 1px solid var(--border-hairline);
+      padding: 24px;
+      box-shadow: 0 15px 35px -10px oklch(18% 0.02 155 / 0.05);
+    }
+    .card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-secondary);
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Dynamic Recovery Score Gauge */
+    .recovery-readout {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .score-big {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--sage-primary);
+    }
+    .score-desc {
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+    }
+
+    /* Interactive Barrier Recovery Slider */
+    .scrubber-wrap {
+      margin-top: 14px;
+    }
+    input[type=range].barrier-scrubber {
+      width: 100%;
+      accent-color: var(--sage-primary);
+    }
+
+    /* Daily Regimen Timeline */
+    .regimen-timeline {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-top: 10px;
     }
-
-    .cal-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
+    .regimen-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 12.5px;
+    }
+    .step-badge {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
-      color: var(--ink-muted);
-      text-transform: uppercase;
-    }
-
-    .cal-month-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
-
-    .cal-day-cell {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: 12px;
-      padding: 7px 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      cursor: pointer;
-      color: var(--ink-espresso);
-      transition: transform 150ms var(--ease-spring), background 160ms var(--ease-spring), border-color 160ms var(--ease-spring), box-shadow 160ms var(--ease-spring);
-    }
-    .cal-day-cell:hover:not([disabled]) {
-      transform: translateY(-2px);
-      border-color: var(--sage-primary);
-    }
-    .cal-day-cell:active:not([disabled]) {
-      transform: scale(0.95);
-    }
-    .cal-day-cell[disabled] {
+      font-weight: 700;
       background: var(--paper-sunken);
-      color: var(--ink-muted);
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-    .cal-day-cell[aria-pressed="true"] {
-      background: var(--sage-primary);
-      color: var(--surface-card);
-      border-color: var(--sage-primary);
-      box-shadow: 0 6px 14px oklch(39% 0.092 158 / 0.25);
-    }
-    .cal-day-num {
-      font-family: 'Instrument Serif', serif;
-      font-size: 20px;
-      line-height: 1;
-    }
-    .cal-day-slots {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: var(--terracotta);
-      font-weight: 600;
-    }
-    .cal-day-cell[aria-pressed="true"] .cal-day-slots {
-      color: var(--sage-soft);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--ink-secondary);
     }
 
-    /* Exact same Slot Button styling from Screen 1's LuminaCalendar */
-    .slot-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+    /* Direct Clinical Messaging Box */
+    .doctor-msg-box {
+      margin-top: auto;
+      background: var(--paper-stone);
+      border-radius: 8px;
+      border: 1px solid var(--border-hairline);
+      padding: 16px;
     }
-    .slot-btn {
-      background: var(--surface-card);
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      padding: 9px 10px;
+    .msg-author {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--ink-espresso);
-      cursor: pointer;
-      text-align: center;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--sage-primary);
+      margin-bottom: 4px;
     }
-    .slot-btn[aria-pressed="true"] {
-      background: var(--sage-primary);
-      color: var(--surface-card);
-      border-color: var(--sage-primary);
+    .msg-content {
+      font-size: 12.5px;
+      color: var(--ink-espresso);
+      line-height: 1.5;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .portal-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="ambient-sunlight" aria-hidden="true"></div>
 
-  <div class="page-shell tabular-nums">
-    <!-- REUSED COMPONENT #1: LuminaNavPill (Shared with Screen 1) -->
-    <header class="nav-pill">
-      <div class="brand-lockup">
-        <span class="brand-serif">Lumina Atelier</span>
-        <span class="brand-meta">PRONTUÁRIO DIGITAL · ID #LUM-8492</span>
-      </div>
+  <!-- Top Patient Navigation -->
+  <header class="portal-nav">
+    <div class="portal-brand">
+      Lumina Atelier <span class="dossier-id">// PATIENT DOSSIER #LM-8821</span>
+    </div>
+    <div class="nav-right-block">
+      <span class="patient-badge">CLARA V. SOMMER · DR. VOGEL</span>
+      <a href="index.html" class="btn-back-screen1">← Back to Consultation (Screen 1)</a>
+    </div>
+  </header>
 
-      <nav class="nav-links" aria-label="Navegação do Portal">
-        <span>Visão Clínica</span>
-        <span class="nav-active">Prontuário &amp; Agenda</span>
-        <span>Escaneamento 3D</span>
-        <span>Prescrição Tópica</span>
-      </nav>
+  <!-- Main Split Portal -->
+  <main class="portal-grid">
 
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span style="font-size:12.5px; font-weight:600; color:var(--ink-secondary);">Marina Alencar</span>
-        <div style="width:34px; height:34px; border-radius:50%; background:var(--sage-primary); color:var(--surface-card); font-family:'Instrument Serif',serif; font-size:16px; display:flex; align-items:center; justify-content:center;">
-          MA
-        </div>
-      </div>
-    </header>
-
-    <main class="portal-bento">
-      <!-- LEFT COLUMN: Patient Clinical Dossier & 3D Biomarker Progression -->
-      <div class="left-column">
-        <section class="dossier-card">
-          <div style="display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:14px; border-bottom:1px solid var(--border-hairline);">
-            <div>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; color:var(--sage-primary);">
-                CICLO REGENERATIVO ATIVO // PROTOCOLO 01 (LAVIEEN + EXOSSOMOS)
-              </span>
-              <h1 style="font-family:'Instrument Serif',serif; font-size:40px; font-weight:400; line-height:1.02; margin-top:4px;">
-                Evolução dérmica de <em>Marina Alencar</em>
-              </h1>
-            </div>
-            <div style="border-left:2px solid var(--sage-primary); padding-left:12px; font-family:'JetBrains Mono',monospace;">
-              <span style="font-size:9.5px; color:var(--ink-muted); display:block;">PROGRESSO DO CICLO</span>
-              <span style="font-size:11.5px; color:var(--sage-primary); font-weight:700;">■ SESSÃO 02/03 CONCLUÍDA</span>
-            </div>
-          </div>
-
-          <!-- REUSED COMPONENT #2: LuminaSegmentedPill -->
-          <div class="pill-switcher" role="tablist">
-            <button class="seg-btn" role="tab" aria-selected="true">Evolução Dérmica 3D</button>
-            <button class="seg-btn" role="tab" aria-selected="false">Cronograma de Sessões (2/3)</button>
-            <button class="seg-btn" role="tab" aria-selected="false">Prescrição Home Care</button>
-          </div>
-
-          <!-- Biomarker Comparison Readout -->
-          <div class="biomarker-grid">
-            <div>
-              <span style="font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--ink-muted);">UNIFORMIDADE MELÂNICA</span>
-              <div class="metric-big">+42<sup>%</sup></div>
-              <span style="font-size:11.5px; color:var(--ink-secondary);">Redução de manchas UV subdérmicas</span>
-            </div>
-            <div>
-              <span style="font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--ink-muted);">HIDRATAÇÃO CORNEOMETRIA</span>
-              <div class="metric-big">78.4<sup>un</sup></div>
-              <span style="font-size:11.5px; color:var(--ink-secondary);">Acima da meta clínica (65.0 un)</span>
-            </div>
-            <div>
-              <span style="font-size:10.5px; font-family:'JetBrains Mono',monospace; color:var(--ink-muted);">DENSIDADE COLÁGENO</span>
-              <div class="metric-big">1.84<sup>mm</sup></div>
-              <span style="font-size:11.5px; color:var(--ink-secondary);">Ultrassom dérmico (+0.31mm)</span>
-            </div>
-          </div>
-
-          <!-- Clinical Session Ledger -->
-          <div class="session-list">
-            <div class="session-row">
-              <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-muted);">14 SET 2026</span>
-              <div>
-                <div style="font-weight:700; font-size:13px;">Sessão 01 · Mapeamento 3D + Laser Lavieen (6mJ)</div>
-                <div style="font-size:12px; color:var(--ink-secondary);">Dra. Helena Vasconcelos · Recuperação completa em 18h</div>
-              </div>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sage-primary); font-weight:700;">✓ REALIZADA</span>
-            </div>
-
-            <div class="session-row">
-              <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-muted);">15 OUT 2026</span>
-              <div>
-                <div style="font-weight:700; font-size:13px;">Sessão 02 · Laser Lavieen (8mJ) + Drug Delivery Exossomos</div>
-                <div style="font-size:12px; color:var(--ink-secondary);">Dra. Helena Vasconcelos · Ganho de +24% em luminosidade</div>
-              </div>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sage-primary); font-weight:700;">✓ REALIZADA</span>
-            </div>
-
-            <div class="session-row active-session">
-              <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; color:var(--sage-primary);">12 NOV 2026</span>
-              <div>
-                <div style="font-weight:700; font-size:13px;">Sessão 03 (Final) · Consolidação &amp; Reavaliação Óptica 3D</div>
-                <div style="font-size:12px; color:var(--ink-secondary);">Horário selecionado: <strong>Qui, 12 Nov às 16:30</strong> · Jardins SP</div>
-              </div>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--terracotta); font-weight:700;">AGENDADA</span>
-            </div>
-          </div>
-        </section>
-
-        <div class="sub-bento-row">
-          <article class="tactile-subcard">
-            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; color:var(--sage-primary);">
-              PREPARO PRÉ-SESSÃO 03 // FALTAM 7 DIAS
-            </span>
-            <p style="font-size:12.5px; color:var(--ink-secondary);">
-              Suspender ácidos retinóicos 48h antes da sessão e manter uso contínuo do Sérum Reparador de Ceramidas manhã e noite.
-            </p>
-          </article>
-
-          <article class="tactile-subcard" style="background:var(--paper-sunken);">
-            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; color:var(--ink-secondary);">
-              CANAL DIRETO CONCIERGE CLÍNICO
-            </span>
-            <p style="font-size:12.5px; color:var(--ink-secondary);">
-              Dúvidas sobre reação da pele ou ajuste de fórmula? Resposta direta da equipe da Dra. Helena em até 15 min.
-            </p>
-          </article>
-        </div>
-      </div>
-
-      <!-- RIGHT COLUMN: REUSED COMPONENT #3 — LuminaCalendar (variant="month") -->
-      <aside class="scheduler-panel" aria-label="Calendário Clínico de Agendamento e Remarcação">
+    <!-- LEFT COLUMN: Reusable Full-Month LuminaCalendar Scheduling -->
+    <section class="schedule-bay">
+      <div class="schedule-header">
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-bottom:12px; border-bottom:1px solid var(--border-hairline);">
-            <div>
-              <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sage-primary); font-weight:600;">
-                COMPONENTE REUTILIZADO // LUMINACALENDAR (MONTH MODE)
-              </div>
-              <h2 style="font-family:'Instrument Serif',serif; font-size:28px; font-weight:400; line-height:1.05; margin-top:2px;">
-                Gerenciar ou remarcar 3ª sessão
-              </h2>
-            </div>
-            <span style="font-family:'JetBrains Mono',monospace; color:var(--ink-secondary); font-size:11px; font-weight:600;">
-              NOV 2026
-            </span>
-          </div>
-
-          <!-- Shared LuminaCalendar Component Instance -->
-          <div class="lumina-calendar" style="margin-top:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12.5px; font-weight:700;">Dra. Helena Vasconcelos · Unidade Jardins</span>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-secondary);">Novembro 2026</span>
-            </div>
-
-            <div class="cal-weekdays">
-              <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
-            </div>
-
-            <div class="cal-month-grid" role="grid">
-              <!-- Week 1 -->
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">2</span><span class="cal-day-slots">2h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">3</span><span class="cal-day-slots">3h</span></button>
-              <button class="cal-day-cell" disabled><span class="cal-day-num">4</span><span class="cal-day-slots">—</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">5</span><span class="cal-day-slots">3h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">6</span><span class="cal-day-slots">2h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">7</span><span class="cal-day-slots">1h</span></button>
-              <button class="cal-day-cell" disabled><span class="cal-day-num">8</span><span class="cal-day-slots">—</span></button>
-              <!-- Week 2 (Active Selection: Day 12) -->
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">9</span><span class="cal-day-slots">2h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">10</span><span class="cal-day-slots">4h</span></button>
-              <button class="cal-day-cell" disabled><span class="cal-day-num">11</span><span class="cal-day-slots">—</span></button>
-              <button class="cal-day-cell" aria-pressed="true"><span class="cal-day-num">12</span><span class="cal-day-slots">3h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">13</span><span class="cal-day-slots">2h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">14</span><span class="cal-day-slots">1h</span></button>
-              <button class="cal-day-cell" disabled><span class="cal-day-num">15</span><span class="cal-day-slots">—</span></button>
-              <!-- Week 3 -->
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">16</span><span class="cal-day-slots">3h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">17</span><span class="cal-day-slots">2h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">18</span><span class="cal-day-slots">4h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">19</span><span class="cal-day-slots">3h</span></button>
-              <button class="cal-day-cell" aria-pressed="false"><span class="cal-day-num">20</span><span class="cal-day-slots">2h</span></button>
-              <button class="cal-day-cell" disabled><span class="cal-day-num">21</span><span class="cal-day-slots">—</span></button>
-              <button class="cal-day-cell" disabled><span class="cal-day-num">22</span><span class="cal-day-slots">—</span></button>
-            </div>
-
-            <div style="margin-top:4px;">
-              <label style="font-size:11.5px; font-weight:600; color:var(--ink-secondary); display:block; margin-bottom:6px;">
-                Horários disponíveis em <strong>Qui, 12 de Novembro</strong>:
-              </label>
-              <div class="slot-grid">
-                <button class="slot-btn" aria-pressed="false">10:00</button>
-                <button class="slot-btn" aria-pressed="false">14:30</button>
-                <button class="slot-btn" aria-pressed="true">16:30 · Atual</button>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px; padding:12px 14px; border-radius:12px; background:var(--paper-sunken); font-size:12px; color:var(--ink-secondary); display:flex; justify-content:space-between; align-items:center;">
-            <span>✓ Remarcação sem taxa até 24h antes</span>
-            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sage-primary); font-weight:700;">PACOTE PAGO</span>
-          </div>
+          <h1 class="schedule-title">Clinical Appointment Ledger</h1>
+          <div style="font-size: 13px; color: var(--ink-muted);">Reusable LuminaCalendar (Month Variant)</div>
         </div>
+        <div class="schedule-meta tabular-nums">NOVEMBER 2026</div>
+      </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid var(--border-hairline);">
+      <!-- Month Grid Table -->
+      <table class="calendar-table">
+        <thead>
+          <tr>
+            <th>MON</th>
+            <th>TUE</th>
+            <th>WED</th>
+            <th>THU</th>
+            <th>FRI</th>
+            <th>SAT</th>
+            <th>SUN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>02</td>
+            <td>03</td>
+            <td class="active-session" onclick="pickCell(this)">04<span class="cell-dot"></span></td>
+            <td>05</td>
+            <td>06</td>
+            <td>07</td>
+            <td>08</td>
+          </tr>
+          <tr>
+            <td>09</td>
+            <td class="selected" onclick="pickCell(this)">10<span class="cell-dot" style="background:white;"></span></td>
+            <td>11</td>
+            <td class="active-session" onclick="pickCell(this)">12<span class="cell-dot orange"></span></td>
+            <td>13</td>
+            <td>14</td>
+            <td>15</td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td>17</td>
+            <td>18</td>
+            <td>19</td>
+            <td>20</td>
+            <td>21</td>
+            <td>22</td>
+          </tr>
+          <tr>
+            <td>23</td>
+            <td>24</td>
+            <td>25</td>
+            <td>26</td>
+            <td>27</td>
+            <td>28</td>
+            <td>29</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Upcoming Treatments -->
+      <div class="upcoming-box">
+        <div class="upcoming-head">
+          <span>SCHEDULED CLINICAL SESSIONS</span>
+          <span style="color: var(--sage-primary);">2 SESSIONS CONFIRMED</span>
+        </div>
+        <div class="appointment-item">
           <div>
-            <span style="font-size:11px; color:var(--ink-muted); display:block;">Reserva confirmada</span>
-            <span id="selected-booking-readout" style="font-family:'Instrument Serif',serif; font-size:30px; line-height:1;">Qui, 12 Nov · 16:30</span>
+            <strong>Nov 10 · 09:30 AM</strong> — Follow-up Barrier Evaluation
           </div>
-          <button class="btn-primary" style="padding:12px 20px;">
-            <span>Confirmar Data →</span>
-          </button>
+          <span class="tabular-nums" style="color: var(--sage-primary);">ROOM 3B · DR. VOGEL</span>
         </div>
-      </aside>
-    </main>
-  </div>
+        <div class="appointment-item">
+          <div>
+            <strong>Nov 12 · 02:00 PM</strong> — Photobiomodulation Session II
+          </div>
+          <span class="tabular-nums" style="color: var(--terracotta);">SUITE 1 · NURSE ANNA</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: Recovery Chronometer & Regimen -->
+    <aside class="recovery-bay">
+
+      <div class="recovery-card">
+        <div class="card-title">
+          <span>Cellular Barrier Recovery</span>
+          <span class="tabular-nums">POST-OP DAY 4</span>
+        </div>
+
+        <div class="recovery-readout">
+          <span class="score-big tabular-nums" id="disp-score">82%</span>
+          <div class="score-desc">
+            <strong>Optimal Stratum Corneum Healing</strong><br>
+            TEWL rate stabilized below 8.2 g/m²h.
+          </div>
+        </div>
+
+        <div class="scrubber-wrap">
+          <input type="range" class="barrier-scrubber" min="40" max="100" value="82" oninput="updateRecovery(this.value)">
+        </div>
+      </div>
+
+      <div class="recovery-card">
+        <div class="card-title">
+          <span>Today's Prescribed Regimen</span>
+          <span style="color: var(--sage-primary);">COMPLIANT</span>
+        </div>
+
+        <div class="regimen-timeline">
+          <div class="regimen-step">
+            <span class="step-badge">08:00 AM</span>
+            <div>Gentle thermal mist rinse followed by Recombinant EGF serum.</div>
+          </div>
+          <div class="regimen-step">
+            <span class="step-badge">01:00 PM</span>
+            <div>Ceramide lipid barrier reapplication + Mineral SPF 50+.</div>
+          </div>
+          <div class="regimen-step">
+            <span class="step-badge">09:30 PM</span>
+            <div>Nightly occlusive barrier balm; avoid active acids or retinoids.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct Message from Clinical Lead -->
+      <div class="doctor-msg-box">
+        <div class="msg-author">DR. ELENA VOGEL, MD · 11:24 AM</div>
+        <div class="msg-content">
+          "The vascular erythema is dissipating ahead of schedule. Ensure you do not expose the treated area to direct sun during tomorrow's midday hours."
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
 
   <script>
-    // Interactive Calendar Day + Slot Selection with Web Animations API Spring Morph
-    const readout = document.getElementById('selected-booking-readout');
-    let currentDayNum = '12';
-    let currentSlot = '16:30';
-
-    function updateReadout() {
-      if (!readout) return;
-      readout.textContent = `Nov, Dia ${currentDayNum} · ${currentSlot}`;
-      if (readout.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        readout.animate(
-          [
-            { opacity: 0.35, transform: 'translateY(5px)' },
-            { opacity: 1, transform: 'translateY(0)' },
-          ],
-          { duration: 240, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
-        );
-      }
+    let audioCtx = null;
+    function playClick() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.015);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.018);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.02);
+      } catch (e) {}
     }
 
-    document.querySelectorAll('.cal-day-cell:not([disabled])').forEach((cell) => {
-      cell.addEventListener('click', () => {
-        document.querySelectorAll('.cal-day-cell').forEach((c) => c.setAttribute('aria-pressed', String(c === cell)));
-        currentDayNum = cell.querySelector('.cal-day-num').textContent;
-        updateReadout();
-      });
-    });
+    function pickCell(cell) {
+      playClick();
+      document.querySelectorAll('.calendar-table td').forEach(c => c.classList.remove('selected'));
+      cell.classList.add('selected');
+    }
 
-    document.querySelectorAll('.slot-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.slot-btn').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-        currentSlot = btn.textContent.split('·')[0].trim();
-        updateReadout();
-      });
-    });
-
-    const dossier = document.querySelector('.dossier-card');
-    if (dossier) {
-      dossier.addEventListener('pointermove', (e) => {
-        const rect = dossier.getBoundingClientRect();
-        dossier.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-        dossier.style.setProperty('--my', `${e.clientY - rect.top}px`);
-      });
+    function updateRecovery(val) {
+      playClick();
+      document.getElementById('disp-score').textContent = val + '%';
     }
   </script>
 </body>

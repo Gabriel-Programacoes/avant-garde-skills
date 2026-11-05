@@ -1,778 +1,788 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tonwerk T-1000 — Laboratório de Síntese Acústica &amp; Micro-Háptica Procedural</title>
+  <title>Tonwerk T-1000 — Physical Acoustic Synthesizer &amp; Micro-Haptic Console</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
   <style>
+    /* Industrial Dieter Rams / Teenage Engineering Hardware Tokens */
     :root {
-      /* Sunlit Industrial Dieter Rams / Braun Polycarbonate Palette (palette.mjs --light) */
-      --surface-sunken: oklch(92.2% 0.009 75.0);     /* Recessed Anodized Aluminum Well */
-      --surface-canvas: oklch(96.2% 0.007 75.0);     /* Warm Polycarbonate Shell */
-      --surface-panel: oklch(98.5% 0.004 75.0);      /* Raised Keycap Surface */
-      --surface-raised: oklch(100.0% 0.000 75.0);    /* Pure Specular Highlight */
-      --border-subtle: oklch(85.0% 0.011 75.0);
-      --border-strong: oklch(72.0% 0.016 75.0);
-      --text-primary: oklch(16.0% 0.012 37.5);       /* 18.6:1 WCAG AAA / Lc 103 */
-      --text-secondary: oklch(40.0% 0.015 37.5);     /* 8.4:1 WCAG AAA */
-      --text-tertiary: oklch(54.0% 0.012 37.5);
-      --braun-orange: oklch(60.0% 0.192 37.5);       /* International Signal Orange */
-      --braun-olive: oklch(42.0% 0.088 152.0);       /* Calibrated Acoustic Olive */
-      --scope-ink: oklch(20.0% 0.018 152.0);
-      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+      --chassis-metal: oklch(0.92 0.008 80);        /* CNC Milled Matte Aluminum #E5E4E0 */
+      --chassis-bezel: oklch(0.86 0.012 80);        /* Chamfered Inset Shadow */
+      --chassis-dark: oklch(0.24 0.018 250);        /* Matte Carbon Faceplate #30343D */
+      --chassis-recess: oklch(0.18 0.015 250);      /* Recessed Well #22252C */
+      
+      --accent-orange: oklch(0.65 0.21 45);         /* Braun Signal Orange #E05A1B */
+      --accent-yellow: oklch(0.82 0.17 85);         /* Calibration Amber */
+      --accent-olive: oklch(0.68 0.14 140);         /* Military Indicator Sage */
+      --accent-cyan: oklch(0.75 0.15 210);          /* Oscilloscope CRT Beam */
+      
+      --text-chassis: oklch(0.22 0.015 250);
+      --text-muted: oklch(0.52 0.015 250);
+      --text-display: oklch(0.94 0.005 80);
+
+      --font-grotesk: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
     }
 
-    @keyframes studioReveal {
-      0% { opacity: 0; transform: translateY(14px) scale(0.992); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 
-    @keyframes ledBlink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.35; }
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      background: var(--surface-canvas);
-      color: var(--text-primary);
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      font-size: 13.5px;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-    }
-
-    .tabular-nums { font-variant-numeric: tabular-nums; }
-
-    .chassis-shell {
-      max-width: 1380px;
-      margin: 0 auto;
-      padding: 18px 26px 26px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    /* 1. Architectural Hardware Header (Zero Rounded-Full Pill Badges) */
-    .top-bar {
-      background: var(--surface-raised);
-      border: 1px solid var(--border-subtle);
-      border-bottom: 2px solid var(--border-strong);
-      border-radius: 10px;
-      padding: 12px 20px;
+    body {
+      background: oklch(0.16 0.012 250);
+      color: var(--text-chassis);
+      font-family: var(--font-sans);
+      min-height: 100vh;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      animation: studioReveal 500ms var(--ease-out-expo) both;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at 50% 20%, oklch(0.22 0.018 250) 0%, oklch(0.12 0.01 250) 100%);
     }
 
-    .brand-group {
+    /* Outer Hardware Flight Case / Desktop Enclosure */
+    .hardware-chassis {
+      width: 100%;
+      max-width: 1220px;
+      background: var(--chassis-metal);
+      border-radius: 18px;
+      box-shadow:
+        0 40px 80px -20px rgba(0, 0, 0, 0.7),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -3px 0 0 rgba(0, 0, 0, 0.25);
+      padding: 28px 32px 32px;
+      position: relative;
+      border: 1px solid oklch(0.80 0.01 80);
+    }
+
+    /* 4 Hex Screws on corners */
+    .screw {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: oklch(0.78 0.01 80);
+      border-radius: 50%;
+      border: 1px solid oklch(0.65 0.015 80);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .screw::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 2px;
+      width: 8px;
+      height: 1px;
+      background: oklch(0.45 0.01 80);
+      transform: rotate(35deg);
+    }
+    .screw.tl { top: 14px; left: 14px; }
+    .screw.tr { top: 14px; right: 14px; }
+    .screw.bl { bottom: 14px; left: 14px; }
+    .screw.br { bottom: 14px; right: 14px; }
+
+    /* Top Machine Header Ribbon */
+    .machine-ribbon {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid oklch(0.84 0.01 80);
+    }
+    .brand-block {
       display: flex;
       align-items: baseline;
-      gap: 16px;
+      gap: 14px;
     }
-    .brand-serif {
-      font-family: 'Instrument Serif', serif;
-      font-size: 26px;
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-    .chassis-model {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-secondary);
-      padding-left: 16px;
-      border-left: 1px solid var(--border-subtle);
-    }
-
-    .header-telemetry {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-    }
-
-    .ledger-cell {
-      padding-left: 18px;
-      border-left: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .ledger-cell:first-child { border-left: none; padding-left: 0; }
-
-    .led-square {
-      width: 6px;
-      height: 6px;
-      background: var(--braun-orange);
-      display: inline-block;
-      animation: ledBlink 2s infinite;
-    }
-
-    /* Hardware Master Mute Interlock Switch ([M]) */
-    .mute-interlock-btn {
-      background: var(--surface-sunken);
-      color: var(--text-primary);
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      padding: 7px 14px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+    .brand-logo {
+      font-family: var(--font-grotesk);
+      font-size: 24px;
       font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
+      letter-spacing: -0.04em;
+      color: var(--chassis-dark);
+      display: flex;
       align-items: center;
       gap: 8px;
-      transition: transform 120ms var(--ease-spring), background 140ms var(--ease-spring), border-color 140ms var(--ease-spring);
     }
-    .mute-interlock-btn:hover {
-      border-color: var(--text-primary);
-      transform: translateY(-1px);
+    .braun-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--accent-orange);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-orange);
     }
-    .mute-interlock-btn:active {
-      transform: scale(0.96);
+    .model-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
     }
-    .mute-interlock-btn[aria-pressed="true"] {
-      background: var(--text-primary);
-      color: var(--surface-raised);
-    }
-
-    /* 2. Split-Stage Acoustic Workbench */
-    .studio-grid {
-      display: grid;
-      grid-template-columns: 7.2fr 4.8fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .left-rack {
+    .power-section {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    /* Oscilloscope & Transient Telemetry Deck */
-    .scope-deck {
-      background: var(--surface-raised);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 16px 36px -20px oklch(16% 0.012 37.5 / 0.07);
-      display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 16px;
-      animation: studioReveal 600ms var(--ease-out-expo) 70ms both;
+      font-family: var(--font-mono);
+      font-size: 11px;
     }
-
-    .deck-header {
+    .led-meter {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border-subtle);
+      gap: 4px;
+      align-items: center;
+    }
+    .led {
+      width: 6px;
+      height: 14px;
+      background: oklch(0.80 0.01 80);
+      border-radius: 1px;
+    }
+    .led.active-green { background: var(--accent-olive); box-shadow: 0 0 6px var(--accent-olive); }
+    .led.active-orange { background: var(--accent-orange); box-shadow: 0 0 6px var(--accent-orange); }
+
+    /* Main Console Grid: 3 Distinct Physical Modules */
+    .console-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr 340px;
+      gap: 24px;
     }
 
-    .scope-screen {
-      background: var(--surface-sunken);
-      border: 1px solid var(--border-strong);
-      border-radius: 8px;
-      padding: 14px 16px;
-      position: relative;
+    /* MODULE 1: Tactical Foley Switchboard (Left) */
+    .module-bay {
+      background: var(--chassis-bezel);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
+      border: 1px solid oklch(0.82 0.01 80);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+    }
+    .module-title {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
     }
 
-    .scope-readout-row {
+    .switch-bank {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .physical-switch-btn {
+      background: var(--chassis-metal);
+      border: 1px solid oklch(0.78 0.01 80);
+      border-bottom: 3px solid oklch(0.68 0.015 80);
+      border-radius: 6px;
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--chassis-dark);
+      transition: all 0.08s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    }
+    .physical-switch-btn:hover {
+      background: oklch(0.96 0.005 80);
+      border-color: oklch(0.72 0.01 80);
+    }
+    .physical-switch-btn:active, .physical-switch-btn.depressed {
+      transform: translateY(2px);
+      border-bottom: 1px solid oklch(0.68 0.015 80);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      background: oklch(0.88 0.01 80);
+    }
+    .switch-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: oklch(0.70 0.01 80);
+    }
+    .physical-switch-btn.active .switch-indicator {
+      background: var(--accent-orange);
+      box-shadow: 0 0 8px var(--accent-orange);
+    }
+
+    /* MODULE 2: The Vacuum CRT Oscilloscope (Center) */
+    .crt-bay {
+      background: var(--chassis-dark);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .crt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-display);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      margin-bottom: 14px;
+      letter-spacing: 0.06em;
+    }
+    .screen-housing {
+      background: var(--chassis-recess);
+      border-radius: 8px;
+      border: 2px solid oklch(0.28 0.015 250);
+      overflow: hidden;
+      position: relative;
+      height: 220px;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+    /* Phosphor Grid Lines */
+    .screen-housing::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.07) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    #scopeCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .crt-footer-telemetry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: oklch(0.72 0.015 250);
+    }
+    .crt-mode-toggle {
+      background: transparent;
+      border: 1px solid oklch(0.40 0.015 250);
+      color: var(--accent-cyan);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .crt-mode-toggle:hover {
+      background: oklch(0.30 0.015 250);
+    }
+
+    /* MODULE 3: Physical ADSR & Rotary Filters (Right) */
+    .fader-rack {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-subtle);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      background: oklch(0.88 0.01 80);
+      border-radius: 8px;
+      padding: 16px 12px;
+      border: 1px solid oklch(0.80 0.01 80);
+      margin-bottom: 16px;
     }
-
-    canvas#adsr-scope {
-      width: 100%;
-      height: 156px;
-      display: block;
-    }
-
-    /* Physical 4-Pad Foley Matrix */
-    .pad-matrix {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .tactile-pad {
-      background: var(--surface-panel);
-      border: 1px solid var(--border-strong);
-      border-bottom: 3px solid var(--border-strong);
-      border-radius: 10px;
-      padding: 16px 18px;
-      text-align: left;
-      cursor: pointer;
+    .fader-channel {
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 10px;
-      transition: transform 110ms var(--ease-spring), border-color 140ms var(--ease-spring), background 140ms var(--ease-spring);
     }
-    .tactile-pad:hover {
-      background: var(--surface-raised);
-      border-color: var(--text-primary);
-      transform: translateY(-1.5px);
+    .fader-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--chassis-dark);
     }
-    .tactile-pad:active {
-      transform: translateY(1.5px) scale(0.985);
-      border-bottom-width: 1px;
-    }
-    .tactile-pad[aria-pressed="true"] {
-      background: var(--surface-raised);
-      border-color: var(--braun-orange);
-      border-top: 2.5px solid var(--braun-orange);
-    }
-
-    .pad-Spec-ledger {
+    .fader-slider-wrap {
+      height: 140px;
       display: flex;
-      justify-content: space-between;
-      padding-top: 8px;
-      border-top: 1px solid var(--border-subtle);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      color: var(--text-secondary);
+      align-items: center;
+      justify-content: center;
+    }
+    /* Vertical Range Slider */
+    input[type=range].vertical-slider {
+      -webkit-appearance: none;
+      writing-mode: vertical-lr;
+      direction: rtl;
+      width: 6px;
+      height: 130px;
+      background: oklch(0.72 0.01 80);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range].vertical-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 26px;
+      height: 16px;
+      background: var(--chassis-dark);
+      border-radius: 3px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      border-top: 2px solid oklch(0.45 0.015 250);
+      border-bottom: 2px solid oklch(0.12 0.01 250);
+    }
+    .fader-val {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
     }
 
-    /* RIGHT RACK: Velocity-Coupled Rotary Detent & Parameter Synthesis Bank */
-    .synth-inspector {
-      background: var(--surface-raised);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 24px 26px;
+    /* Rotary Filter Section */
+    .rotary-bay {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .rotary-node {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: 16px;
-      box-shadow: 0 20px 44px -20px oklch(16% 0.012 37.5 / 0.08);
-      animation: studioReveal 600ms var(--ease-out-expo) 140ms both;
-    }
-
-    .parameter-well {
-      background: var(--surface-sunken);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 16px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .slider-row {
-      display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 6px;
     }
+    .rotary-knob {
+      width: 54px;
+      height: 54px;
+      background: var(--chassis-dark);
+      border-radius: 50%;
+      border: 3px solid oklch(0.80 0.01 80);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.05s linear;
+    }
+    .rotary-knob::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 24px;
+      width: 2px;
+      height: 12px;
+      background: var(--accent-orange);
+      border-radius: 1px;
+    }
+    .rotary-title {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
 
-    .slider-header {
+    /* Bottom Tactile Trigger Bar */
+    .master-trigger-bar {
+      margin-top: 20px;
       display: flex;
+      gap: 14px;
       justify-content: space-between;
-      font-family: 'JetBrains Mono', monospace;
+      align-items: center;
+      padding-top: 18px;
+      border-top: 1px solid oklch(0.82 0.01 80);
+    }
+    .foot-specs {
+      font-family: var(--font-mono);
       font-size: 11px;
+      color: var(--text-muted);
     }
-
-    input[type="range"].braun-fader {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
-      background: var(--surface-raised);
-      border: 1px solid var(--border-strong);
-      border-radius: 3px;
-      cursor: ew-resize;
-    }
-    input[type="range"].braun-fader::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      background: var(--braun-orange);
-      border: 2px solid var(--surface-raised);
-      border-radius: 3px;
-      cursor: ew-resize;
-      box-shadow: 0 2px 5px oklch(16% 0.012 37.5 / 0.25);
-    }
-
-    .haptic-coupling-table {
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid var(--border-subtle);
-    }
-    .coupling-row {
-      display: grid;
-      grid-template-columns: 92px 1fr auto;
-      align-items: baseline;
-      gap: 10px;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border-subtle);
-      font-size: 12px;
-    }
-
-    .trigger-master-btn {
-      background: var(--braun-orange);
-      color: var(--surface-raised);
+    .fire-impulse-btn {
+      background: var(--accent-orange);
+      color: white;
       border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-family: inherit;
+      border-radius: 6px;
+      padding: 12px 28px;
+      font-family: var(--font-grotesk);
       font-size: 13px;
       font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      transition: transform 120ms var(--ease-spring), opacity 120ms var(--ease-spring);
+      box-shadow: 0 4px 12px rgba(224, 90, 27, 0.35);
+      transition: all 0.1s ease;
     }
-    .trigger-master-btn:hover { transform: translateY(-1px); }
-    .trigger-master-btn:active { transform: scale(0.98); }
-
-    @media (max-width: 959px) {
-      .chassis-shell { padding: 12px 14px 20px; }
-      .header-telemetry, .chassis-model { display: none; }
-      .deck-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .studio-grid { grid-template-columns: 1fr; }
-      .pad-matrix { grid-template-columns: 1fr; }
-      .scope-readout-row { grid-template-columns: repeat(2, 1fr); }
+    .fire-impulse-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 4px rgba(224, 90, 27, 0.4);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+      *, ::before, ::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .console-grid {
+        grid-template-columns: 1fr;
+      }
+      .hardware-chassis {
+        padding: 20px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="chassis-shell tabular-nums">
-    <!-- 1. ARCHITECTURAL HARDWARE HEADER (Zero Rounded-Full Pill Badges) -->
-    <header class="top-bar">
-      <div class="brand-group" style="white-space:nowrap;">
-        <span class="brand-serif">Tonwerk T-1000</span>
-        <span class="chassis-model">LABORATÓRIO DE FOLEY PROCEDURAL · WEB AUDIO API</span>
-      </div>
 
-      <div class="header-telemetry" aria-label="Telemetria do Motor Web Audio" style="white-space:nowrap;">
-        <span class="ledger-cell">
-          <span class="led-square"></span>
-          <span>48kHz / 32-BIT</span>
-        </span>
-        <span class="ledger-cell">ASSETS: <strong>0.0 KB</strong></span>
-        <span class="ledger-cell" style="color:var(--braun-olive); font-weight:700;">LATÊNCIA 3.8ms</span>
-      </div>
+  <div class="hardware-chassis">
+    <!-- 4 Enclosure Corner Screws -->
+    <div class="screw tl"></div>
+    <div class="screw tr"></div>
+    <div class="screw bl"></div>
+    <div class="screw br"></div>
 
-      <button type="button" class="mute-interlock-btn" id="mute-btn" aria-pressed="false" style="white-space:nowrap;">
-        <span id="mute-led" style="width:6px; height:6px; background:var(--braun-olive); display:inline-block;"></span>
-        <span id="mute-label">SOM [ON] · [M]</span>
-      </button>
+    <!-- Machine Ribbon -->
+    <header class="machine-ribbon">
+      <div class="brand-block">
+        <div class="brand-logo">
+          <span class="braun-dot"></span> TONWERK T-1000
+        </div>
+        <span class="model-code">PHYSICAL ACOUSTIC LAB · TYPE 55-A</span>
+      </div>
+      <div class="power-section">
+        <div class="led-meter">
+          <div class="led active-green"></div>
+          <div class="led active-green"></div>
+          <div class="led active-green"></div>
+          <div class="led active-orange"></div>
+        </div>
+        <span style="font-weight: 700; color: var(--chassis-dark);">DSP READY · 48.0 kHz</span>
+      </div>
     </header>
 
-    <!-- 2. SPLIT-STAGE ACOUSTIC & HAPTIC CALIBRATION WORKBENCH -->
-    <main class="studio-grid">
-      <!-- LEFT RACK: Real-Time ADSR Oscilloscope + 4 Physical Foley Pads -->
-      <div class="left-rack">
-        <section class="scope-deck" aria-label="Osciloscópio de Transiente e Envelope ADSR">
-          <div class="deck-header">
-            <div>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-tertiary);">
-                01 // BANCADA DE INSPEÇÃO ACÚSTICA &amp; TRANSIENTE FÍSICO
-              </span>
-              <h1 style="font-family:'Instrument Serif',serif; font-size:36px; font-weight:400; line-height:1.02; margin-top:3px;">
-                Calibração de materiais sonoros e resposta tátil
-              </h1>
+    <!-- Main 3-Bay Hardware Console -->
+    <main class="console-grid">
+
+      <!-- BAY 1: Physical Foley Relays -->
+      <section class="module-bay">
+        <div class="module-title">
+          <span>Mechanical Foley Transients</span>
+          <span>BANK A</span>
+        </div>
+
+        <div class="switch-bank">
+          <button class="physical-switch-btn active" onclick="playFoley('solenoid', this)">
+            <span>01 / Solenoid Relay</span>
+            <div class="switch-indicator"></div>
+          </button>
+          <button class="physical-switch-btn" onclick="playFoley('ceramic', this)">
+            <span>02 / Ceramic Detent</span>
+            <div class="switch-indicator"></div>
+          </button>
+          <button class="physical-switch-btn" onclick="playFoley('titanium', this)">
+            <span>03 / Titanium Clack</span>
+            <div class="switch-indicator"></div>
+          </button>
+          <button class="physical-switch-btn" onclick="playFoley('rotary', this)">
+            <span>04 / Rotary Stepper</span>
+            <div class="switch-indicator"></div>
+          </button>
+          <button class="physical-switch-btn" onclick="playFoley('shutter', this)">
+            <span>05 / Micro Shutter</span>
+            <div class="switch-indicator"></div>
+          </button>
+        </div>
+      </section>
+
+      <!-- BAY 2: Real-time Phosphor CRT Oscilloscope -->
+      <section class="crt-bay">
+        <div class="crt-header">
+          <span>VECTOR PHOSPHOR OSCILLOSCOPE</span>
+          <span id="crt-status">LIVE BUFFER: 512 SAMPLES</span>
+        </div>
+
+        <div class="screen-housing">
+          <canvas id="scopeCanvas" width="560" height="220"></canvas>
+        </div>
+
+        <div class="crt-footer-telemetry">
+          <span>TIMEBASE: 1.2ms/DIV</span>
+          <button class="crt-mode-toggle" onclick="toggleScopeMode()">MODE: TIME-DOMAIN</button>
+          <span>GAIN: +3.5 dB</span>
+        </div>
+      </section>
+
+      <!-- BAY 3: ADSR Faders & Resonant Filter -->
+      <section class="module-bay">
+        <div class="module-title">
+          <span>Envelope Synthesis (ADSR)</span>
+          <span>CALIBRATED</span>
+        </div>
+
+        <div class="fader-rack">
+          <div class="fader-channel">
+            <span class="fader-label">ATTACK</span>
+            <div class="fader-slider-wrap">
+              <input type="range" class="vertical-slider" min="1" max="100" value="8" id="adsr-a" oninput="updateADSR('a', this.value)">
             </div>
-            <div style="border-left:2px solid var(--braun-orange); padding-left:12px; font-family:'JetBrains Mono',monospace;">
-              <span style="font-size:9.5px; color:var(--text-tertiary); display:block;">PERFIL ATIVO</span>
-              <span style="font-size:12px; font-weight:700; color:var(--text-primary);" id="active-profile-name">■ V-01 Relé Solenoide</span>
-            </div>
+            <span class="fader-val" id="val-a">8ms</span>
           </div>
 
-          <!-- HiDPI Oscilloscope Well -->
-          <div class="scope-screen">
-            <div class="scope-readout-row">
-              <div>
-                <span style="color:var(--text-tertiary); display:block; font-size:9.5px;">FREQUÊNCIA FUNDAMENTAL</span>
-                <strong style="font-size:14px;" id="readout-hz">240 Hz</strong>
-              </div>
-              <div>
-                <span style="color:var(--text-tertiary); display:block; font-size:9.5px;">DECAIMENTO EXPONENCIAL (τ)</span>
-                <strong style="font-size:14px;" id="readout-ms">26 ms</strong>
-              </div>
-              <div>
-                <span style="color:var(--text-tertiary); display:block; font-size:9.5px;">CORTE BIQUAD LOWPASS</span>
-                <strong style="font-size:14px;" id="readout-lpf">2400 Hz</strong>
-              </div>
-              <div>
-                <span style="color:var(--text-tertiary); display:block; font-size:9.5px;">ACOPLAMENTO HÁPTICO</span>
-                <strong style="font-size:14px; color:var(--braun-olive);" id="readout-hap">10ms Pulso + Recoil</strong>
-              </div>
+          <div class="fader-channel">
+            <span class="fader-label">DECAY</span>
+            <div class="fader-slider-wrap">
+              <input type="range" class="vertical-slider" min="5" max="250" value="45" id="adsr-d" oninput="updateADSR('d', this.value)">
             </div>
-
-            <canvas id="adsr-scope" width="760" height="156" aria-label="Forma de onda do transiente acústico"></canvas>
+            <span class="fader-val" id="val-d">45ms</span>
           </div>
 
-          <!-- 4 Physical Acoustic Material Trigger Pads -->
-          <div class="pad-matrix" role="group" aria-label="Matriz de Gatilhos Acústicos">
-            <button type="button" class="tactile-pad" aria-pressed="true" data-voice="relay">
-              <div style="display:flex; justify-content:space-between; width:100%; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--braun-orange); font-weight:700;">
-                <span>■ V-01 // ALUMÍNIO ANODIZADO</span>
-                <span>[1]</span>
-              </div>
-              <div style="font-size:15px; font-weight:700;">Relé Mecânico Solenoide</div>
-              <p style="font-size:12px; color:var(--text-secondary);">
-                Impulso curto de chave seletora Braun/Leica com queda rápida de pitch (240Hz → 64Hz) sem clique digital.
-              </p>
-              <div class="pad-Spec-ledger">
-                <span>F0: 240 Hz</span>
-                <span>τ: 26 ms</span>
-                <span>-14.0 dBFS</span>
-              </div>
-            </button>
-
-            <button type="button" class="tactile-pad" aria-pressed="false" data-voice="ceramic">
-              <div style="display:flex; justify-content:space-between; width:100%; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-secondary); font-weight:700;">
-                <span>■ V-02 // PORCELANA FOSCA</span>
-                <span>[2]</span>
-              </div>
-              <div style="font-size:15px; font-weight:700;">Toque Cerâmico Daylight</div>
-              <p style="font-size:12px; color:var(--text-secondary);">
-                Transiente orgânico filtrado em 1150Hz ideal para seleção de cards, calendários e interfaces diurnas.
-              </p>
-              <div class="pad-Spec-ledger">
-                <span>F0: 420 Hz</span>
-                <span>τ: 42 ms</span>
-                <span>-12.5 dBFS</span>
-              </div>
-            </button>
-
-            <button type="button" class="tactile-pad" aria-pressed="false" data-voice="detent">
-              <div style="display:flex; justify-content:space-between; width:100%; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-secondary); font-weight:700;">
-                <span>■ V-03 // ENCODER ÓPTICO</span>
-                <span>[3]</span>
-              </div>
-              <div style="font-size:15px; font-weight:700;">Detente Rotativo acoplado a Velocidade</div>
-              <p style="font-size:12px; color:var(--text-secondary);">
-                Micro-tick de 8ms cuja frequência sobe proporcionalmente à velocidade de arrasto do scrubber.
-              </p>
-              <div class="pad-Spec-ledger">
-                <span>F0: 1400 Hz</span>
-                <span>τ: 8 ms</span>
-                <span>-18.0 dBFS</span>
-              </div>
-            </button>
-
-            <button type="button" class="tactile-pad" aria-pressed="false" data-voice="harmonic">
-              <div style="display:flex; justify-content:space-between; width:100%; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-secondary); font-weight:700;">
-                <span>■ V-04 // VIDRO ÓPTICO</span>
-                <span>[4]</span>
-              </div>
-              <div style="font-size:15px; font-weight:700;">Acorde Harmônico de Confirmação</div>
-              <p style="font-size:12px; color:var(--text-secondary);">
-                Intervalo de quinta justa (528Hz + 792Hz) com ataque defasado em 18ms para conclusão de reservas ou pagamentos.
-              </p>
-              <div class="pad-Spec-ledger">
-                <span>F0: 528/792 Hz</span>
-                <span>τ: 165 ms</span>
-                <span>-15.0 dBFS</span>
-              </div>
-            </button>
-          </div>
-        </section>
-      </div>
-
-      <!-- RIGHT RACK: Live Parameter Synthesis & Velocity Scrubber Inspector -->
-      <aside class="synth-inspector" aria-label="Inspetor de Síntese e Acoplamento Háptico">
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-bottom:12px; border-bottom:1px solid var(--border-subtle);">
-            <div>
-              <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-tertiary);">
-                02 // PARÂMETROS DO SINTETIZADOR PROCEDURAL
-              </div>
-              <h2 style="font-family:'Instrument Serif',serif; font-size:28px; font-weight:400; line-height:1.05; margin-top:2px;">
-                Modulação de Envelope &amp; Filtro
-              </h2>
+          <div class="fader-channel">
+            <span class="fader-label">SUSTAIN</span>
+            <div class="fader-slider-wrap">
+              <input type="range" class="vertical-slider" min="0" max="100" value="18" id="adsr-s" oninput="updateADSR('s', this.value)">
             </div>
-            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--braun-olive); font-weight:700;">
-              RAMP EXPONENCIAL ATIVO
-            </span>
+            <span class="fader-val" id="val-s">18%</span>
           </div>
 
-          <!-- Interactive Braun Faders (Modulate Web Audio & Scope in Real Time) -->
-          <div class="parameter-well">
-            <div class="slider-row">
-              <div class="slider-header">
-                <span>FREQUÊNCIA FUNDAMENTAL (F0)</span>
-                <strong id="fader-hz-val">240 Hz</strong>
-              </div>
-              <input type="range" class="braun-fader" id="fader-hz" min="90" max="1600" value="240" />
+          <div class="fader-channel">
+            <span class="fader-label">RELEASE</span>
+            <div class="fader-slider-wrap">
+              <input type="range" class="vertical-slider" min="10" max="400" value="65" id="adsr-r" oninput="updateADSR('r', this.value)">
             </div>
-
-            <div class="slider-row">
-              <div class="slider-header">
-                <span>DECAIMENTO DO ENVELOPE (τ)</span>
-                <strong id="fader-ms-val">26 ms</strong>
-              </div>
-              <input type="range" class="braun-fader" id="fader-ms" min="6" max="220" value="26" />
-            </div>
-
-            <div class="slider-row">
-              <div class="slider-header">
-                <span>FILTRO BIQUAD LOWPASS (CUTOFF)</span>
-                <strong id="fader-lpf-val">2400 Hz</strong>
-              </div>
-              <input type="range" class="braun-fader" id="fader-lpf" min="400" max="4800" value="2400" />
-            </div>
-          </div>
-
-          <!-- Architectural Ledger of Haptic & Visual Synchronization -->
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-tertiary); margin-bottom:8px;">
-              03 // MATRIZ DE SINCRONIZAÇÃO MULTISSENSORIAL
-            </div>
-            <div class="haptic-coupling-table">
-              <div class="coupling-row">
-                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-tertiary);">WEB AUDIO</span>
-                <span>Ramp exponencial até <code>0.0001</code> (zero pop de caixa)</span>
-                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--braun-olive); font-weight:700;">ATIVO</span>
-              </div>
-              <div class="coupling-row">
-                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-tertiary);">HAPTIC API</span>
-                <span>Pulso <code>navigator.vibrate(10)</code> sincronizado ao ataque</span>
-                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--braun-olive); font-weight:700;">10ms</span>
-              </div>
-              <div class="coupling-row">
-                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-tertiary);">SPRING UI</span>
-                <span>Compressão física <code>scale(0.985)</code> na borda inferior</span>
-                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--braun-olive); font-weight:700;">110ms</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 04: Velocity-Coupled Step Bank (Fills Vertical Rhythm + Tests Constraint #2) -->
-          <div style="background:var(--surface-panel); border:1px solid var(--border-subtle); border-radius:10px; padding:14px 16px;">
-            <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-tertiary); margin-bottom:8px;">
-              <span>04 // ESCALA DE VELOCIDADE ANGULAR (PITCH COUPLING)</span>
-              <span style="color:var(--braun-orange); font-weight:700;">F0 × VEL</span>
-            </div>
-            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
-              <button type="button" class="vel-step-btn" data-vel="0.85" style="padding:8px 6px; background:var(--surface-raised); border:1px solid var(--border-strong); border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; cursor:pointer;">0.85× Lento</button>
-              <button type="button" class="vel-step-btn" data-vel="1.00" style="padding:8px 6px; background:var(--surface-raised); border:1px solid var(--braun-orange); border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; cursor:pointer;">1.00× Base</button>
-              <button type="button" class="vel-step-btn" data-vel="1.25" style="padding:8px 6px; background:var(--surface-raised); border:1px solid var(--border-strong); border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; cursor:pointer;">1.25× Rápido</button>
-              <button type="button" class="vel-step-btn" data-vel="1.50" style="padding:8px 6px; background:var(--surface-raised); border:1px solid var(--border-strong); border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; cursor:pointer;">1.50× Flick</button>
-            </div>
+            <span class="fader-val" id="val-r">65ms</span>
           </div>
         </div>
 
-        <button type="button" class="trigger-master-btn" id="master-trigger-btn">
-          <span>Disparar Transiente Calibrado</span>
-          <span style="font-family:'JetBrains Mono',monospace; font-size:11px;">[ESPAÇO] →</span>
-        </button>
-      </aside>
+        <!-- Dual Rotary Knobs -->
+        <div class="rotary-bay">
+          <div class="rotary-node">
+            <div class="rotary-knob" id="knob-cutoff" onclick="rotateKnob('cutoff')"></div>
+            <span class="rotary-title">CUTOFF: 2.8kHz</span>
+          </div>
+          <div class="rotary-node">
+            <div class="rotary-knob" id="knob-q" onclick="rotateKnob('q')"></div>
+            <span class="rotary-title">RESONANCE: 4.2</span>
+          </div>
+        </div>
+      </section>
+
     </main>
+
+    <!-- Bottom Machine Bar -->
+    <footer class="master-trigger-bar">
+      <div class="foot-specs">
+        <span>ZERO ASSETS: 100% PROCEDURAL WEB AUDIO API (<1.4 KB)</span> · <span>LATENCY: &lt;6ms</span>
+      </div>
+      <button class="fire-impulse-btn" onclick="triggerMasterImpulse()">
+        ▲ STRIKE MASTER IMPULSE
+      </button>
+    </footer>
   </div>
 
   <script>
-    const VOICE_PRESETS = {
-      relay: { name: '■ V-01 Relé Solenoide', hz: 240, ms: 26, lpf: 2400, hap: '10ms Pulso + Recoil', type: 'triangle' },
-      ceramic: { name: '■ V-02 Cerâmica Daylight', hz: 420, ms: 42, lpf: 1150, hap: '8ms Toque + Spring', type: 'sine' },
-      detent: { name: '■ V-03 Detente Rotativo', hz: 1400, ms: 8, lpf: 3600, hap: '4ms Micro-Tick', type: 'sine' },
-      harmonic: { name: '■ V-04 Acorde Harmônico', hz: 528, ms: 165, lpf: 2800, hap: '14ms Duplo + Glow', type: 'sine' },
-    };
-
-    let currentVoice = 'relay';
-    let currentHz = 240;
-    let currentMs = 26;
-    let currentLpf = 2400;
-    let isMuted = false;
-    let triggerPulsePhase = 1.0;
+    // 100% Procedural Web Audio API Engine
     let audioCtx = null;
+    let analyser = null;
+    let dataArray = null;
 
-    function playProceduralSound(hz, ms, lpf, voiceKey) {
-      triggerPulsePhase = 1.45;
-      if (isMuted) return;
-      const Ctor = window.AudioContext || window.webkitAudioContext;
-      if (!Ctor) return;
-      if (!audioCtx) audioCtx = new Ctor();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 512;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // ADSR State
+    let adsr = { a: 0.008, d: 0.045, s: 0.18, r: 0.065 };
+    function updateADSR(param, val) {
+      initAudio();
+      triggerMicroTick();
+      if (param === 'a') { adsr.a = val / 1000; document.getElementById('val-a').textContent = val + 'ms'; }
+      if (param === 'd') { adsr.d = val / 1000; document.getElementById('val-d').textContent = val + 'ms'; }
+      if (param === 's') { adsr.s = val / 100; document.getElementById('val-s').textContent = val + '%'; }
+      if (param === 'r') { adsr.r = val / 1000; document.getElementById('val-r').textContent = val + 'ms'; }
+    }
+
+    // Micro mechanical click when adjusting knobs/faders
+    function triggerMicroTick() {
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(1400, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.006);
+        gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.008);
+        osc.connect(gain);
+        gain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.01);
+      } catch (e) {}
+    }
+
+    // Physical Foley Profiles
+    function playFoley(type, el) {
+      initAudio();
+      document.querySelectorAll('.physical-switch-btn').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
 
       const now = audioCtx.currentTime;
-      const dur = Math.max(0.006, ms / 1000);
-      const osc = audioCtx.createOscillator();
-      const filter = audioCtx.createBiquadFilter();
-      const gain = audioCtx.createGain();
 
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(lpf, now);
-
-      osc.type = voiceKey === 'relay' ? 'triangle' : 'sine';
-      osc.frequency.setValueAtTime(hz, now);
-      osc.frequency.exponentialRampToValueAtTime(Math.max(48, hz * 0.32), now + dur);
-
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start(now);
-      osc.stop(now + dur + 0.004);
-
-      if (navigator.vibrate) navigator.vibrate(voiceKey === 'detent' ? 4 : 10);
+      if (type === 'solenoid') {
+        // Heavy 24V Solenoid Plunger
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.035);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + adsr.d);
+        osc.connect(gain);
+        gain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + adsr.d + 0.01);
+      } else if (type === 'ceramic') {
+        // High Q Ceramic Tap
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(2600, now);
+        osc.frequency.exponentialRampToValueAtTime(1800, now + 0.015);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+        osc.connect(gain);
+        gain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.025);
+      } else if (type === 'titanium') {
+        // Sharp metallic clack
+        const bufferSize = audioCtx.sampleRate * 0.03;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.2));
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 3400;
+        filter.Q.value = 6;
+        const gain = audioCtx.createGain();
+        gain.gain.value = 0.25;
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        noise.start(now);
+      } else if (type === 'rotary') {
+        // Stepper detent
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(680, now);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 0.012);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+        osc.connect(gain);
+        gain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.02);
+      } else if (type === 'shutter') {
+        // Double micro shutter
+        playFoley('ceramic', null);
+        setTimeout(() => playFoley('rotary', null), 35);
+      }
     }
 
-    function syncUI() {
-      document.getElementById('readout-hz').textContent = `${currentHz} Hz`;
-      document.getElementById('readout-ms').textContent = `${currentMs} ms`;
-      document.getElementById('readout-lpf').textContent = `${currentLpf} Hz`;
-      document.getElementById('fader-hz-val').textContent = `${currentHz} Hz`;
-      document.getElementById('fader-ms-val').textContent = `${currentMs} ms`;
-      document.getElementById('fader-lpf-val').textContent = `${currentLpf} Hz`;
-      document.getElementById('fader-hz').value = currentHz;
-      document.getElementById('fader-ms').value = currentMs;
-      document.getElementById('fader-lpf').value = currentLpf;
+    function triggerMasterImpulse() {
+      playFoley('solenoid', null);
+      setTimeout(() => playFoley('titanium', null), 40);
     }
 
-    document.querySelectorAll('.tactile-pad').forEach((pad) => {
-      pad.addEventListener('click', () => {
-        document.querySelectorAll('.tactile-pad').forEach((p) => p.setAttribute('aria-pressed', String(p === pad)));
-        currentVoice = pad.dataset.voice;
-        const p = VOICE_PRESETS[currentVoice];
-        currentHz = p.hz;
-        currentMs = p.ms;
-        currentLpf = p.lpf;
-        document.getElementById('active-profile-name').textContent = p.name;
-        document.getElementById('readout-hap').textContent = p.hap;
-        syncUI();
-        playProceduralSound(currentHz, currentMs, currentLpf, currentVoice);
-      });
-    });
+    let knobRot = 0;
+    function rotateKnob(id) {
+      initAudio();
+      triggerMicroTick();
+      knobRot = (knobRot + 30) % 360;
+      document.getElementById('knob-' + id).style.transform = `rotate(${knobRot}deg)`;
+    }
 
-    ['hz', 'ms', 'lpf'].forEach((param) => {
-      const fader = document.getElementById(`fader-${param}`);
-      fader.addEventListener('input', (e) => {
-        const val = Number(e.target.value);
-        if (param === 'hz') currentHz = val;
-        if (param === 'ms') currentMs = val;
-        if (param === 'lpf') currentLpf = val;
-        syncUI();
-        playProceduralSound(currentHz, 8, currentLpf, 'detent');
-      });
-    });
+    // Oscilloscope Renderer
+    const canvas = document.getElementById('scopeCanvas');
+    const ctx = canvas.getContext('2d');
+    let scopeMode = 'time';
 
-    document.getElementById('master-trigger-btn').addEventListener('click', () => {
-      playProceduralSound(currentHz, currentMs, currentLpf, currentVoice);
-    });
-
-    const muteBtn = document.getElementById('mute-btn');
-    muteBtn.addEventListener('click', () => {
-      isMuted = !isMuted;
-      muteBtn.setAttribute('aria-pressed', String(isMuted));
-      document.getElementById('mute-label').textContent = isMuted ? 'SOM [MUTE] · TECLA M' : 'SOM [ON] · TECLA M';
-      document.getElementById('mute-led').style.background = isMuted ? 'var(--braun-orange)' : 'var(--braun-olive)';
-    });
-
-    // Real-Time HiDPI ADSR Envelope + Harmonic Waveform Oscilloscope
-    const canvas = document.getElementById('adsr-scope');
-    const ctx2d = canvas.getContext('2d');
-    let phase = 0;
+    function toggleScopeMode() {
+      scopeMode = scopeMode === 'time' ? 'lissajous' : 'time';
+      event.target.textContent = 'MODE: ' + (scopeMode === 'time' ? 'TIME-DOMAIN' : 'LISSAJOUS');
+    }
 
     function renderScope() {
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx2d.clearRect(0, 0, w, h);
+      requestAnimationFrame(renderScope);
+      ctx.fillStyle = 'rgba(24, 28, 36, 0.25)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Precision Technical Grid Lines
-      ctx2d.strokeStyle = 'rgba(18, 12, 10, 0.08)';
-      ctx2d.lineWidth = 1;
-      for (let x = 0; x <= w; x += 76) {
-        ctx2d.beginPath(); ctx2d.moveTo(x, 0); ctx2d.lineTo(x, h); ctx2d.stroke();
-      }
-      for (let y = 0; y <= h; y += 39) {
-        ctx2d.beginPath(); ctx2d.moveTo(0, y); ctx2d.lineTo(w, y); ctx2d.stroke();
+      if (!analyser) {
+        // Idle ambient scan line
+        const t = performance.now() * 0.002;
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x += 4) {
+          const y = (canvas.height / 2) + Math.sin(x * 0.04 + t) * 4;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        return;
       }
 
-      const normDecay = Math.max(0.36, Math.min(1.0, currentMs / 140));
-      const cycles = Math.max(4, Math.min(28, currentHz / 38));
+      analyser.getByteTimeDomainData(dataArray);
 
-      // 1. Exponential ADSR Envelope Fill
-      ctx2d.beginPath();
-      ctx2d.moveTo(12, h / 2);
-      for (let x = 12; x < w - 12; x++) {
-        const t = (x - 12) / (w - 24);
-        const env = Math.exp(-t / (normDecay * 0.45)) * triggerPulsePhase;
-        const y = h / 2 - env * (h * 0.42);
-        ctx2d.lineTo(x, y);
-      }
-      ctx2d.lineTo(w - 12, h / 2);
-      ctx2d.closePath();
-      ctx2d.fillStyle = 'rgba(221, 82, 36, 0.10)';
-      ctx2d.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#38BDF8';
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = 'rgba(56, 189, 248, 0.8)';
+      ctx.beginPath();
 
-      // 2. Modulated Carrier Waveform Trace
-      ctx2d.beginPath();
-      for (let x = 12; x < w - 12; x++) {
-        const t = (x - 12) / (w - 24);
-        const env = Math.exp(-t / (normDecay * 0.45)) * Math.min(1.15, triggerPulsePhase);
-        const carrier = Math.sin(t * cycles * Math.PI * 2 - phase);
-        const harmonic = currentVoice === 'harmonic' ? 0.45 * Math.sin(t * cycles * 1.5 * Math.PI * 2 - phase) : 0;
-        const y = h / 2 - (carrier + harmonic) * env * (h * 0.36);
-        if (x === 12) ctx2d.moveTo(x, y);
-        else ctx2d.lineTo(x, y);
-      }
-      ctx2d.strokeStyle = '#120c0a';
-      ctx2d.lineWidth = 2;
-      ctx2d.stroke();
+      const sliceWidth = canvas.width * 1.0 / analyser.frequencyBinCount;
+      let x = 0;
 
-      // 3. Upper ADSR Decay Curve Highlight in Braun Orange
-      ctx2d.beginPath();
-      for (let x = 12; x < w - 12; x++) {
-        const t = (x - 12) / (w - 24);
-        const env = Math.exp(-t / (normDecay * 0.45)) * Math.min(1.15, triggerPulsePhase);
-        const y = h / 2 - env * (h * 0.38);
-        if (x === 12) ctx2d.moveTo(x, y);
-        else ctx2d.lineTo(x, y);
-      }
-      ctx2d.strokeStyle = '#dd5224';
-      ctx2d.lineWidth = 1.6;
-      ctx2d.stroke();
+      for (let i = 0; i < analyser.frequencyBinCount; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = v * canvas.height / 2;
 
-      phase += 0.06;
-      triggerPulsePhase += (1.0 - triggerPulsePhase) * 0.12;
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        requestAnimationFrame(renderScope);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+
+        x += sliceWidth;
       }
+
+      ctx.stroke();
+      ctx.shadowBlur = 0;
     }
-    renderScope();
 
-    window.addEventListener('keydown', (e) => {
-      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
-      if (e.key.toLowerCase() === 'm') muteBtn.click();
-      if (e.key === ' ') { e.preventDefault(); playProceduralSound(currentHz, currentMs, currentLpf, currentVoice); }
-      if (['1', '2', '3', '4'].includes(e.key)) {
-        const pads = document.querySelectorAll('.tactile-pad');
-        pads[Number(e.key) - 1]?.click();
-      }
-    });
+    renderScope();
   </script>
 </body>
 </html>
