@@ -117,6 +117,34 @@ Combine two, or take one and change at least 2 axes from 3.3.
 - **Retro-Future / Y2K**: chrome, acid colors, pixel or wide fonts, CRT shaders.
 - **Organic / Tactile**: paper textures, earthy tones, hand-drawn SVG, soft physics.
 
+### 3.7 Structural Archetype Diversity (Anti-Template Monoculture Rule)
+**NEVER repeat the same structural formula across projects.** The common failure mode is changing colors/fonts while replicating the exact same page anatomy:
+`[Navbar] -> [Centered Hero with Big Title + Subtitle] -> [3 Equal KPI Cards in a row] -> [1 Big Chart] -> [1 Simulator at the bottom]`.
+This makes every system look like a cloned SaaS marketing page disguised as software.
+
+Before structuring a screen, explicitly choose one of 5 distinct structural archetypes matching the domain:
+1. **Institutional Command Desk (Bloomberg / Aladdin / Linear Workbench)**:
+   - **Zero marketing hero fluff.** Launches immediately into functional operations.
+   - **Top Precision Ribbon**: Market indices, operational status, world financial clocks, monumental NAV ticker.
+   - **Asymmetric Multi-Panel Grid**: 300px ledger waterfall | 1fr orderbook & dynamic stress surface | 380px execution & custody desk.
+   - Ideal for: Financial terminals, RWA desks, developer tools, trading cockpits, mission control.
+2. **Asymmetric Split Dossier (Perplexity Pro / Substack / Editorial Audit)**:
+   - 40/60 or 45/55 persistent inspection pane on left, reactive document/evidence feed on right.
+   - Inline annotations, deep footnotes, zero equal-spaced card grids.
+   - Ideal for: Legal systems, medical patient dossiers, code reviews, investigative data journalism.
+3. **Tactile Modular Deck (Teenage Engineering / Braun / Playdate OS)**:
+   - Vertically stacked physical hardware rack with analog dials, stepped sliders, toggle switches.
+   - 100dvh pocket-safe layout, rotary scrubbers, Web Audio mechanical relay acoustics.
+   - Ideal for: Audio synthesis, creative utilities, mobile pocket tools, hardware controllers.
+4. **Spatial Canvas & Contextual Inspector (Figma / Miro / Node Graphs)**:
+   - Fluid interactive workspace with floating micro-tool docks, minimap, and contextual properties panel appearing only on selection.
+   - Ideal for: Visual builders, diagramming, strategy maps, workflow orchestrators.
+5. **Editorial Longform Investigation (NYT Graphics / The Pudding)**:
+   - Monumental editorial typography scale, narrative scroll-driven transitions, inline Tufte margin plots.
+   - Ideal for: Publishing, public reports, longform research, brand manifestos.
+
+State the chosen structural archetype in one line before building layout.
+
 State the chosen concept in one line: metaphor + visual rule + drawn constraints + memorable moment.
 
 ## 4. Color system
