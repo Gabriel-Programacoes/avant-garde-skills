@@ -42,6 +42,44 @@ npx avant-garde-skills list
 
 ---
 
+## 🎮 Prompting Guide: Default vs. `--wild` & Skill Targeting
+
+How you prompt the agent determines the creative archetype and domain precision:
+
+### 1. Default Mode vs. `--wild` Mode
+
+| Mode | Intended Domain | Creative Character | Prompt Trigger |
+|---|---|---|---|
+| **Studio Craft (Default)** | Commercial SaaS, FinTech, E-Commerce, Clinics, High-End Portfolios | Usability-safe, sunlit travertine or obsidian slate, APCA contrast, asymmetric bento layouts, live interactive simulators. | *"Make a modern, clean, and beautiful interface for my clinic."* |
+| **`--wild` Mode** | Art direction, luxury fashion, music drops, manifestos, Awwwards experiments | Convention-breaking: horizontal sideways scroll, single fixed physical canvas (ticket, dossier, camera), vertical/rotated type, monochrome revealed by interaction. | Add `--wild` to your prompt: *"Create an experimental fashion portfolio (--wild mode)."* |
+
+### 2. Targeting Specific Skills Exclusively
+
+To force the agent to activate a specific domain engine, mention the skill name directly in your prompt:
+
+- **Mobile Pocket Instruments (`avant-garde-mobile-tactile`):**  
+  > *"Using `avant-garde-mobile-tactile`, design a tactile camera exposure calculator with a 100dvh safe-area shell, rotary dials, and thumb-zone ergonomics."*
+
+- **Desktop & Tauri Software (`avant-garde-desktop`):**  
+  > *"Using `avant-garde-desktop`, build an audio mastering console with pointer-locked scrubbers, sub-120ms keyboard shortcuts, and custom window chrome."*
+
+- **Procedural Shaders & 60fps Motion (`avant-garde-motion-shaders`):**  
+  > *"Using `avant-garde-motion-shaders`, create an aspect-correct WebGL2 background with liquid domain warping and Bayer dithering."*
+
+- **Editorial Data Journalism (`avant-garde-data-viz`):**  
+  > *"Using `avant-garde-data-viz`, build an ocean temperature horizon plot with perceptual OKLCH scales and Tufte-style margin annotations."*
+
+- **Generative AI Workbenches (`avant-garde-ai-ux`):**  
+  > *"Using `avant-garde-ai-ux`, create a post-chat legal redline workbench with inline `<del>`/`<ins>` diffs, epistemic confidence markers, and citation cards."*
+
+- **Procedural Acoustics & Micro-Haptics (`avant-garde-sonic-haptics`):**  
+  > *"Using `avant-garde-sonic-haptics`, synthesize zero-asset (<2KB) Web Audio mechanical relay clicks and rotary detent feedback."*
+
+- **Multi-Screen Design Lock (`design-lock`):**  
+  > *"Create Screen 2 for my patient portal, reusing the LuminaCalendar and exact tokens from Screen 1 with zero design drift."*
+
+---
+
 ## 🥊 The Proof: Before vs. After (Same Exact Prompt)
 
 **Prompt given to the AI:**  
@@ -159,23 +197,57 @@ Every skill in the suite is backed by runnable, audited benchmark implementation
 
 ---
 
-## 🛠️ CLI Reference
+## 🛠️ CLI Reference & Power-User Tools
 
-The suite comes with standalone zero-dependency CLI tooling:
+The suite includes zero-dependency CLI tools for testing, auditing, and color science:
 
+### 1. Anti-Slop & Living Motion Auditor
+Audit any project directory or live localhost URL:
 ```bash
-# Audit any project folder against Anti-Slop, JSX, and Living Motion rules:
+# Web applications (checks for OKLCH, anti-slop gradients, living motion, no pill badges):
 npx avant-garde-skills audit ./src --mode web
+
+# Desktop software (enforces draggable titlebar regions, pointer lock, keymaps):
 npx avant-garde-skills audit ./src --mode desktop
+```
 
-# Inspect or verify multi-screen design lock:
+### 2. Multi-Screen Design Lock (`design-lock`)
+Prevent design drift and reuse existing UI components across screens:
+```bash
+# Check current locked contract and registered components:
 npx avant-garde-skills lock status ./src
-npx avant-garde-skills lock scan ./src --name "my-app" --archetype "editorial-atelier" --write
-npx avant-garde-skills lock find ./src "calendar"
-npx avant-garde-skills lock verify ./src
 
-# Sync skills directly to all AI agents:
-npm run sync
+# Scan Screen 1 and lock its design tokens & primitives:
+npx avant-garde-skills lock scan ./src --name "my-app" --archetype "editorial-atelier" --write
+
+# Search for existing reusable components (e.g., calendar, modal, slider):
+npx avant-garde-skills lock find ./src "calendar"
+
+# Verify all multi-screen pages adhere to the locked contract (0 token-drift):
+npx avant-garde-skills lock verify ./src
+```
+
+### 3. Creative Constraints & Archetype Drawer
+Draw creative rules to break out of design blocks:
+```bash
+# Default studio craft mode (safe, commercial, high-beauty):
+node avant-garde-frontend/scripts/constraints.mjs 2
+
+# Wild mode (experimental, convention-breaking art direction):
+node avant-garde-frontend/scripts/constraints.mjs 2 --wild
+```
+
+### 4. Perceptual Color Math & APCA Contrast Calculator
+Verify color tokens with zero dependencies:
+```bash
+# Check WCAG 2 ratio + APCA (Lc) contrast for text on background:
+node avant-garde-frontend/scripts/palette.mjs contrast "#11141B" "#F8FAFC"
+
+# Generate an 11-step OKLCH color ramp with gamut clamping:
+node avant-garde-frontend/scripts/palette.mjs ramp "#18583F" brand
+
+# Generate dark surface elevations and text tokens:
+node avant-garde-frontend/scripts/palette.mjs surfaces "#18583F"
 ```
 
 ---
