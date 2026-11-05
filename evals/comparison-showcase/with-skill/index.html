@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vanguard &amp; Stone — Gestão Patrimonial Soberana &amp; Crédito RWA (Com Avant-Garde)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Sunlit Sovereign Wealth Atelier (OKLCH Perceptually Uniform) */
+      --paper-limestone: oklch(96.8% 0.007 88.0);   /* Warm Alabaster Stone Ground */
+      --paper-sunken: oklch(93.2% 0.010 88.0);      /* Recessed Well */
+      --surface-card: oklch(99.6% 0.003 88.0);      /* Pure Sunlit White Card */
+      --ink-espresso: oklch(16.0% 0.014 165.0);     /* 18.2:1 WCAG AAA / Lc 101 */
+      --ink-secondary: oklch(39.0% 0.018 165.0);    /* 8.5:1 WCAG AAA */
+      --ink-tertiary: oklch(54.0% 0.014 165.0);
+      --sovereign-green: oklch(38.0% 0.098 162.0);  /* Deep Forest Reserve */
+      --sovereign-soft: oklch(92.0% 0.035 162.0);
+      --burnished-gold: oklch(62.0% 0.155 48.0);    /* Pure Bronze Gold Accent */
+      --border-hairline: oklch(16.0% 0.014 165.0 / 0.12);
+      --border-strong: oklch(16.0% 0.014 165.0 / 0.24);
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    @keyframes atelierReveal {
+      0% { opacity: 0; transform: translateY(16px) scale(0.992); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes beaconBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    @keyframes drawYieldCurve {
+      0% { stroke-dashoffset: 480; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--paper-limestone);
+      color: var(--ink-espresso);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+
+    .atelier-shell {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 18px 26px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* 1. Architectural Header (Zero Pill Badges — Hairline Rules & Naked Typography) */
+    .top-bar {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 12px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: atelierReveal 500ms var(--ease-out-expo) both;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+    .brand-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 27px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .brand-tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-secondary);
+      padding-left: 16px;
+      border-left: 1px solid var(--border-hairline);
+    }
+
+    .nav-ledger {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+    .nav-item-active {
+      color: var(--sovereign-green);
+      border-bottom: 2px solid var(--sovereign-green);
+      padding-bottom: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-audio-toggle {
+      background: var(--paper-sunken);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-espresso);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: transform 120ms var(--ease-spring);
+    }
+    .btn-audio-toggle:hover { transform: translateY(-1px); }
+    .btn-audio-toggle:active { transform: scale(0.96); }
+
+    .btn-primary {
+      background: var(--ink-espresso);
+      color: var(--surface-card);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 140ms var(--ease-spring), transform 140ms var(--ease-spring);
+    }
+    .btn-primary:hover {
+      background: var(--sovereign-green);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* 2. Asymmetric Split Bento (7.1fr / 4.9fr) */
+    .bento-stage {
+      display: grid;
+      grid-template-columns: 7.2fr 4.8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    /* Main Sovereign Story Card */
+    .story-card {
+      background:
+        radial-gradient(420px circle at var(--mx, 50%) var(--my, 20%), oklch(94% 0.025 162 / 0.25), transparent 70%),
+        var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 32px 34px;
+      box-shadow: 0 16px 40px -22px oklch(16% 0.014 165 / 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: atelierReveal 600ms var(--ease-out-expo) 80ms both;
+      transition: transform 260ms var(--ease-spring), box-shadow 260ms var(--ease-spring);
+    }
+    .story-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 24px 48px -18px oklch(16% 0.014 165 / 0.12);
+    }
+
+    .eyebrow-ledger {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-hairline);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--sovereign-green);
+      font-weight: 700;
+    }
+
+    h1.hero-title {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: clamp(2.8rem, 4.4vw, 4.3rem);
+      line-height: 0.96;
+      letter-spacing: -0.02em;
+      max-width: 17ch;
+    }
+    h1.hero-title em {
+      font-style: italic;
+      color: var(--sovereign-green);
+    }
+
+    .hero-lead {
+      font-size: 14.5px;
+      color: var(--ink-secondary);
+      max-width: 54ch;
+      line-height: 1.55;
+    }
+
+    /* Constraint: Numbers as Hero Evidence */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .metric-big {
+      font-family: 'Instrument Serif', serif;
+      font-size: 42px;
+      line-height: 0.95;
+      color: var(--ink-espresso);
+    }
+    .metric-big sup {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--burnished-gold);
+      font-weight: 700;
+      margin-left: 2px;
+    }
+    .metric-caption {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--ink-secondary);
+      font-weight: 500;
+    }
+
+    /* Secondary Bento Row: Real-World Asset Ledger & SVG Yield Curve */
+    .sub-bento-row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .tactile-subcard {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      animation: atelierReveal 600ms var(--ease-out-expo) 140ms both;
+      transition: transform 220ms var(--ease-spring), box-shadow 220ms var(--ease-spring);
+    }
+    .tactile-subcard:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px -16px oklch(16% 0.014 165 / 0.10);
+    }
+
+    .asset-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border-hairline);
+      font-size: 12px;
+    }
+    .asset-row:last-child { border-bottom: none; }
+
+    /* RIGHT COLUMN: Interactive Liquidity & Yield Simulator */
+    .simulator-panel {
+      background: var(--surface-card);
+      border: 1.5px solid var(--border-strong);
+      border-top: 3px solid var(--sovereign-green);
+      border-radius: 16px;
+      padding: 26px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 20px 48px -20px oklch(16% 0.014 165 / 0.12);
+      animation: atelierReveal 600ms var(--ease-out-expo) 180ms both;
+    }
+
+    .sim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    /* Horizon Step Switcher ([30d] [90d] [180d] [365d]) */
+    .horizon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--paper-sunken);
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .horizon-btn {
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      text-align: center;
+      transition: background 140ms var(--ease-spring), color 140ms var(--ease-spring);
+    }
+    .horizon-btn[aria-selected="true"] {
+      background: var(--surface-card);
+      color: var(--ink-espresso);
+      box-shadow: 0 1px 4px oklch(16% 0.014 165 / 0.08);
+      font-weight: 700;
+    }
+
+    /* Interactive Allocation Scrubber */
+    .scrubber-well {
+      background: var(--paper-limestone);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input[type="range"].sovereign-fader {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 3px;
+      cursor: ew-resize;
+    }
+    input[type="range"].sovereign-fader::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--sovereign-green);
+      border: 2px solid var(--surface-card);
+      border-radius: 4px;
+      cursor: ew-resize;
+      box-shadow: 0 2px 6px oklch(16% 0.014 165 / 0.25);
+    }
+
+    .output-well {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 16px;
+      background: var(--paper-sunken);
+      border-radius: 10px;
+    }
+
+    @media (max-width: 959px) {
+      .atelier-shell { padding: 12px 14px 20px; }
+      .nav-ledger, .brand-tagline { display: none; }
+      .bento-stage { grid-template-columns: 1fr; }
+      .story-card { padding: 22px 20px; }
+      .sub-bento-row { grid-template-columns: 1fr; }
+      .evidence-grid { gap: 10px; }
+      .metric-big { font-size: 32px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="atelier-shell tabular-nums">
+    <!-- 1. SOVEREIGN ARCHITECTURAL HEADER -->
+    <header class="top-bar">
+      <div class="brand-lockup">
+        <span class="brand-title">Vanguard &amp; Stone</span>
+        <span class="brand-tagline">PRIVATE WEALTH &amp; RWA SYNDICATE · GENÈVE · SÃO PAULO</span>
+      </div>
+
+      <nav class="nav-ledger" aria-label="Navegação Institucional">
+        <span class="nav-item-active">Visão Patrimonial</span>
+        <span>Sindicato RWA</span>
+        <span>Curva de Liquidez</span>
+        <span>Relatórios Auditados</span>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="btn-audio-toggle" id="audio-toggle-btn" aria-pressed="true">
+          <span style="width:6px; height:6px; background:var(--sovereign-green); display:inline-block;"></span>
+          <span id="audio-label">SOM [ON]</span>
+        </button>
+        <button class="btn-primary">
+          <span>Aporte Privado →</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. ASYMMETRIC BENTO STAGE -->
+    <main class="bento-stage">
+      <!-- LEFT COLUMN (60%): Editorial Narrative + Evidence Strip + Sub-Bento -->
+      <div class="left-column">
+        <article class="story-card" id="story-card">
+          <div class="eyebrow-ledger">
+            <span style="width:6px; height:6px; background:var(--sovereign-green); display:inline-block; animation:beaconBlink 2.2s infinite;"></span>
+            <span>CRÉDITO PRIVADO ESTRUTURADO</span>
+            <span style="color:var(--ink-tertiary);">//</span>
+            <span>LASTRO EM ATIVOS TANGÍVEIS (RWA)</span>
+          </div>
+
+          <h1 class="hero-title">
+            Arquitetura de capital soberana para proteger e <em>perpetuar</em> o seu patrimônio.
+          </h1>
+
+          <p class="hero-lead">
+            Estruturamos emissões seniores de crédito privado, debêntures de infraestrutura hídrica e recebíveis agrícolas com garantia real em cartório e blindagem contra volatilidade de balcão.
+          </p>
+
+          <!-- Constraint: Numbers as Hero Evidence -->
+          <div class="evidence-grid">
+            <div>
+              <div class="metric-big">R$ 4.2<sup>B</sup></div>
+              <div class="metric-caption">Sob gestão e custódia segregada</div>
+            </div>
+            <div>
+              <div class="metric-big">138.4<sup>%</sup></div>
+              <div class="metric-caption">Rendimento líquido médio vs CDI anual</div>
+            </div>
+            <div>
+              <div class="metric-big">0.0<sup>%</sup></div>
+              <div class="metric-caption">Inadimplência histórica nas tranches seniores</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Sub-Bento Row: Real Asset Ledger + SVG Yield Curve -->
+        <div class="sub-bento-row">
+          <article class="tactile-subcard">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; padding-bottom:8px; border-bottom:1px solid var(--border-hairline);">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; color:var(--sovereign-green);">
+                01 // CARTEIRA ATIVA RWA
+              </span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--burnished-gold); font-weight:700;">
+                TRANCHE SÊNIOR
+              </span>
+            </div>
+
+            <div>
+              <div class="asset-row">
+                <div>
+                  <strong style="font-size:12.5px;">Infraestrutura Hídrica Sudeste (Deb. Incentivada)</strong>
+                  <div style="font-size:11px; color:var(--ink-secondary);">IPCA + 7.85% a.a. · Isento de IR</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace; font-weight:700;">42%</span>
+              </div>
+              <div class="asset-row">
+                <div>
+                  <strong style="font-size:12.5px;">CRA Agro-Exportação Soja &amp; Grãos</strong>
+                  <div style="font-size:11px; color:var(--ink-secondary);">CDI + 3.40% a.a. · Alienação fiduciária</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace; font-weight:700;">38%</span>
+              </div>
+              <div class="asset-row">
+                <div>
+                  <strong style="font-size:12.5px;">Recebíveis Logísticos AAA (Galpões SP)</strong>
+                  <div style="font-size:11px; color:var(--ink-secondary);">IPCA + 6.90% a.a. · Contratos atípicos 10a</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace; font-weight:700;">20%</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="tactile-subcard" style="background:var(--paper-sunken);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; color:var(--ink-secondary);">
+                02 // CURVA DE RETORNO ACUMULADO (36M)
+              </span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sovereign-green); font-weight:700;">
+                +44.8% LÍQ.
+              </span>
+            </div>
+
+            <svg viewBox="0 0 240 76" width="100%" height="76" role="img" aria-label="Curva de retorno RWA vs CDI">
+              <line x1="0" y1="64" x2="240" y2="64" stroke="oklch(16% 0.014 165 / 0.18)" stroke-dasharray="2 2" />
+              <!-- CDI Line Baseline -->
+              <path d="M4,62 L232,38" fill="none" stroke="oklch(16% 0.014 165 / 0.35)" stroke-width="1.5" stroke-dasharray="3 3" />
+              <!-- Sovereign Yield Curve with Draw Animation -->
+              <path d="M4,62 Q75,54 135,32 T232,12 L232,64 L4,64 Z" fill="oklch(38% 0.098 162 / 0.14)" />
+              <path d="M4,62 Q75,54 135,32 T232,12" fill="none" stroke="oklch(38% 0.098 162)" stroke-width="2.2" stroke-dasharray="480" style="animation:drawYieldCurve 1.4s var(--ease-out-expo) both;" />
+              <circle cx="135" cy="32" r="3.5" fill="oklch(38% 0.098 162)" />
+              <circle cx="232" cy="12" r="4.5" fill="oklch(62% 0.155 48)" />
+              <text x="100" y="24" font-size="9.5" font-family="JetBrains Mono,monospace" font-weight="600" fill="oklch(16% 0.014 165)">18m (+21%)</text>
+              <text x="162" y="10" font-size="9.5" font-family="JetBrains Mono,monospace" font-weight="700" fill="oklch(62% 0.155 48)">36m (+44.8%)</text>
+            </svg>
+
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--ink-secondary);">
+              <span>Linha tracejada: Benchmark CDI</span>
+              <span style="font-weight:700; color:var(--sovereign-green);">Alfa Líquido +11.2%</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN (40%): Live Liquidity & Yield Simulator -->
+      <aside class="simulator-panel" aria-label="Simulador de Liquidez e Projeção Patrimonial">
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="sim-header">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sovereign-green); font-weight:700;">
+                SIMULADOR INTERATIVO // LIQUIDEZ E RETORNO
+              </div>
+              <h2 style="font-family:'Instrument Serif',serif; font-size:28px; font-weight:400; line-height:1.05; margin-top:2px;">
+                Projeção personalizada de aporte
+              </h2>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--sovereign-green); font-weight:700;">
+              ■ TEMPO REAL
+            </span>
+          </div>
+
+          <!-- 1. Horizon Step Switcher -->
+          <div>
+            <label style="font-size:11.5px; font-weight:600; color:var(--ink-secondary); display:block; margin-bottom:6px;">
+              1. Horizonte de liquidez e resgate:
+            </label>
+            <div class="horizon-grid" role="tablist">
+              <button class="horizon-btn" role="tab" aria-selected="false" data-rate="0.108" data-days="30">30d (D+0)</button>
+              <button class="horizon-btn" role="tab" aria-selected="false" data-rate="0.124" data-days="90">90 dias</button>
+              <button class="horizon-btn" role="tab" aria-selected="true" data-rate="0.142" data-days="180">180 dias</button>
+              <button class="horizon-btn" role="tab" aria-selected="false" data-rate="0.165" data-days="365">12 meses</button>
+            </div>
+          </div>
+
+          <!-- 2. Volume Scrubber -->
+          <div class="scrubber-well">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:11.5px; font-weight:600; color:var(--ink-secondary);">2. Volume alocado para sindicação:</span>
+              <strong style="font-family:'Instrument Serif',serif; font-size:26px; line-height:1;" id="volume-readout">R$ 500.000</strong>
+            </div>
+            <input type="range" class="sovereign-fader" id="volume-fader" min="100000" max="5000000" step="50000" value="500000" />
+            <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-tertiary);">
+              <span>Mínimo: R$ 100k</span>
+              <span>Ticket Médio: R$ 500k</span>
+              <span>Teto: R$ 5,0M</span>
+            </div>
+          </div>
+
+          <!-- 3. Dynamic Yield & Return Projection Output -->
+          <div class="output-well">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-secondary); font-weight:700;">
+                PROJEÇÃO DE RENDIMENTO LÍQUIDO NO HORIZONTE
+              </span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--burnished-gold); font-weight:700;" id="tax-exempt-label">
+                ISENTO DE IR (LEI 12.431)
+              </span>
+            </div>
+
+            <div style="display:flex; align-items:baseline; gap:8px; margin-top:4px;">
+              <span style="font-family:'Instrument Serif',serif; font-size:42px; line-height:1; color:var(--sovereign-green);" id="yield-result">
+                +R$ 35.500
+              </span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-secondary);" id="yield-pct-readout">
+                (+7.10% no período)
+              </span>
+            </div>
+
+            <div style="font-size:11.5px; color:var(--ink-secondary); margin-top:4px;">
+              Equivalente bancário a <strong>138.2% do CDI</strong> com lastro em contratos de fornecimento hídrico e grãos.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="padding:14px 22px; justify-content:center; font-size:14px; width:100%;">
+          <span>Solicitar Acesso ao Book de Ofertas RWA →</span>
+        </button>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    // Procedural Web Audio Zero-Asset Acoustic Synthesis (Subtle luxury clicks & detents)
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function playTactileTick(freq = 480) {
+      if (!audioEnabled) return;
+      const Ctor = window.AudioContext || window.webkitAudioContext;
+      if (!Ctor) return;
+      if (!audioCtx) audioCtx = new Ctor();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1400, now);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(160, now + 0.022);
+
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.024);
+      if (navigator.vibrate) navigator.vibrate(6);
+    }
+
+    const audioBtn = document.getElementById('audio-toggle-btn');
+    audioBtn.addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      audioBtn.setAttribute('aria-pressed', String(audioEnabled));
+      document.getElementById('audio-label').textContent = audioEnabled ? 'SOM [ON]' : 'SOM [MUTE]';
+      audioBtn.querySelector('span').style.background = audioEnabled ? 'var(--sovereign-green)' : 'var(--ink-tertiary)';
+    });
+
+    // Interactive Simulator Math with 60fps RequestAnimationFrame Interpolation
+    let currentVol = 500000;
+    let currentRate = 0.142; // annual
+    let currentDays = 180;
+    let displayedYieldVal = 35500;
+
+    function calculateYield() {
+      const periodFactor = currentDays / 365;
+      return Math.round(currentVol * (currentRate * periodFactor));
+    }
+
+    function animateYieldTo(targetVal) {
+      const el = document.getElementById('yield-result');
+      if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (el) el.textContent = `+R$ ${targetVal.toLocaleString('pt-BR')}`;
+        displayedYieldVal = targetVal;
+        return;
+      }
+      const start = displayedYieldVal;
+      const t0 = performance.now();
+      function step(now) {
+        const p = Math.min(1, (now - t0) / 260);
+        const val = Math.round(start + (targetVal - start) * (1 - Math.pow(1 - p, 3)));
+        el.textContent = `+R$ ${val.toLocaleString('pt-BR')}`;
+        if (p < 1) requestAnimationFrame(step);
+        else displayedYieldVal = targetVal;
+      }
+      requestAnimationFrame(step);
+    }
+
+    function updateSimulation() {
+      const y = calculateYield();
+      const periodPct = ((currentRate * (currentDays / 365)) * 100).toFixed(2);
+      document.getElementById('yield-pct-readout').textContent = `(+${periodPct}% no período)`;
+      animateYieldTo(y);
+    }
+
+    const fader = document.getElementById('volume-fader');
+    fader.addEventListener('input', (e) => {
+      currentVol = Number(e.target.value);
+      document.getElementById('volume-readout').textContent = `R$ ${currentVol.toLocaleString('pt-BR')}`;
+      playTactileTick(340 + (currentVol / 5000000) * 400);
+      updateSimulation();
+    });
+
+    document.querySelectorAll('.horizon-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.horizon-btn').forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
+        currentRate = Number(btn.dataset.rate);
+        currentDays = Number(btn.dataset.days);
+        playTactileTick(560);
+        updateSimulation();
+      });
+    });
+
+    // Pointer-reactive radial sheen
+    const card = document.getElementById('story-card');
+    if (card) {
+      card.addEventListener('pointermove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+      });
+    }
+  </script>
+</body>
+</html>

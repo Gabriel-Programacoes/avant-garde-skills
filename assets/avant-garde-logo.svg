@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-glow" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#141721" />
+      <stop offset="60%" stop-color="#090A0D" />
+      <stop offset="100%" stop-color="#050608" />
+    </radialGradient>
+
+    <!-- Titanium Facet (Left) -->
+    <linearGradient id="facet-titanium" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="35%" stop-color="#E2E5EB" />
+      <stop offset="100%" stop-color="#949DAF" />
+    </linearGradient>
+
+    <!-- Obsidian Graphite Facet (Right) -->
+    <linearGradient id="facet-graphite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#647082" />
+      <stop offset="50%" stop-color="#333B48" />
+      <stop offset="100%" stop-color="#191D24" />
+    </linearGradient>
+
+    <!-- Emerald Pulse Accent -->
+    <linearGradient id="emerald-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00F090" />
+      <stop offset="100%" stop-color="#00D27F" />
+    </linearGradient>
+
+    <!-- Amber Indicator -->
+    <linearGradient id="amber-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF5722" />
+      <stop offset="100%" stop-color="#FF8A65" />
+    </linearGradient>
+
+    <!-- Subtle Technical Grid Pattern -->
+    <pattern id="tech-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="800" height="800" fill="url(#bg-glow)" />
+  <rect width="800" height="800" fill="url(#tech-grid)" />
+
+  <!-- Outer Technical Blueprint Framing -->
+  <rect x="40" y="40" width="720" height="720" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+  <rect x="52" y="52" width="696" height="696" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1" />
+
+  <!-- Corner Brackets (Constructivist Marks) -->
+  <path d="M 32 60 L 32 32 L 60 32" fill="none" stroke="#00F090" stroke-width="2" />
+  <path d="M 768 60 L 768 32 L 740 32" fill="none" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" />
+  <path d="M 32 740 L 32 768 L 60 768" fill="none" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" />
+  <path d="M 768 740 L 768 768 L 740 768" fill="none" stroke="#00F090" stroke-width="2" />
+
+  <!-- Technical Monospace Labels in Corners -->
+  <text x="64" y="80" font-family="'Consolas', 'Courier New', monospace" font-size="11" fill="#717A8C" letter-spacing="0.18em">AVANT-GARDE // INTELLIGENCE SUITE</text>
+  <text x="736" y="80" text-anchor="end" font-family="'Consolas', 'Courier New', monospace" font-size="11" fill="#717A8C" letter-spacing="0.18em">CORE : SPEC 01</text>
+  <text x="64" y="730" font-family="'Consolas', 'Courier New', monospace" font-size="11" fill="#00F090" letter-spacing="0.18em">&#9632; APCA Lc 98.8</text>
+  <text x="736" y="730" text-anchor="end" font-family="'Consolas', 'Courier New', monospace" font-size="11" fill="#717A8C" letter-spacing="0.18em">ANTI-SLOP : VERIFIED</text>
+
+  <!-- Precision Crosshairs & Alignment Axes -->
+  <line x1="400" y1="90" x2="400" y2="150" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+  <line x1="400" y1="580" x2="400" y2="620" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+  <line x1="120" y1="360" x2="180" y2="360" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+  <line x1="620" y1="360" x2="680" y2="360" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+
+  <circle cx="400" cy="360" r="260" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1" />
+  <circle cx="400" cy="360" r="220" fill="none" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1" stroke-dasharray="4 8" />
+  <circle cx="400" cy="360" r="160" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1" />
+
+  <!-- CENTRAL ICON: MONUMENTAL CONSTRUCTIVIST 'A' PRISM -->
+  <g id="monogram">
+    <!-- Drop Shadow / Ambient Grounding -->
+    <polygon points="400,162 568,518 506,518 400,298 294,518 232,518" fill="rgba(0,0,0,0.5)" filter="blur(20px)" />
+
+    <!-- Left Architectural Facet (Titanium) -->
+    <polygon points="400,165 400,290 290,515 220,515" fill="url(#facet-titanium)" />
+
+    <!-- Right Architectural Facet (Graphite / Deep Metallic) -->
+    <polygon points="400,165 400,290 510,515 580,515" fill="url(#facet-graphite)" />
+
+    <!-- Precision Apex Bevel Cap -->
+    <polygon points="380,210 400,165 420,210" fill="#FFFFFF" opacity="0.9" />
+
+    <!-- Optical Refraction Inner Prism (Negative Space Geometry) -->
+    <polygon points="400,290 460,415 340,415" fill="#0A0D12" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+
+    <!-- Precision Horizontal Crossbar / Quantum Telemetry Link -->
+    <rect x="264" y="420" width="272" height="10" fill="#0E1218" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+    <line x1="264" y1="425" x2="536" y2="425" stroke="url(#emerald-accent)" stroke-width="3" />
+
+    <!-- Center Precision Indicator Pip (Amber Solenoid) -->
+    <circle cx="400" cy="425" r="4" fill="#FF5722" />
+    <circle cx="400" cy="425" r="8" fill="none" stroke="#FF5722" stroke-width="1" opacity="0.6" />
+
+    <!-- Precision Ticks along Crossbar -->
+    <line x1="332" y1="420" x2="332" y2="430" stroke="#00F090" stroke-width="1.5" />
+    <line x1="468" y1="420" x2="468" y2="430" stroke="#00F090" stroke-width="1.5" />
+  </g>
+
+  <!-- Geometric Reticle Cross at Apex -->
+  <line x1="392" y1="165" x2="408" y2="165" stroke="#00F090" stroke-width="2" />
+  <line x1="400" y1="157" x2="400" y2="173" stroke="#00F090" stroke-width="2" />
+
+  <!-- Lower Typographic Monolith -->
+  <g id="typography">
+    <text x="400" y="610" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="34" font-weight="bold" fill="#F8FAFC" letter-spacing="0.32em">AVANT-GARDE</text>
+    <text x="400" y="638" text-anchor="middle" font-family="'Consolas', 'Courier New', monospace" font-size="12" font-weight="normal" fill="#8892A2" letter-spacing="0.25em">STUDIO INTELLIGENCE SUITE</text>
+    <rect x="360" y="656" width="80" height="2" fill="url(#emerald-accent)" />
+  </g>
+</svg>

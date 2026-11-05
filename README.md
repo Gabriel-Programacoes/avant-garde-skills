@@ -38,6 +38,33 @@ npx avant-garde-skills list
 
 ---
 
+## 🥊 The Proof: Before vs. After (Same Exact Prompt)
+
+Prompt given to the AI:  
+> *"Crie uma plataforma moderna e elegante de gestão patrimonial e investimentos privados (Private Wealth & RWA), com visão de rendimento, alocação de carteira e simulador de liquidez."*
+
+### ❌ Without Avant-Garde (Typical AI Slop)
+*Inter font everywhere, generic purple/indigo glow blobs, floating pastel pill badges (`border-radius: 9999px`), 3 identical cards, fake sparkle icons (`✨`), static dead SVG.*
+
+![Without Avant-Garde (AI Slop)](evals/comparison-showcase/shot-without-skill.png)
+
+### ✅ With Avant-Garde Skills (Award-Level Studio Craft)
+*Warm limestone alabaster ground, `Instrument Serif` + `Plus Jakarta Sans` + `JetBrains Mono` (`tabular-nums`), zero pill badges (naked monospace ledgers + hairline rules), real RWA asset classes, live interactive yield simulator with 60fps rAF interpolation, and zero-asset Web Audio procedural acoustic feedback.*
+
+![With Avant-Garde (Studio Craft)](evals/comparison-showcase/shot-with-skill.png)
+
+| Aspect | Without Avant-Garde (Default LLM) | With Avant-Garde Suite |
+|---|---|---|
+| **Color Space** | Generic RGB/Tailwind `#0f172a` + purple-indigo gradient | Perceptually uniform OKLCH daylight limestone + forest pine |
+| **Typography** | Default `Inter` across all headings and labels | Expressive `Instrument Serif` + `Plus Jakarta Sans` + `JetBrains Mono` |
+| **Status / Tags** | Pastel pill/badge bubbles ("balõezinhos" `border-radius: 9999px`) | Architectural naked ledgers, hairline dividers, 6px solid squares (`■`) |
+| **Numeric Telemetry** | Plain text that jitters during updates | Fixed `tabular-nums` with smooth 60fps `requestAnimationFrame` ticker |
+| **Interactivity** | Static dead mockups with dummy cards | Live interactive multi-horizon simulator (`D+0`, `30d`, `90d`, `365d`) |
+| **Sensory Feedback** | Zero sound, zero tactile presence | Zero-asset Web Audio API acoustic transients (`<2KB`) + haptic recoil |
+| **Multi-Screen** | Amnesia & Design Drift (Screen 2 breaks Screen 1) | Automatic `.ui-design-lock.json` contract + component registry |
+
+---
+
 ## 🏛️ The 7 Avant-Garde Skills
 
 | Skill | Role & Domain | Signature Mechanics | Benchmark Eval |
