@@ -180,23 +180,6 @@ npm run sync
 
 ---
 
-## 📦 How to Publish to GitHub & npm
-
-### 1. Push to GitHub
-```bash
-git remote add origin https://github.com/Gabriel-Programacoes/avant-garde-skills.git
-git branch -M main
-git push -u origin main
-```
-
-### 2. Publish to npm (for `npx avant-garde-skills`)
-```bash
-npm login
-npm publish --access public
-```
-
----
-
 ## 📄 License
 
 MIT © 2026 Gabriel-Programacoes. Free to use, adapt, and build studio-grade software.
