@@ -33,7 +33,7 @@ Before choosing a palette, typography, or layout, **always run `node scripts/des
      ```
 2. **Screen 2..N of the Same Project (`STATUS: LOCKED` or `UNLOCKED_EXISTING_UI`):**
    - **Zero Design Drift Law:** Do **not** run `history.md` anti-repetition or invent new colors, fonts, border-radii, or surface styles. Inherit 100% of the CSS custom properties (`tokens`) and `fonts` locked in `.ui-design-lock.json`.
-   - **Mandatory Component Discovery & Reuse:** Before building any interactive widget (e.g., user asks for *"um calendário na tela 20"*, *"um seletor de abas"*, *"um cabeçalho"*), query the project registry first:
+   - **Mandatory Component Discovery & Reuse:** Before building any interactive widget (e.g., user asks for *"a calendar on screen 20"*, *"a tab switcher"*, *"a header"* or in Portuguese *"um calendário na tela 20"*, *"um seletor de abas"*), query the project registry first:
      ```bash
      node scripts/design-lock.mjs find <project-dir> <keyword>   # e.g. calendar, calendario, tabs, nav, card
      ```
@@ -60,16 +60,16 @@ Do instead (tools, not a checklist — use only what serves the concept):
 - Details: grain/noise texture, marquee, numbered sections, micro-copy with voice, sound toggle when fitting.
 
 ### 2.1 Layman-to-Studio Intent Translator (When the User Uses Non-Technical Words)
-Most users do not know frontend or design jargon. They will ask for *"uma tela bonita e moderna"*, *"um site elegante"*, *"algo limpo e profissional"*, or *"um app divertido"*.
+Most users do not know frontend or design jargon. They will ask for *"a clean and modern screen"*, *"an elegant website"*, *"something clean and professional"*, or *"a playful app"* (or Portuguese equivalents like *"uma tela bonita e moderna"*, *"um site elegante"*, *"algo limpo e profissional"*).
 **Never punish a simple prompt with either (a) generic AI purple/Inter slop OR (b) harsh, illegible dark brutalism.** Translate layman words into studio-grade art direction automatically:
 
 | What the User Says (Layman Prompt) | What They Actually Mean | Studio Direction to Build Automatically |
 |------------------------------------|-------------------------|-----------------------------------------|
-| **"Bonita e moderna" / "Limpa" / "Agradável"** | Easy to use, trustworthy, contemporary, visually warm, feels like a $50k agency product. | **Sunlit Architectural Daylight + Refractive Tactile Details:** Warm alabaster/stone surface (`oklch(97% 0.008 80)`), expressive serif + clean geometric sans (`Instrument Serif` + `Plus Jakarta Sans`), asymmetric bento layout (never 3 equal cards), 1 rich domain accent (sage, terracotta, cobalt, or amber), a floating optical-glass action bar, and an **interactive utility/simulator** right in the hero. |
-| **"Elegante" / "Chique" / "Sofisticada" / "Premium"** | High perceived value, calm authority, boutique feel. | **Editorial Atelier / Quiet Luxury:** Creamy travertine or deep espresso velvet, high-contrast serif headlines, generous negative space, hairline 1px borders, subtle film texture, and smooth `expo.out` transitions. |
-| **"Rápida" / "Prática" / "Produtiva" / "Sistema"** | Zero fluff, scannable, immediate feedback, professional tool. | **High-Craft Daylight or Obsidian Studio (Linear / Cron / Stripe style):** Crisp 1px surface hierarchy, `tabular-nums` metrics, inline search/filters, segmented pill switchers, and instant `<120ms` micro-interactions. |
-| **"Divertida" / "Jovem" / "Gameficada"** | Energetic, tactile, rewarding to click. | **Tactile Pop & Physical Play:** High-chroma OKLCH accents on warm cream, physical buttons that depress `2px` on click, progress streaks, and spring physics. |
-| **"Tecnológica" / "Futurista" / "Impactante"** | Cinematic, memorable, cutting-edge. | **Spatial Refractive UI or Interactive WebGL Stage:** Living light/shader canvas behind optical glass cards with 1px specular rims and kinetic counters. |
+| **"Clean and modern" / "Beautiful" / "Clean"**<br>*(PT: "Bonita e moderna" / "Limpa" / "Agradável")* | Easy to use, trustworthy, contemporary, visually warm, feels like a $50k agency product. | **Sunlit Architectural Daylight + Refractive Tactile Details:** Warm alabaster/stone surface (`oklch(97% 0.008 80)`), expressive serif + clean geometric sans (`Instrument Serif` + `Plus Jakarta Sans`), asymmetric bento layout (never 3 equal cards), 1 rich domain accent (sage, terracotta, cobalt, or amber), a floating optical-glass action bar, and an **interactive utility/simulator** right in the hero. |
+| **"Elegant" / "Sophisticated" / "Premium"**<br>*(PT: "Elegante" / "Chique" / "Sofisticada")* | High perceived value, calm authority, boutique feel. | **Editorial Atelier / Quiet Luxury:** Creamy travertine or deep espresso velvet, high-contrast serif headlines, generous negative space, hairline 1px borders, subtle film texture, and smooth `expo.out` transitions. |
+| **"Fast" / "Practical" / "Productive" / "System"**<br>*(PT: "Rápida" / "Prática" / "Produtiva" / "Sistema")* | Zero fluff, scannable, immediate feedback, professional tool. | **High-Craft Daylight or Obsidian Studio (Linear / Cron / Stripe style):** Crisp 1px surface hierarchy, `tabular-nums` metrics, inline search/filters, segmented pill switchers, and instant `<120ms` micro-interactions. |
+| **"Fun" / "Playful" / "Gamified"**<br>*(PT: "Divertida" / "Jovem" / "Gameficada")* | Energetic, tactile, rewarding to click. | **Tactile Pop & Physical Play:** High-chroma OKLCH accents on warm cream, physical buttons that depress `2px` on click, progress streaks, and spring physics. |
+| **"High-tech" / "Futuristic" / "Cinematic"**<br>*(PT: "Tecnológica" / "Futurista" / "Impactante")* | Cinematic, memorable, cutting-edge. | **Spatial Refractive UI or Interactive WebGL Stage:** Living light/shader canvas behind optical glass cards with 1px specular rims and kinetic counters. |
 
 ### 2.2 Anti-Slop Style Elevation Matrix (When User Requests Specific Technical Styles)
 Never default to dark brutalism when the user asks for another aesthetic, and never ship the "AI slop" version of their requested style. Elevate every style to studio craft:

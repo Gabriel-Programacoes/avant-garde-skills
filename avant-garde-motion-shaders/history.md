@@ -5,3 +5,4 @@ Anti-repetition log for WebGL shaders, procedural canvases, and scroll/spring ch
 Format: `YYYY-MM-DD | project | archetype | input driver | dominant oklch | post-fx | audit status`
 
 2026-11-05 | aether-sdf-04 | raymarched sdf monolith (torus+octa+gyroid) | harmonic oscillator presets + damped pointer spring | oklch(86.0% 0.215 121.2) | ordered 4x4 bayer dither + topographic isolines | PASS (0 errors)
+2026-11-05 | licitagoias-landing | liquid domain warp + anisotropic brushed glass | damped pointer velocity + horizontal scroll velocity | oklch(95.6% 0.005 95) | 4x4 bayer dither + chromatic dispersion | PASS (0 errors)

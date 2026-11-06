@@ -18,7 +18,7 @@ Extract from user request. Ask only what is blocking; otherwise expand autonomou
 | Polarity (Sunlit Paper for legal/medical/editorial/finance; Obsidian for code/devops/security) | Follow user choice | Match domain natural lighting via `scripts/palette.mjs [--light]` |
 
 ### 1.1 Layman-to-Studio AI Translator
-When a user asks simply for *"uma tela de IA bonita"*, *"um assistente inteligente para minha empresa"*, or *"um chat para analisar documentos"*:
+When a user asks simply for *"a good-looking AI screen"*, *"an intelligent assistant for my business"*, or *"a document analysis chat"* (or in Portuguese: *"uma tela de IA bonita"*, *"um assistente inteligente"*, *"um chat para analisar documentos"*):
 - **Never build an empty centered input box saying "Como posso ajudar hoje?" with 3 generic prompt cards.**
 - Automatically elevate into a **2-Pane Grounded Workbench**:
   - **Left Pane (Source / Document / Dataset Canvas):** The actual artifact being analyzed or edited, with highlighted spans linked to citations and inline redline diffs (`Accept [Tab]` / `Reject [Esc]`).

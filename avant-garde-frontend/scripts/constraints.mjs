@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Draws creative constraints to elevate a design beyond generic AI templates while respecting usability.
-// Default mode draws usability-safe, high-beauty studio craft rules (ideal for "uma tela bonita e moderna").
+// Default mode draws usability-safe, high-beauty studio craft rules (ideal for "clean and modern" / "uma tela bonita e moderna").
 // Pass `--wild` for experimental/avant-garde art-direction rules that break web conventions.
 // Usage: node constraints.mjs [count=2] [--domain saas|ecommerce|editorial|portfolio|wellness] [--wild] | test
 
